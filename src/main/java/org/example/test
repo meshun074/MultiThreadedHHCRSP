@@ -1,0 +1,38 @@
+
+
+package org.example;
+
+import org.example.Data.InstancesClass;
+import org.example.Data.ReadData;
+import org.example.GA.Chromosome;
+import org.example.GA.GeneticAlgorithm;
+import java.io.File;
+
+public class Main {
+    public static InstancesClass instance;
+    public static void main(String[] args) {
+        long startTime;
+        long endTime;
+        long averageTime;
+        for (int y = 1; y<=10; y++){
+            //Read dataset
+            startTime = System.currentTimeMillis();
+            instance = ReadData.read(new File("src/main/java/org/example/Data/instance/50_"+y+".json"));
+            //GA start here
+            double total = 0;
+            double best = Double.MAX_VALUE;
+            Chromosome result;
+            for (int i = 0; i < 20; i++) {
+                GeneticAlgorithm ga = new GeneticAlgorithm(200, 600, 0.1f, instance);
+                result = ga.start();
+                if (result.getFitness() < best) {
+                    best = result.getFitness();
+                }
+                total += result.getFitness();
+            }
+            endTime = System.currentTimeMillis();
+            averageTime = (endTime - startTime)/20000;
+            System.out.println("Instance_50_"+y+" Best Fitness: " + best + " Average Fitness: " + total / 20 +" Average Time: " + averageTime+"s");
+        }
+    }
+}

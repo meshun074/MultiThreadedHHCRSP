@@ -1,0 +1,423 @@
+/Users/apex/Library/Java/JavaVirtualMachines/openjdk-21.0.2/Contents/Home/bin/java -javaagent:/Applications/IntelliJ IDEA.app/Contents/lib/idea_rt.jar=51421:/Applications/IntelliJ IDEA.app/Contents/bin -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath /Users/apex/IdeaProjects/GAforHHCRSP/target/classes:/Users/apex/IdeaProjects/GAforHHCRSP/lib/jackson-databind-2.15.2.jar:/Users/apex/IdeaProjects/GAforHHCRSP/lib/jackson-annotations-2.15.2.jar:/Users/apex/IdeaProjects/GAforHHCRSP/lib/jackson-core-2.15.2.jar org.example.Main
+Index 7 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - Index 2 Average fitness: 43639.73333333334 ** fitness: 218.19866666666667
+[p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - Best fitness: 218.19866666666667
+fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Index 4 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Index 9 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Index 3 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Index 11 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Index 6 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Index 8 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Index 5 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Index 10 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Index 1 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Index 13 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Index 12 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Index 14 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Index 18 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Index 16 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Index 15 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Index 20 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Index 19 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Index 17 Average fitness: 43639.73333333334 ** [p10, p3, p5, p9, p7] - [p8] - [p8, p10, p6, p2, p1, p9, p4] - fitness: 218.19866666666667
+Best fitness: 218.19866666666667
+Instance_10_1 Best Fitness: 218.19866666666667 Average Fitness: 218.19866666666667 Average Time: 0s
+All GA tasks completed. 20
+Index 2 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 7 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 8 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 5 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 1 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 10 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 4 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 6 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 9 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 11 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 3 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 13 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 12 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 17 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 16 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 19 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 14 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 15 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 18 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Index 20 Average fitness: 49325.333333333336 ** [p9, p2, p3, p7, p10, p4, p6] - [p1, p8, p10] - [p9, p8, p5] - fitness: 246.62666666666667
+Best fitness: 246.62666666666667
+Instance_10_2 Best Fitness: 246.62666666666667 Average Fitness: 246.62666666666664 Average Time: 0s
+All GA tasks completed. 20
+Index 4 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 10 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 1 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 11 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 3 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 8 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 5 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 6 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 9 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 2 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 7 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 12 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 13 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 16 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 17 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 15 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 14 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 18 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 20 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Index 19 Average fitness: 61171.66666666667 ** [p9, p10, p1, p2, p4, p6, p5, p3] - [p9, p7, p8] - [p10, p8] - fitness: 305.85833333333335
+Best fitness: 305.85833333333335
+Instance_10_3 Best Fitness: 305.85833333333335 Average Fitness: 305.85833333333346 Average Time: 0s
+All GA tasks completed. 20
+Index 11 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 2 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 10 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 5 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 7 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 8 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 1 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 3 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 4 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 6 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 9 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 12 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 13 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 17 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 14 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 15 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 20 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 18 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 16 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Index 19 Average fitness: 37379.33333333334 ** [p7, p1, p10, p9] - [p5, p8] - [p6, p4, p8, p2, p3, p10, p9] - fitness: 186.8966666666667
+Best fitness: 186.8966666666667
+Instance_10_4 Best Fitness: 186.8966666666667 Average Fitness: 186.89666666666665 Average Time: 0s
+All GA tasks completed. 20
+Index 4 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p6, p8, p9, p2, p10, p7, p1] - [p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 3 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p6, p8, p9, p2, p10, p7, p1] - [p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 1 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p6, p8, p9, p2, p10, p7, p1] - [p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 9 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p8, p9, p2, p10, p7, p1] - [p6, p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 7 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p6, p8, p9, p2, p10, p7, p1] - [p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 10 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p8, p9, p2, p10, p7, p1] - [p6, p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 5 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p8, p9, p2, p10, p7, p1] - [p6, p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 11 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p8, p9, p2, p10, p7, p1] - [p6, p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 8 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p8, p9, p2, p10, p7, p1] - [p6, p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 6 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p8, p9, p2, p10, p7, p1] - [p6, p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 2 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p8, p9, p2, p10, p7, p1] - [p6, p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 12 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p6, p8, p9, p2, p10, p7, p1] - [p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 13 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p6, p8, p9, p2, p10, p7, p1] - [p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 14 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p6, p8, p9, p2, p10, p7, p1] - [p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 16 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p6, p8, p9, p2, p10, p7, p1] - [p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 17 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p6, p8, p9, p2, p10, p7, p1] - [p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 15 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p6, p8, p9, p2, p10, p7, p1] - [p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 19 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p6, p8, p9, p2, p10, p7, p1] - [p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 20 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p6, p8, p9, p2, p10, p7, p1] - [p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Index 18 Average fitness: 37908.66666666667 ** [p9, p10, p3, p5, p4] - [p6, p8, p9, p2, p10, p7, p1] - [p8] - fitness: 189.54333333333335
+Best fitness: 189.54333333333335
+Instance_10_5 Best Fitness: 189.54333333333335 Average Fitness: 189.5433333333334 Average Time: 0s
+All GA tasks completed. 20
+Index 11 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 7 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 9 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 10 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 1 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 2 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 5 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 4 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 8 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 3 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 6 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 12 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 13 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 17 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 16 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 14 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 20 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 18 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 15 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Index 19 Average fitness: 40019.866666666654 ** [p5, p4, p3, p2, p9, p10, p1] - [p7, p8, p10] - [p6, p8, p9] - fitness: 200.09933333333328
+Best fitness: 200.09933333333328
+Instance_10_6 Best Fitness: 200.09933333333328 Average Fitness: 200.09933333333322 Average Time: 0s
+All GA tasks completed. 20
+Index 2 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Index 1 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Index 10 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Index 6 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Index 11 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Index 5 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Index 7 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Index 3 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Index 8 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Index 4 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Index 9 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Index 13 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Index 15 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Index 12 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - Index 16 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Index 14 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Index 17 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Index 18 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Index 20 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Index 19 Average fitness: 45073.8 ** [p2, p10, p9] - [p8] - [p1, p3, p4, p5, p10, p6, p8, p7, p9] - fitness: 225.36900000000003
+Best fitness: 225.36900000000003
+Instance_10_7 Best Fitness: 225.36900000000003 Average Fitness: 225.36900000000009 Average Time: 0s
+All GA tasks completed. 20
+Index 2 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 10 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 4 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 1 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 8 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 5 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 3 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 6 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 11 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 9 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 7 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 14 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 13 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 15 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 17 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 12 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 16 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 18 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 20 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Index 19 Average fitness: 46409.666666666664 ** [p10, p4, p6, p9, p5] - [p8] - [p8, p10, p7, p1, p3, p2, p9] - fitness: 232.04833333333332
+Best fitness: 232.04833333333332
+Instance_10_8 Best Fitness: 232.04833333333332 Average Fitness: 232.04833333333326 Average Time: 0s
+All GA tasks completed. 20
+Index 11 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p2, p6, p8, p10, p3] - [p9, p5, p8, p7] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 4 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p9, p5, p8, p10, p3] - [p2, p6, p8, p7] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 6 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p2, p6, p8, p10, p3] - [p9, p5, p8, p7] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 1 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p9, p5, p8, p7] - [p2, p6, p8, p10, p3] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 2 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p2, p6, p8, p10, p3] - [p9, p5, p8, p7] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 10 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p9, p5, p8, p7] - [p2, p6, p8, p10, p3] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 9 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p2, p6, p8, p10, p3] - [p9, p5, p8, p7] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 8 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p2, p6, p8, p10, p3] - [p9, p5, p8, p7] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 3 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p2, p6, p8, p7] - [p9, p5, p8, p10, p3] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 5 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p2, p6, p8, p10, p3] - [p9, p5, p8, p7] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 7 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p2, p6, p8, p10, p3] - [p9, p5, p8, p7] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 13 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p9, p5, p8, p10, p3] - [p2, p6, p8, p7] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 12 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p2, p6, p8, p7] - [p9, p5, p8, p10, p3] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 15 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p9, p5, p8, p7] - [p2, p6, p8, p10, p3] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 14 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p2, p6, p8, p10, p3] - [p9, p5, p8, p7] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 16 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p9, p5, p8, p7] - [p2, p6, p8, p10, p3] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 18 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p9, p5, p8, p10, p3] - [p2, p6, p8, p7] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 17 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p2, p6, p8, p10, p3] - [p9, p5, p8, p7] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 19 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p2, p6, p8, p7] - [p9, p5, p8, p10, p3] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Index 20 Average fitness: 44458.99999999999 ** [p9, p4, p10, p1] - [p2, p6, p8, p7] - [p9, p5, p8, p10, p3] - fitness: 222.29499999999996
+Best fitness: 222.29499999999996
+Instance_10_9 Best Fitness: 222.29499999999996 Average Fitness: 222.29500000000002 Average Time: 1s
+All GA tasks completed. 20
+Index 5 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 4 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 6 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 7 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 3 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 11 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 9 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 10 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 8 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 1 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 2 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 12 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 16 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 15 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 14 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 19 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 13 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 17 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 18 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Index 20 Average fitness: 45001.13333333334 ** [p2, p4, p7, p9, p10] - [p5, p6, p8, p9] - [p3, p8, p1, p10] - fitness: 225.00566666666668
+Best fitness: 225.00566666666668
+Instance_10_10 Best Fitness: 225.00566666666668 Average Fitness: 225.00566666666677 Average Time: 0s
+All GA tasks completed. 20
+
+Process finished with exit code 0
