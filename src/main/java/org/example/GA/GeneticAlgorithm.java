@@ -43,7 +43,7 @@ public class GeneticAlgorithm implements Runnable {
         for (int i = 1; i <= gen; i++) {
             maintainElitism();
             //System.out.println(i);
-            bestCostRouteCrossover1();
+            bestCostRouteCrossover2();
             //System.out.println(i);
 //            if (i % localSearchRate == 0)
 //                Localsearch();

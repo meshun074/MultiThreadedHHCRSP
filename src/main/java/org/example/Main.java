@@ -21,11 +21,11 @@ public class Main {
         long endTime;
         long averageTime;
         try {
-            for (int y = 1; y <= 10; y++) {
+            for (int y = 7; y <= 10; y++) {
                 //Read dataset
-                String instanceName = "50";
+                String instanceName = "100";
                 startTime = System.currentTimeMillis();
-                PrintStream fileout = new PrintStream("src/main/java/org/example/Result_"+instanceName+"_"+y+"_d_.txt");
+                PrintStream fileout = new PrintStream("src/main/java/org/example/MP_BCRCD_Results/Result_"+instanceName+"_"+y+"_MP_.txt");
                 System.setOut(fileout);
                 instance = ReadData.read(new File("src/main/java/org/example/Data/instance/" + instanceName + "_" + y + ".json"));
                 //GA start here
