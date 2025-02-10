@@ -21,7 +21,7 @@ public class Main {
         long endTime;
         long averageTime;
         try {
-            for (int y = 7; y <= 10; y++) {
+            for (int y = 10; y <= 10; y++) {
                 //Read dataset
                 String instanceName = "100";
                 startTime = System.currentTimeMillis();
