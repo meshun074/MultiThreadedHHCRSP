@@ -21,9 +21,9 @@ public class Main {
         long endTime;
         long averageTime;
         try {
-            for (int y = 3; y <= 3; y++) {
+            for (int y = 1; y <= 1; y++) {
                 //Read dataset
-                String instanceName = "100";
+                String instanceName = "200";
                 startTime = System.currentTimeMillis();
                 PrintStream fileout = new PrintStream("src/main/java/org/example/MP_BCRCD_Results/Result_"+instanceName+"_"+y+"_MP_.txt");
                 System.setOut(fileout);
