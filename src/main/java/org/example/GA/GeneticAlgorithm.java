@@ -5,6 +5,9 @@ import org.example.Data.InstancesClass;
 import org.example.Data.Patient;
 
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.example.GA.EvaluationFunction.EvaluateFitness;
 import static org.example.GA.EvaluationFunction.getIdOfObject;
@@ -177,6 +180,87 @@ public class GeneticAlgorithm implements Runnable {
                 c3 = CrossoverMD(p3, p1, p2, r3,r1, r2);
                 nextPopulation.add(c3);
             }
+        }
+    }
+
+    private void bestCostRouteCrossover3() {
+        Random rand = new Random(System.currentTimeMillis());
+        Chromosome p1, p2, p3, c1, c2, c3;
+        int r1, r2, r3;
+        int count;
+        int index =nextPopulation.size();
+        List<String> uniqueParents = new ArrayList<>();
+        ExecutorService service = Executors.newFixedThreadPool(3);
+        CrossoverTask.crossoverChromosomes = Collections.synchronizedList(new ArrayList<>());
+        List<Callable<Chromosome>> crossoverTasks = new ArrayList<>();
+        while (index < popSize) {
+            p1 = newPopulation.get(rand.nextInt(popSize));
+//            p2 = newPopulation.get(tournamentSelection(3));
+            uniqueParents.add(p1.toString());
+            p2 = newPopulation.get(rand.nextInt(popSize));
+            count = 0;
+            while (count < 10 && uniqueParents.contains(p2.toString())) {
+                p2 = newPopulation.get(rand.nextInt(popSize));
+                count++;
+            }
+            p3 = newPopulation.get(rand.nextInt(popSize));
+            count = 0;
+            while (count < 10 && uniqueParents.contains(p3.toString())) {
+                p3 = newPopulation.get(rand.nextInt(popSize));
+                count++;
+            }
+            //c1 = Crossover(p1, p2);
+            do {
+                r1 = rand.nextInt(p2.getGenes().length);
+                r2 = rand.nextInt(p3.getGenes().length);
+                r3 = rand.nextInt(p1.getGenes().length);
+            } while (p1.getGenes()[r3].isEmpty() && p2.getGenes()[r1].isEmpty() && p3.getGenes()[r2].isEmpty());
+
+            Chromosome finalP1 = p1;
+            Chromosome finalP2 = p2;
+            Chromosome finalP3 = p3;
+            int finalR1 = r1;
+            int finalR2 = r2;
+            int finalR3 = r3;
+            crossoverTasks.add(() -> {
+                new CrossoverTask(finalP1, finalP2, finalP3, finalR1, finalR2,finalR3,data).run();
+                return null;
+            });
+            index++;
+
+            //c1 = CrossoverMD(p1, p2, p3, r1, r2,r3);
+            //System.out.println("yiees");
+            //nextPopulation.add(c1);
+            //c2 = Crossover(p2, p1);
+            if (index < popSize) {
+                crossoverTasks.add(() -> {
+                    new CrossoverTask(finalP2, finalP3, finalP1, finalR2, finalR3, finalR1,data).run();
+                    return null;
+                });
+                //c2 = CrossoverMD(p2, p3, p1, r2,r3, r1);
+                index++;
+                //nextPopulation.add(c2);
+            }
+            if (index < popSize) {
+                crossoverTasks.add(() -> {
+                    new CrossoverTask( finalP3, finalP1, finalP2,  finalR3, finalR1, finalR2, data).run();
+                    return null;
+                });
+                index++;
+                //c3 = CrossoverMD(p3, p1, p2, r3,r1, r2);
+                //nextPopulation.add(c3);
+            }
+        }
+        try {
+            service.invokeAll(crossoverTasks);
+            List<Chromosome> xChromosomes = CrossoverTask.crossoverChromosomes;
+            synchronized (xChromosomes){
+                nextPopulation.addAll(xChromosomes);
+            }
+        }catch (InterruptedException e){
+            Thread.currentThread().interrupt();
+        }finally {
+            service.shutdown();
         }
     }
 
