@@ -24,6 +24,7 @@ public class GeneticAlgorithm implements Runnable {
     private List<Chromosome> nextPopulation;
     private List<Chromosome> newPopulation;
     public static List<Chromosome> bestChromosomes;
+    private List<Chromosome> crossoverChromosomes;
 
     public GeneticAlgorithm(int identity, int numOfEliteSearch, int localSearchRate, int popSize, int gen, float elitismRate, InstancesClass data) {
         this.identity = identity;
@@ -46,8 +47,8 @@ public class GeneticAlgorithm implements Runnable {
         for (int i = 1; i <= gen; i++) {
             maintainElitism();
             //System.out.println(i);
-            bestCostRouteCrossover2();
-            //System.out.println(i);
+            bestCostRouteCrossover3();
+//            System.out.println("Index "+identity+" "+nextPopulation.size());
 //            if (i % localSearchRate == 0)
 //                Localsearch();
             updatePopulation1();
@@ -56,6 +57,10 @@ public class GeneticAlgorithm implements Runnable {
         }
 
         return bestChromosome;
+    }
+
+    public List<Chromosome> getCrossoverChromosomes() {
+        return crossoverChromosomes;
     }
 
     private void updatePopulation1() {
@@ -190,8 +195,8 @@ public class GeneticAlgorithm implements Runnable {
         int count;
         int index =nextPopulation.size();
         List<String> uniqueParents = new ArrayList<>();
-        ExecutorService service = Executors.newFixedThreadPool(3);
-        CrossoverTask.crossoverChromosomes = Collections.synchronizedList(new ArrayList<>());
+        ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        crossoverChromosomes = Collections.synchronizedList(new ArrayList<>());
         List<Callable<Chromosome>> crossoverTasks = new ArrayList<>();
         while (index < popSize) {
             p1 = newPopulation.get(rand.nextInt(popSize));
@@ -223,7 +228,7 @@ public class GeneticAlgorithm implements Runnable {
             int finalR2 = r2;
             int finalR3 = r3;
             crossoverTasks.add(() -> {
-                new CrossoverTask(finalP1, finalP2, finalP3, finalR1, finalR2,finalR3,data).run();
+                new CrossoverTask(this,finalP1, finalP2, finalP3, finalR1, finalR2,finalR3,data).run();
                 return null;
             });
             index++;
@@ -234,7 +239,7 @@ public class GeneticAlgorithm implements Runnable {
             //c2 = Crossover(p2, p1);
             if (index < popSize) {
                 crossoverTasks.add(() -> {
-                    new CrossoverTask(finalP2, finalP3, finalP1, finalR2, finalR3, finalR1,data).run();
+                    new CrossoverTask(this,finalP2, finalP3, finalP1, finalR2, finalR3, finalR1,data).run();
                     return null;
                 });
                 //c2 = CrossoverMD(p2, p3, p1, r2,r3, r1);
@@ -243,7 +248,7 @@ public class GeneticAlgorithm implements Runnable {
             }
             if (index < popSize) {
                 crossoverTasks.add(() -> {
-                    new CrossoverTask( finalP3, finalP1, finalP2,  finalR3, finalR1, finalR2, data).run();
+                    new CrossoverTask( this,finalP3, finalP1, finalP2,  finalR3, finalR1, finalR2, data).run();
                     return null;
                 });
                 index++;
@@ -253,7 +258,7 @@ public class GeneticAlgorithm implements Runnable {
         }
         try {
             service.invokeAll(crossoverTasks);
-            List<Chromosome> xChromosomes = CrossoverTask.crossoverChromosomes;
+            List<Chromosome> xChromosomes = crossoverChromosomes;
             synchronized (xChromosomes){
                 nextPopulation.addAll(xChromosomes);
             }

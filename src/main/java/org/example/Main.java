@@ -23,9 +23,9 @@ public class Main {
         try {
             for (int y = 1; y <= 1; y++) {
                 //Read dataset
-                String instanceName = "200";
+                String instanceName = "25";
                 startTime = System.currentTimeMillis();
-                PrintStream fileout = new PrintStream("src/main/java/org/example/MP_BCRCD_Results/Result_"+instanceName+"_"+y+"_MP_.txt");
+                PrintStream fileout = new PrintStream("src/main/java/org/example/Result_"+instanceName+"_"+y+"_MP_.txt");
                 System.setOut(fileout);
                 instance = ReadData.read(new File("src/main/java/org/example/Data/instance/" + instanceName + "_" + y + ".json"));
                 //GA start here
@@ -33,11 +33,11 @@ public class Main {
                 double best = Double.MAX_VALUE;
                 Chromosome bestChromosome = null;
                 int coreNumber = Runtime.getRuntime().availableProcessors();
-                ExecutorService executor = Executors.newFixedThreadPool(coreNumber);
+                ExecutorService executor = Executors.newFixedThreadPool(2);
                 GeneticAlgorithm.bestChromosomes = Collections.synchronizedList(new ArrayList<>());
                 List<Callable<Void>> gaTasks = new ArrayList<>();
                 double mean;
-                int n = 10;
+                int n = 8;
                 for (int i = 1; i <= n; i++) {
                     int finalI = i;
                     gaTasks.add(() -> {

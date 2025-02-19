@@ -14,9 +14,9 @@ public class CrossoverTask implements Runnable {
     private final Chromosome p1, p2, p3;
     private final int r1, r2, r3;
     private final InstancesClass data;
-    public static List<Chromosome> crossoverChromosomes;
+    private GeneticAlgorithm ga;
 
-    public CrossoverTask(Chromosome p1, Chromosome p2, Chromosome p3, int r1, int r2, int r3, InstancesClass data) {
+    public CrossoverTask(GeneticAlgorithm ga,Chromosome p1, Chromosome p2, Chromosome p3, int r1, int r2, int r3, InstancesClass data) {
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;
@@ -24,11 +24,12 @@ public class CrossoverTask implements Runnable {
         this.r2 = r2;
         this.r3 = r3;
         this.data = data;
+        this.ga =ga;
     }
 
     @Override
     public void run(){
-        crossoverChromosomes.add(Crossover());
+        ga.getCrossoverChromosomes().add(Crossover());
     }
     private Chromosome Crossover() {
         Chromosome c1 = p2, c1Temp;
