@@ -19,21 +19,25 @@ public class GeneticAlgorithm implements Runnable {
     private final int localSearchRate;
     private final int numOfEliteSearch;
     private final float elitismRate;
+    private final float mutRate;
     private final InstancesClass data;
     private Chromosome bestChromosome;
     private List<Chromosome> nextPopulation;
     private List<Chromosome> newPopulation;
     public static List<Chromosome> bestChromosomes;
     private List<Chromosome> crossoverChromosomes;
+    private double[] popProbabilities;
 
-    public GeneticAlgorithm(int identity, int numOfEliteSearch, int localSearchRate, int popSize, int gen, float elitismRate, InstancesClass data) {
+    public GeneticAlgorithm(int identity, int numOfEliteSearch, int localSearchRate, int popSize, int gen, float elitismRate,float mutRate, InstancesClass data) {
         this.identity = identity;
         this.numOfEliteSearch = numOfEliteSearch;
         this.localSearchRate = localSearchRate;
         this.popSize = popSize;
         this.gen = gen;
         this.elitismRate = elitismRate;
+        this.mutRate = mutRate;
         this.data = data;
+        popProbabilities = new double[popSize];
     }
 
     public Chromosome start() {
@@ -84,7 +88,7 @@ public class GeneticAlgorithm implements Runnable {
 
 
     private void bestCostRouteCrossover() {
-        Random rand = new Random(System.currentTimeMillis());
+        Random rand = new Random(System.currentTimeMillis()+identity);
         Chromosome p1, p2, c1, c2;
         int c = 0, r1, r2;
         int count;
@@ -113,7 +117,7 @@ public class GeneticAlgorithm implements Runnable {
         }
     }
     private void bestCostRouteCrossover1() {
-        Random rand = new Random(System.currentTimeMillis());
+        Random rand = new Random(System.currentTimeMillis()+identity);
         Chromosome p1, p2, c1, c2;
         int r1, r2;
         int count;
@@ -144,7 +148,7 @@ public class GeneticAlgorithm implements Runnable {
         }
     }
     private void bestCostRouteCrossover2() {
-        Random rand = new Random(System.currentTimeMillis());
+        Random rand = new Random(System.currentTimeMillis()+identity);
         Chromosome p1, p2, p3, c1, c2, c3;
         int r1, r2, r3;
         int count;
@@ -189,7 +193,7 @@ public class GeneticAlgorithm implements Runnable {
     }
 
     private void bestCostRouteCrossover3() {
-        Random rand = new Random(System.currentTimeMillis());
+        Random rand = new Random(System.currentTimeMillis()+identity);
         Chromosome p1, p2, p3, c1, c2, c3;
         int r1, r2, r3;
         int count;
@@ -228,32 +232,25 @@ public class GeneticAlgorithm implements Runnable {
             int finalR2 = r2;
             int finalR3 = r3;
             crossoverTasks.add(() -> {
-                new CrossoverTask(this,finalP1, finalP2, finalP3, finalR1, finalR2,finalR3,data).run();
+                new CrossoverTask(this,identity,mutRate,finalP1, finalP2, finalP3, finalR1, finalR2,finalR3,data).run();
                 return null;
             });
             index++;
 
-            //c1 = CrossoverMD(p1, p2, p3, r1, r2,r3);
-            //System.out.println("yiees");
-            //nextPopulation.add(c1);
-            //c2 = Crossover(p2, p1);
+
             if (index < popSize) {
                 crossoverTasks.add(() -> {
-                    new CrossoverTask(this,finalP2, finalP3, finalP1, finalR2, finalR3, finalR1,data).run();
+                    new CrossoverTask(this,identity,mutRate,finalP2, finalP3, finalP1, finalR2, finalR3, finalR1,data).run();
                     return null;
                 });
-                //c2 = CrossoverMD(p2, p3, p1, r2,r3, r1);
                 index++;
-                //nextPopulation.add(c2);
             }
             if (index < popSize) {
                 crossoverTasks.add(() -> {
-                    new CrossoverTask( this,finalP3, finalP1, finalP2,  finalR3, finalR1, finalR2, data).run();
+                    new CrossoverTask( this,identity,mutRate,finalP3, finalP1, finalP2,  finalR3, finalR1, finalR2, data).run();
                     return null;
                 });
                 index++;
-                //c3 = CrossoverMD(p3, p1, p2, r3,r1, r2);
-                //nextPopulation.add(c3);
             }
         }
         try {
@@ -271,7 +268,7 @@ public class GeneticAlgorithm implements Runnable {
 
     private int tournamentSelection(int k) {
         ArrayList<Integer> list = new ArrayList<>();
-        Random rand = new Random(System.currentTimeMillis());
+        Random rand = new Random(System.currentTimeMillis()+identity);
         for (int i = 0; i < k; i++) {
             list.add(rand.nextInt(popSize));
         }
@@ -281,8 +278,38 @@ public class GeneticAlgorithm implements Runnable {
         }
         return list.get(rand.nextInt(list.size()));
     }
+    private void rouletteWheelSetup(){
+        double total = 0.0;
+        for (int i = 0; i < newPopulation.size(); i++){
+            popProbabilities[i] = 1 / newPopulation.get(i).getFitness();
+            total+=popProbabilities[i];
+        }
+        for(int i = 0; i < popProbabilities.length; i++){
+            popProbabilities[i] = popProbabilities[i] / total;
+        }
+    }
+    private int rouletteWheelSelection(){
+        double rand = Math.random();
+      for(int i = 0; i < newPopulation.size(); i++){
+          if(rand<popProbabilities[i])
+              return i;
+      }
+      return (int)(rand*popSize);
+    }
+
+    public Chromosome mutation(Chromosome c){
+        Random rand = new Random(System.currentTimeMillis()+identity);
+        Chromosome newCh = search(c, rand.nextInt(data.getPatients().length));
+        if(newCh.getFitness()<c.getFitness())
+            return newCh;
+        return c;
+    }
+//    private void mutation1(Chromosome c){
+//        Random rand = new Random(System.currentTimeMillis()+identity);
+//        Chromosome newCh = search(c, rand.nextInt(data.getPatients().length));
+//    }
     private void Localsearch() {
-        Random rand = new Random(System.currentTimeMillis());
+        Random rand = new Random(System.currentTimeMillis()+identity);
         Chromosome ch;
         Chromosome newCh;
         ArrayList<Integer> searchedPatients;
@@ -311,7 +338,7 @@ public class GeneticAlgorithm implements Runnable {
     }
 
     private Chromosome search(Chromosome ch, int sp) {
-        Random rand = new Random(System.currentTimeMillis());
+        Random rand = new Random(System.currentTimeMillis()+identity);
         Chromosome tempCh;
         Chromosome bestCh = ch;
         Patient patient = data.getPatients()[sp];
@@ -680,7 +707,7 @@ public class GeneticAlgorithm implements Runnable {
 
     private Chromosome CrossoverMD(Chromosome p1, Chromosome p2, Chromosome p3, int r1, int r2, int r3) {
         Chromosome c1 = p2, c1Temp;
-        Random rand = new Random(System.currentTimeMillis());
+        Random rand = new Random(System.currentTimeMillis()+identity);
         ArrayList[] p1Routes, c1Routes;
         ArrayList<String> selectRoute, route, tempRoute1,
                 tempRoute2, currentRoute1, currentRoute2, bestroute1, bestroute2;
@@ -809,7 +836,7 @@ public class GeneticAlgorithm implements Runnable {
     }
     private Chromosome CrossoverD(Chromosome p1, Chromosome p2, int r1, int r2) {
         Chromosome c1 = p2, c1Temp;
-        Random rand = new Random(System.currentTimeMillis());
+        Random rand = new Random(System.currentTimeMillis()+identity);
         ArrayList[] p1Routes, c1Routes;
         ArrayList<String> selectRoute, route, tempRoute1,
                 tempRoute2, currentRoute1, currentRoute2, bestroute1, bestroute2;
@@ -942,7 +969,7 @@ public class GeneticAlgorithm implements Runnable {
 
     private Chromosome Crossover(Chromosome p1, Chromosome p2) {
         Chromosome c1 = p2, c1Temp;
-        Random rand = new Random(System.currentTimeMillis());
+        Random rand = new Random(System.currentTimeMillis()+identity);
         ArrayList[] p1Routes, c1Routes;
         ArrayList<String> selectRoute, route, route1, tempRoute1,
                 tempRoute2, currentRoute1, currentRoute2, bestroute1, bestroute2;
@@ -1110,14 +1137,13 @@ public class GeneticAlgorithm implements Runnable {
 
     private void performanceUpdate(List<Chromosome> population, int iterations) {
         sortPopulation(population);
+        double averageFitness = population.stream().mapToDouble(Chromosome::getFitness).sum();
+        System.out.println("Index " + identity +" Iteration " +iterations + " Best fitness: " + population.getFirst().getFitness() + " Average fitness: " + averageFitness/popSize);
         if (iterations == gen) {
-//            double averageFitness = population.stream().mapToDouble(Chromosome::getFitness).sum();
-//            System.out.print("Index " + identity + " Average fitness: " + averageFitness + " ** ");
-           // population.getFirst().showSolution();
+            population.getFirst().showSolution(identity);
             bestChromosome = population.getFirst();
-            System.out.println(" Iteration " + iterations + " Fitness: " + bestChromosome.getFitness() + " Total Distance: " + bestChromosome.getTotalTravelCost() + " Total Tardiness: " + bestChromosome.getTotalTardiness() + " Highest Tardiness: " + bestChromosome.getHighestTardiness());
+            System.out.println("Index " + identity +" Iteration " + iterations + " Fitness: " + bestChromosome.getFitness() + " Total Distance: " + bestChromosome.getTotalTravelCost() + " Total Tardiness: " + bestChromosome.getTotalTardiness() + " Highest Tardiness: " + bestChromosome.getHighestTardiness());
         }
-        System.out.println("Index " + identity +" Iteration " +iterations + " Best fitness: " + population.getFirst().getFitness());
     }
 
     @Override

@@ -12,11 +12,12 @@ import static org.example.GA.EvaluationFunction.getIdOfObject;
 
 public class CrossoverTask implements Runnable {
     private final Chromosome p1, p2, p3;
-    private final int r1, r2, r3;
+    private final int r1, r2, r3, identity;
+    private final float mutRate;
     private final InstancesClass data;
     private GeneticAlgorithm ga;
 
-    public CrossoverTask(GeneticAlgorithm ga,Chromosome p1, Chromosome p2, Chromosome p3, int r1, int r2, int r3, InstancesClass data) {
+    public CrossoverTask(GeneticAlgorithm ga,int identity,float mutRate, Chromosome p1, Chromosome p2, Chromosome p3, int r1, int r2, int r3, InstancesClass data) {
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;
@@ -25,6 +26,8 @@ public class CrossoverTask implements Runnable {
         this.r3 = r3;
         this.data = data;
         this.ga =ga;
+        this.identity =identity;
+        this.mutRate = mutRate;
     }
 
     @Override
@@ -33,7 +36,7 @@ public class CrossoverTask implements Runnable {
     }
     private Chromosome Crossover() {
         Chromosome c1 = p2, c1Temp;
-        Random rand = new Random(System.currentTimeMillis());
+        Random rand = new Random(System.currentTimeMillis()+identity);
         ArrayList[] p1Routes, c1Routes;
         ArrayList<String> selectRoute, route, tempRoute1,
                 tempRoute2, currentRoute1, currentRoute2, bestroute1, bestroute2;
@@ -140,8 +143,12 @@ public class CrossoverTask implements Runnable {
                 }
             }
         }
+        if(Math.random()<mutRate) {
+            c1=ga.mutation(c1);
+        }
         return c1;
     }
+
     private ArrayList<Integer> getQualifiedCaregiver(String service) {
         ArrayList<Integer> caregivers = new ArrayList<>();
         for (Caregiver c : data.getCaregivers()) {

@@ -113,7 +113,8 @@ public class Chromosome {
         this.totalTardiness += totalTardiness;
     }
 
-    public void showSolution() {
+    public void showSolution(int index) {
+        System.out.print("index : "+index+"\t");
         for (ArrayList route : genes) {
             System.out.print(route+" - ");
         }
