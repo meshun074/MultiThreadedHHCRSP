@@ -43,7 +43,7 @@ public class Main {
                     for (int i = 1; i <= n; i++) {
                         int finalI = i;
                         gaTasks.add(() -> {
-                            new GeneticAlgorithm(finalI, 6, 10, 300, 400, 0.1f,0.1f, instance).run();
+                            new GeneticAlgorithm(finalI, 6, 4, 300, 400, 'R',0.1f,0.1f, instance).run();
                             return null;
                         });
 //                GeneticAlgorithm ga = new GeneticAlgorithm(200, 600, 0.1f, instance);

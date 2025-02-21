@@ -5,19 +5,18 @@ import org.example.Data.InstancesClass;
 import org.example.Data.Patient;
 
 import java.util.*;
-import java.util.concurrent.Callable;
 
 import static org.example.GA.EvaluationFunction.EvaluateFitness;
 import static org.example.GA.EvaluationFunction.getIdOfObject;
 
-public class CrossoverTask implements Runnable {
+public class MPBCRCD_CrossoverTask implements Runnable {
     private final Chromosome p1, p2, p3;
     private final int r1, r2, r3, identity;
     private final float mutRate;
     private final InstancesClass data;
     private GeneticAlgorithm ga;
 
-    public CrossoverTask(GeneticAlgorithm ga,int identity,float mutRate, Chromosome p1, Chromosome p2, Chromosome p3, int r1, int r2, int r3, InstancesClass data) {
+    public MPBCRCD_CrossoverTask(GeneticAlgorithm ga, int identity, float mutRate, Chromosome p1, Chromosome p2, Chromosome p3, int r1, int r2, int r3, InstancesClass data) {
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;
