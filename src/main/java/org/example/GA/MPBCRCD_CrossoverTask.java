@@ -8,6 +8,7 @@ import java.util.*;
 
 import static org.example.GA.EvaluationFunction.EvaluateFitness;
 import static org.example.GA.EvaluationFunction.getIdOfObject;
+import static org.example.GA.GeneticAlgorithm.conflictCheck;
 
 public class MPBCRCD_CrossoverTask implements Runnable {
     private final Chromosome p1, p2, p3;
@@ -49,7 +50,7 @@ public class MPBCRCD_CrossoverTask implements Runnable {
         selectRoute.addAll(p3.getGenes()[r2]);
         p1Routes = p1.getGenes();
         c1Routes = new ArrayList[p1.getGenes().length];
-
+        //removing patients of selected route from parent routes
         for (int i = 0; i < p1Routes.length; i++) {
             route = new ArrayList<>();
             for (Object obj : p1Routes[i]) {
@@ -142,8 +143,10 @@ public class MPBCRCD_CrossoverTask implements Runnable {
                 }
             }
         }
-        if(Math.random()<mutRate) {
-            c1=ga.mutation(c1);
+        if(mutRate>0){
+            if (Math.random() < mutRate) {
+                c1 = ga.mutationSelection(c1);
+            }
         }
         return c1;
     }
@@ -158,17 +161,6 @@ public class MPBCRCD_CrossoverTask implements Runnable {
         return caregivers;
     }
     private boolean noEvaluationConflicts(ArrayList<String> c1Route, ArrayList<String> c2Route, int m, int n) {
-        int index1;
-        int index2;
-        for (int i = 0; i < c1Route.size(); i++) {
-            if (c2Route.contains(c1Route.get(i))) {
-                index1 = c1Route.indexOf(c1Route.get(i));
-                index2 = c2Route.indexOf(c1Route.get(i));
-                if (m <= index1 && n > index2 || m > index1 && n <= index2) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return conflictCheck(c1Route, c2Route, m, n);
     }
 }

@@ -16,8 +16,11 @@ public class GeneticAlgorithm implements Runnable {
     private final int popSize;
     private final int gen;
     private final int identity;
+    private final int LSRate;
     private final int TSRate;
     private final char selectTechnique;
+    private final String crossType;
+    private final String mutType;
     private final int numOfEliteSearch;
     private final float elitismRate;
     private final float mutRate;
@@ -27,17 +30,20 @@ public class GeneticAlgorithm implements Runnable {
     private List<Chromosome> newPopulation;
     public static List<Chromosome> bestChromosomes;
     private List<Chromosome> crossoverChromosomes;
-    private double[] popProbabilities;
+    private final double[] popProbabilities;
 
-    public GeneticAlgorithm(int identity, int numOfEliteSearch, int TSRate, int popSize, int gen, char selectTechnique, float elitismRate,float mutRate, InstancesClass data) {
+    public GeneticAlgorithm(int identity, int numOfEliteSearch, int LSRate, int TSRate, int popSize, int gen,   float elitismRate,  Parameters p, InstancesClass data) {
         this.identity = identity;
         this.numOfEliteSearch = numOfEliteSearch;
+        this.LSRate = LSRate;
         this.TSRate = TSRate;
         this.popSize = popSize;
         this.gen = gen;
-        this.selectTechnique = selectTechnique;
+        selectTechnique = p.selectionTechnique();
+        mutType = p.mutationType();
+        crossType = p.crossoverType();
         this.elitismRate = elitismRate;
-        this.mutRate = mutRate;
+        mutRate = p.mutationRate();
         this.data = data;
         popProbabilities = new double[popSize];
     }
@@ -48,20 +54,20 @@ public class GeneticAlgorithm implements Runnable {
         newPopulation = Population.initialize(popSize, data.getPatients().length);
         //Sort population
         sortPopulation(newPopulation);
-        //Localsearch();
+        //printing output
         performanceUpdate(newPopulation, 0);
         for (int i = 1; i <= gen; i++) {
             maintainElitism();
-            //System.out.println(i);
-            MultiParentBCRCD();
-//            System.out.println("Index "+identity+" "+nextPopulation.size());
-//            if (i % localSearchRate == 0)
-//                Localsearch();
+            //select appropriate crossover;
+            crossoverSelection();
+            //Local search();
+            if(!crossType.equals("MP")&&mutRate==-1f){
+                if (i % LSRate == 0)
+                    Localsearch();
+            }
             updatePopulation1();
-            //System.out.println("Size: " + newPopulation.size());
             performanceUpdate(newPopulation, i);
         }
-
         return bestChromosome;
     }
 
@@ -74,21 +80,14 @@ public class GeneticAlgorithm implements Runnable {
         newPopulation.addAll(nextPopulation);
     }
 
-    private void updatePopulation() {
-        int index = 0;
-        sortPopulation(newPopulation);
-        while (nextPopulation.size() < popSize) {
-            if (!nextPopulation.contains(newPopulation.get(index))) {
-                nextPopulation.add(newPopulation.get(index));
-            }
-            index++;
-            //System.out.println("ths");
-        }
-        newPopulation.clear();
-        newPopulation.addAll(nextPopulation);
+    private void crossoverSelection(){
+        if(crossType.equals("MP"))
+            MultiParentBCRCD();
+        else if(crossType.equals("BD"))
+            bestCostRouteCrossoverDestruction();
+        else
+            bestCostRouteCrossover();
     }
-
-
     private void bestCostRouteCrossover() {
         Random rand = new Random(System.currentTimeMillis()+identity);
         Chromosome p1, p2;
@@ -131,50 +130,69 @@ public class GeneticAlgorithm implements Runnable {
                 });
                 index++;
             }
-            try {
-                service.invokeAll(crossoverTasks);
-                List<Chromosome> xChromosomes = crossoverChromosomes;
-                synchronized (xChromosomes){
-                    nextPopulation.addAll(xChromosomes);
-                }
-            }catch (InterruptedException e){
-                Thread.currentThread().interrupt();
-            }finally {
-                service.shutdown();
-            }
+        }
+        invokeThreads(service, crossoverTasks);
+    }
 
+    private void invokeThreads(ExecutorService service, List<Callable<Void>> crossoverTasks) {
+        try {
+            service.invokeAll(crossoverTasks);
+            List<Chromosome> xChromosomes = crossoverChromosomes;
+            synchronized (xChromosomes){
+                nextPopulation.addAll(xChromosomes);
+            }
+        }catch (InterruptedException e){
+            Thread.currentThread().interrupt();
+        }finally {
+            service.shutdown();
         }
     }
-    private void bestCostRouteCrossover1() {
+
+    private void bestCostRouteCrossoverDestruction() {
         Random rand = new Random(System.currentTimeMillis()+identity);
-        Chromosome p1, p2, c1, c2;
+        Chromosome p1, p2;
         int r1, r2;
         int count;
-        while (nextPopulation.size() < popSize) {
-            //p1 = newPopulation.get(rand.nextInt((int) (popSize * elitismRate)));
-            p1 = newPopulation.get(rand.nextInt(popSize));
-//            p2 = newPopulation.get(tournamentSelection(3));
-            p2 = newPopulation.get(rand.nextInt(popSize));
+        int index =nextPopulation.size();
+        ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        crossoverChromosomes = Collections.synchronizedList(new ArrayList<>());
+        List<Callable<Void>> crossoverTasks = new ArrayList<>();
+        if(selectTechnique=='R')
+            rouletteWheelSetup();
+        while (index < popSize) {
+            p1 = newPopulation.get(selectionTechnique(rand));
             count = 0;
-            while (count < 10 && p1.getFitness() == p2.getFitness() && p1.getTotalTravelCost() == p2.getTotalTravelCost() && p1.getHighestTardiness() == p2.getHighestTardiness() && p1.getTotalTardiness() == p2.getTotalTardiness()) {
-                p2 = newPopulation.get(rand.nextInt(popSize));
-                //System.out.println(c);
+            do {
+                p2 = newPopulation.get(selectionTechnique(rand));
                 count++;
             }
-            do{
+            while (count < 10 && p2.toString().equals(p1.toString()));
+            do {
                 r1 = rand.nextInt(p2.getGenes().length);
                 r2 = rand.nextInt(p1.getGenes().length);
-            }while(p1.getGenes()[r2].isEmpty()&&p2.getGenes()[r1].isEmpty());
-            //c1 = Crossover(p1, p2);
-            c1 = CrossoverD(p1, p2, r1, r2);
-            //System.out.println("yiees");
-            nextPopulation.add(c1);
-            //c2 = Crossover(p2, p1);
-            if (nextPopulation.size() < popSize) {
-                c2 = CrossoverD(p2, p1, r2, r1);
-                nextPopulation.add(c2);
+            }while (p1.getGenes()[r2].isEmpty() && p2.getGenes()[r1].isEmpty());
+
+            Chromosome finalP1 = p1;
+            Chromosome finalP2 = p2;
+            int finalR1 = r1;
+            int finalR2 = r2;
+
+            crossoverTasks.add(() -> {
+                new BCRCD_CrossoverTask(this,identity,mutRate,finalP1, finalP2, finalR1,finalR2, data).run();
+                return null;
+            });
+            index++;
+
+
+            if (index < popSize) {
+                crossoverTasks.add(() -> {
+                    new BCRCD_CrossoverTask(this,identity,mutRate,finalP2, finalP1, finalR2,finalR1, data).run();
+                    return null;
+                });
+                index++;
             }
         }
+        invokeThreads(service, crossoverTasks);
     }
 
     private void MultiParentBCRCD() {
@@ -239,17 +257,7 @@ public class GeneticAlgorithm implements Runnable {
                 index++;
             }
         }
-        try {
-            service.invokeAll(crossoverTasks);
-            List<Chromosome> xChromosomes = crossoverChromosomes;
-            synchronized (xChromosomes){
-                nextPopulation.addAll(xChromosomes);
-            }
-        }catch (InterruptedException e){
-            Thread.currentThread().interrupt();
-        }finally {
-            service.shutdown();
-        }
+        invokeThreads(service, crossoverTasks);
     }
     private int selectionTechnique(Random rand) {
         if (selectTechnique=='R'){
@@ -291,17 +299,71 @@ public class GeneticAlgorithm implements Runnable {
       return (int)(rand*popSize);
     }
 
-    public Chromosome mutation(Chromosome c){
+    public Chromosome mutationSelection(Chromosome c){
+        if(mutType.equals("M"))
+            return mutation(c);
+        else return mutation1(c);
+    }
+    private Chromosome mutation(Chromosome c){
         Random rand = new Random(System.currentTimeMillis()+identity);
         Chromosome newCh = search(c, rand.nextInt(data.getPatients().length));
         if(newCh.getFitness()<c.getFitness())
             return newCh;
         return c;
     }
-//    private void mutation1(Chromosome c){
-//        Random rand = new Random(System.currentTimeMillis()+identity);
-//        Chromosome newCh = search(c, rand.nextInt(data.getPatients().length));
-//    }
+    private Chromosome mutation1(Chromosome ch){
+        Random rand = new Random(System.currentTimeMillis()+identity);
+        Chromosome c = new Chromosome(ch.getGenes(),ch.getFitness(),true);
+        int selectedRoute = rand.nextInt(c.getGenes().length);
+        ArrayList<String> route  = new ArrayList<>(c.getGenes()[selectedRoute]);
+        int index;
+        int limit;
+        String holder;
+        if(route.size()>1){
+            if(route.size()==2){
+                route.reversed();
+            }else {
+                index = rand.nextInt(route.size());
+                limit = route.size()-index;
+                if (limit==1){
+                    if(index==1){
+                        holder = route.getFirst();
+                        route.set(0,route.get(index));
+                        route.set(index, holder);
+                    }else{
+                        if(rand.nextBoolean()){
+                            holder = route.get(index);
+                            route.set(index, route.get(index-1));
+                            route.set(index-1, holder);
+                        }else {
+                            holder = route.get(index);
+                            route.set(index, route.get(index-2));
+                            route.set(index-2, holder);
+                        }
+                    }
+                }else if(limit==2){
+                    holder = route.get(index);
+                    route.set(index,route.get(index+1));
+                    route.set(index+1, holder);
+                }else {
+                    if(rand.nextBoolean()){
+                        holder = route.get(index);
+                        route.set(index, route.get(index+1));
+                        route.set(index+1, holder);
+                    }else {
+                        holder = route.get(index);
+                        route.set(index, route.get(index+2));
+                        route.set(index+2, holder);
+                    }
+                }
+            }
+            c.getGenes()[selectedRoute] = new ArrayList(route);
+        }
+        EvaluateFitness(Collections.singletonList(c), data);
+        if(c.getFitness()==Double.POSITIVE_INFINITY)
+            return c;
+        return ch;
+    }
     private void Localsearch() {
         Random rand = new Random(System.currentTimeMillis()+identity);
         Chromosome ch;
@@ -699,141 +761,12 @@ public class GeneticAlgorithm implements Runnable {
         base.set(g, keyB);
     }
 
-    private Chromosome CrossoverD(Chromosome p1, Chromosome p2, int r1, int r2) {
-        Chromosome c1 = p2, c1Temp;
-        Random rand = new Random(System.currentTimeMillis()+identity);
-        ArrayList[] p1Routes, c1Routes;
-        ArrayList<String> selectRoute, route, tempRoute1,
-                tempRoute2, currentRoute1, currentRoute2, bestroute1, bestroute2;
-        LinkedHashSet<String> route1;
-        int bestRoute1Index = 0, bestRoute2Index = 0;
-        String patient;
-        Patient p;
-        double bestCost;
-        selectRoute = new ArrayList(p2.getGenes()[r1]);
-        selectRoute.addAll(p1.getGenes()[r2]);
-        p1Routes = p1.getGenes();
-        c1Routes = new ArrayList[p1.getGenes().length];
-        //removing patients of selected route from parent routes
-        for (int i = 0; i < p1Routes.length; i++) {
-            route = new ArrayList<>();
-            for (int j = 0; j < p1Routes[i].size(); j++) {
-                patient = (String) p1Routes[i].get(j);
-                if (!selectRoute.contains(patient)) {
-                    route.add(patient);
-                }
-            }
-            c1Routes[i] = new ArrayList<>(route);
-        }
-        // inserting removed route.
-        Collections.shuffle(selectRoute, rand);
-        route1 = new LinkedHashSet<>(selectRoute);
-
-        String service1, service2;
-        ArrayList<Integer> caregivers1, caregivers2;
-        //Testing
-//        for(ArrayList m: p1.getGenes()) {
-//            System.out.println(m);
-//        }
-//        System.out.println("----- i "+ route1);
-//        for(ArrayList m: c1Routes) {
-//            System.out.println(m);
-//        }
-        for (String s : route1) {
-            bestCost = Double.MAX_VALUE;
-            bestroute1 = null;
-            bestroute2 = null;
-            p = data.getPatients()[getIdOfObject(s)];
-            service1 = p.getRequired_caregivers()[0].getService();
-            if (p.getRequired_caregivers().length > 1) {
-                service2 = p.getRequired_caregivers()[1].getService();
-                caregivers1 = getQualifiedCaregiver(service1);
-                caregivers2 = getQualifiedCaregiver(service2);
-
-                for (int k = 0; k < c1Routes.length; k++) {
-                    if (caregivers1.contains(k)) {
-                        for (int l = 0; l < c1Routes.length; l++) {
-                            if (caregivers2.contains(l) && k != l) {
-
-                                for (int m = 0; m <= c1Routes[k].size(); m++) {
-                                    for (int n = 0; n <= c1Routes[l].size(); n++) {
-                                        if (noEvaluationConflicts(c1Routes[k], c1Routes[l], m, n)) {
-                                            tempRoute1 = new ArrayList<>(c1Routes[k]);
-                                            tempRoute2 = new ArrayList<>(c1Routes[l]);
-                                            tempRoute1.add(m, s);
-                                            tempRoute2.add(n, s);
-                                            currentRoute1 = c1Routes[k];
-                                            currentRoute2 = c1Routes[l];
-                                            c1Routes[k] = tempRoute1;
-                                            c1Routes[l] = tempRoute2;
-                                            c1Temp = new Chromosome(c1Routes, 0.0);
-                                            EvaluateFitness(Collections.singletonList(c1Temp), data);
-                                            if (c1Temp.getFitness() <= bestCost) {
-                                                bestCost = c1Temp.getFitness();
-                                                bestroute1 = tempRoute1;
-                                                bestroute2 = tempRoute2;
-                                                bestRoute1Index = k;
-                                                bestRoute2Index = l;
-                                                c1 = c1Temp;
-                                            }
-                                            c1Routes[k] = currentRoute1;
-                                            c1Routes[l] = currentRoute2;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                try {
-                    assert bestroute1 != null;
-                    c1Routes[bestRoute1Index] = new ArrayList<>(bestroute1);
-                    assert bestroute2 != null;
-                    c1Routes[bestRoute2Index] = new ArrayList<>(bestroute2);
-                } catch (Exception e) {
-                    System.out.println("Exception \n" + s);
-                    for (ArrayList m : c1Routes) {
-                        System.out.println(m);
-                    }
-                    System.out.println("Caregivers1" + caregivers1);
-                    System.out.println("Caregivers2" + caregivers2);
-                    throw new RuntimeException(e);
-                }
-
-            } else {
-                caregivers1 = getQualifiedCaregiver(service1);
-                for (int j = 0; j < c1Routes.length; j++) {
-                    if (caregivers1.contains(j)) {
-                        for (int k = 0; k <= c1Routes[j].size(); k++) {
-                            tempRoute1 = new ArrayList(c1Routes[j]);
-                            tempRoute1.add(k, s);
-                            currentRoute1 = c1Routes[j];
-                            c1Routes[j] = tempRoute1;
-                            c1Temp = new Chromosome(c1Routes, 0.0);
-                            EvaluateFitness(Collections.singletonList(c1Temp), data);
-                            if (c1Temp.getFitness() <= bestCost) {
-                                bestCost = c1Temp.getFitness();
-                                bestroute1 = tempRoute1;
-                                bestRoute1Index = j;
-                                c1 = c1Temp;
-                            }
-                            c1Routes[j] = currentRoute1;
-                        }
-                    }
-                }
-                assert bestroute1 != null;
-                c1Routes[bestRoute1Index] = new ArrayList<>(bestroute1);
-            }
-//            System.out.println("----- "+s);
-//            for(ArrayList m: c1Routes) {
-//                System.out.println(m);
-//            }
-        }
-        return c1;
-    }
-
 
     private boolean noEvaluationConflicts(ArrayList<String> c1Route, ArrayList<String> c2Route, int m, int n) {
+        return conflictCheck(c1Route, c2Route, m, n);
+    }
+
+    static boolean conflictCheck(ArrayList<String> c1Route, ArrayList<String> c2Route, int m, int n) {
         int index1;
         int index2;
         for (int i = 0; i < c1Route.size(); i++) {
@@ -847,6 +780,7 @@ public class GeneticAlgorithm implements Runnable {
         }
         return true;
     }
+
 
     private ArrayList<Integer> getQualifiedCaregiver(String service) {
         ArrayList<Integer> caregivers = new ArrayList<>();

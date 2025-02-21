@@ -6,41 +6,51 @@ import org.example.Data.Patient;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Random;
 
 import static org.example.GA.EvaluationFunction.EvaluateFitness;
 import static org.example.GA.EvaluationFunction.getIdOfObject;
 import static org.example.GA.GeneticAlgorithm.conflictCheck;
 
-public class BCRC_CrossoverTask implements Runnable {
+public class BCRCD_CrossoverTask implements Runnable {
     private final GeneticAlgorithm ga;
     private final int identity;
     private final float mutRate;
-    private final int r;
+    private final int r1;
+    private final int r2;
     private final Chromosome p1, p2;
     private final InstancesClass data;
 
-    public BCRC_CrossoverTask(GeneticAlgorithm ga, int identity, float mutRate, Chromosome p1, Chromosome p2, int r, InstancesClass data) {
+    public BCRCD_CrossoverTask(GeneticAlgorithm ga, int identity, float mutRate, Chromosome p1, Chromosome p2, int r1, int r2, InstancesClass data) {
         this.ga = ga;
         this.identity = identity;
         this.mutRate = mutRate;
+        this.r1 = r1;
+        this.r2 = r2;
         this.p1 = p1;
         this.p2 = p2;
-        this.r = r;
         this.data = data;
+    }
+
+    @Override
+    public void run() {
+        ga.getCrossoverChromosomes().add(Crossover());
     }
 
     private Chromosome Crossover() {
         Chromosome c1 = p2, c1Temp;
-        Random rand = new Random(System.currentTimeMillis()+identity);
+        Random rand = new Random(System.currentTimeMillis() + identity);
         ArrayList[] p1Routes, c1Routes;
-        ArrayList<String> selectRoute, route, route1, tempRoute1,
+        ArrayList<String> selectRoute, route, tempRoute1,
                 tempRoute2, currentRoute1, currentRoute2, bestroute1, bestroute2;
-        int  bestRoute1Index = 0, bestRoute2Index = 0;
+        LinkedHashSet<String> route1;
+        int bestRoute1Index = 0, bestRoute2Index = 0;
         String patient;
         Patient p;
         double bestCost;
-        selectRoute = new ArrayList(p2.getGenes()[r]);
+        selectRoute = new ArrayList(p2.getGenes()[r1]);
+        selectRoute.addAll(p1.getGenes()[r2]);
         p1Routes = p1.getGenes();
         c1Routes = new ArrayList[p1.getGenes().length];
         //removing patients of selected route from parent routes
@@ -55,10 +65,12 @@ public class BCRC_CrossoverTask implements Runnable {
             c1Routes[i] = new ArrayList<>(route);
         }
         // inserting removed route.
-        route1 = new ArrayList<>(selectRoute);
-        Collections.shuffle(route1, rand);
+        Collections.shuffle(selectRoute, rand);
+        route1 = new LinkedHashSet<>(selectRoute);
+
         String service1, service2;
         ArrayList<Integer> caregivers1, caregivers2;
+
         for (String s : route1) {
             bestCost = Double.MAX_VALUE;
             bestroute1 = null;
@@ -70,34 +82,37 @@ public class BCRC_CrossoverTask implements Runnable {
                 caregivers1 = getQualifiedCaregiver(service1);
                 caregivers2 = getQualifiedCaregiver(service2);
 
-                for (int k = 0; k < c1Routes.length; k++) {
-                    if (caregivers1.contains(k)) {
-                        for (int l = 0; l < c1Routes.length; l++) {
-                            if (caregivers2.contains(l) && k != l) {
-                                for (int m = 0; m <= c1Routes[k].size(); m++) {
-                                    for (int n = 0; n <= c1Routes[l].size(); n++) {
-                                        if (noEvaluationConflicts(c1Routes[k], c1Routes[l], m, n)) {
-                                            tempRoute1 = new ArrayList<>(c1Routes[k]);
-                                            tempRoute2 = new ArrayList<>(c1Routes[l]);
-                                            tempRoute1.add(m, s);
-                                            tempRoute2.add(n, s);
-                                            currentRoute1 = c1Routes[k];
-                                            currentRoute2 = c1Routes[l];
-                                            c1Routes[k] = tempRoute1;
-                                            c1Routes[l] = tempRoute2;
-                                            c1Temp = new Chromosome(c1Routes, 0.0);
-                                            EvaluateFitness(Collections.singletonList(c1Temp), data);
-                                            if (c1Temp.getFitness() < bestCost) {
-                                                bestCost = c1Temp.getFitness();
-                                                bestroute1 = tempRoute1;
-                                                bestroute2 = tempRoute2;
-                                                bestRoute1Index = k;
-                                                bestRoute2Index = l;
-                                                c1 = c1Temp;
-                                            }
-                                            c1Routes[k] = currentRoute1;
-                                            c1Routes[l] = currentRoute2;
+//                for (int k = 0; k < c1Routes.length; k++) {
+//                    if (caregivers1.contains(k)) {
+//                        for (int l = 0; l < c1Routes.length; l++) {
+//                            if (caregivers2.contains(l) && k != l) {
+                for (int k : caregivers1) {
+                    for (int l : caregivers2) {
+                        if (k != l) {
+
+                            for (int m = 0; m <= c1Routes[k].size(); m++) {
+                                for (int n = 0; n <= c1Routes[l].size(); n++) {
+                                    if (noEvaluationConflicts(c1Routes[k], c1Routes[l], m, n)) {
+                                        tempRoute1 = new ArrayList<>(c1Routes[k]);
+                                        tempRoute2 = new ArrayList<>(c1Routes[l]);
+                                        tempRoute1.add(m, s);
+                                        tempRoute2.add(n, s);
+                                        currentRoute1 = c1Routes[k];
+                                        currentRoute2 = c1Routes[l];
+                                        c1Routes[k] = tempRoute1;
+                                        c1Routes[l] = tempRoute2;
+                                        c1Temp = new Chromosome(c1Routes, 0.0);
+                                        EvaluateFitness(Collections.singletonList(c1Temp), data);
+                                        if (c1Temp.getFitness() <= bestCost) {
+                                            bestCost = c1Temp.getFitness();
+                                            bestroute1 = tempRoute1;
+                                            bestroute2 = tempRoute2;
+                                            bestRoute1Index = k;
+                                            bestRoute2Index = l;
+                                            c1 = c1Temp;
                                         }
+                                        c1Routes[k] = currentRoute1;
+                                        c1Routes[l] = currentRoute2;
                                     }
                                 }
                             }
@@ -130,7 +145,7 @@ public class BCRC_CrossoverTask implements Runnable {
                             c1Routes[j] = tempRoute1;
                             c1Temp = new Chromosome(c1Routes, 0.0);
                             EvaluateFitness(Collections.singletonList(c1Temp), data);
-                            if (c1Temp.getFitness() < bestCost) {
+                            if (c1Temp.getFitness() <= bestCost) {
                                 bestCost = c1Temp.getFitness();
                                 bestroute1 = tempRoute1;
                                 bestRoute1Index = j;
@@ -143,9 +158,8 @@ public class BCRC_CrossoverTask implements Runnable {
                 assert bestroute1 != null;
                 c1Routes[bestRoute1Index] = new ArrayList<>(bestroute1);
             }
-
         }
-        if(mutRate>0){
+        if (mutRate > 0) {
             if (Math.random() < mutRate) {
                 c1 = ga.mutationSelection(c1);
             }
@@ -162,12 +176,9 @@ public class BCRC_CrossoverTask implements Runnable {
         }
         return caregivers;
     }
+
     private boolean noEvaluationConflicts(ArrayList<String> c1Route, ArrayList<String> c2Route, int m, int n) {
         return conflictCheck(c1Route, c2Route, m, n);
     }
 
-    @Override
-    public void run() {
-        ga.getCrossoverChromosomes().add(Crossover());
-    }
 }
