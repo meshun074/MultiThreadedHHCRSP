@@ -119,19 +119,11 @@ public class BCRCD_CrossoverTask implements Runnable {
                         }
                     }
                 }
-                try {
-                    assert bestroute1 != null;
+                if (bestroute1 != null) {
                     c1Routes[bestRoute1Index] = new ArrayList<>(bestroute1);
-                    assert bestroute2 != null;
+                }
+                if (bestroute2 != null) {
                     c1Routes[bestRoute2Index] = new ArrayList<>(bestroute2);
-                } catch (Exception e) {
-                    System.out.println("Exception \n" + s);
-                    for (ArrayList m : c1Routes) {
-                        System.out.println(m);
-                    }
-                    System.out.println("Caregivers1" + caregivers1);
-                    System.out.println("Caregivers2" + caregivers2);
-                    throw new RuntimeException(e);
                 }
 
             } else {
@@ -155,8 +147,9 @@ public class BCRCD_CrossoverTask implements Runnable {
                         }
                     }
                 }
-                assert bestroute1 != null;
-                c1Routes[bestRoute1Index] = new ArrayList<>(bestroute1);
+                if (bestroute1 != null) {
+                    c1Routes[bestRoute1Index] = new ArrayList<>(bestroute1);
+                }
             }
         }
         if (mutRate > 0) {

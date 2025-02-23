@@ -98,8 +98,8 @@ public class Main {
     private static List<Parameters> getParametersList() {
         char[] selectType = {'r','T','R'};
         String[] crossType = {"BC", "BD", "MP"};
-        String[] mutType = {"M"};
-        //-1f for localsearch
+        String[] mutType = {"M","M1"};
+        //-1f for local search
         float[] mutRate = {0.0f, 0.05f ,0.1f, -1f};
         List<Parameters> parameters = new ArrayList<>();
         for (char s: selectType){

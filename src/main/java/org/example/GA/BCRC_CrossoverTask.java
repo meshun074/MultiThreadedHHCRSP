@@ -32,11 +32,11 @@ public class BCRC_CrossoverTask implements Runnable {
 
     private Chromosome Crossover() {
         Chromosome c1 = p2, c1Temp;
-        Random rand = new Random(System.currentTimeMillis()+identity);
+        Random rand = new Random(System.currentTimeMillis() + identity);
         ArrayList[] p1Routes, c1Routes;
         ArrayList<String> selectRoute, route, route1, tempRoute1,
                 tempRoute2, currentRoute1, currentRoute2, bestroute1, bestroute2;
-        int  bestRoute1Index = 0, bestRoute2Index = 0;
+        int bestRoute1Index = 0, bestRoute2Index = 0;
         String patient;
         Patient p;
         double bestCost;
@@ -70,53 +70,45 @@ public class BCRC_CrossoverTask implements Runnable {
                 caregivers1 = getQualifiedCaregiver(service1);
                 caregivers2 = getQualifiedCaregiver(service2);
 
-                for (int k = 0; k < c1Routes.length; k++) {
-                    if (caregivers1.contains(k)) {
-                        for (int l = 0; l < c1Routes.length; l++) {
-                            if (caregivers2.contains(l) && k != l) {
-                                for (int m = 0; m <= c1Routes[k].size(); m++) {
-                                    for (int n = 0; n <= c1Routes[l].size(); n++) {
-                                        if (noEvaluationConflicts(c1Routes[k], c1Routes[l], m, n)) {
-                                            tempRoute1 = new ArrayList<>(c1Routes[k]);
-                                            tempRoute2 = new ArrayList<>(c1Routes[l]);
-                                            tempRoute1.add(m, s);
-                                            tempRoute2.add(n, s);
-                                            currentRoute1 = c1Routes[k];
-                                            currentRoute2 = c1Routes[l];
-                                            c1Routes[k] = tempRoute1;
-                                            c1Routes[l] = tempRoute2;
-                                            c1Temp = new Chromosome(c1Routes, 0.0);
-                                            EvaluateFitness(Collections.singletonList(c1Temp), data);
-                                            if (c1Temp.getFitness() < bestCost) {
-                                                bestCost = c1Temp.getFitness();
-                                                bestroute1 = tempRoute1;
-                                                bestroute2 = tempRoute2;
-                                                bestRoute1Index = k;
-                                                bestRoute2Index = l;
-                                                c1 = c1Temp;
-                                            }
-                                            c1Routes[k] = currentRoute1;
-                                            c1Routes[l] = currentRoute2;
+                for (int k : caregivers1) {
+                    for (int l : caregivers2) {
+                        if (k != l) {
+
+                            for (int m = 0; m <= c1Routes[k].size(); m++) {
+                                for (int n = 0; n <= c1Routes[l].size(); n++) {
+                                    if (noEvaluationConflicts(c1Routes[k], c1Routes[l], m, n)) {
+                                        tempRoute1 = new ArrayList<>(c1Routes[k]);
+                                        tempRoute2 = new ArrayList<>(c1Routes[l]);
+                                        tempRoute1.add(m, s);
+                                        tempRoute2.add(n, s);
+                                        currentRoute1 = c1Routes[k];
+                                        currentRoute2 = c1Routes[l];
+                                        c1Routes[k] = tempRoute1;
+                                        c1Routes[l] = tempRoute2;
+                                        c1Temp = new Chromosome(c1Routes, 0.0);
+                                        EvaluateFitness(Collections.singletonList(c1Temp), data);
+                                        if (c1Temp.getFitness() < bestCost) {
+                                            bestCost = c1Temp.getFitness();
+                                            bestroute1 = tempRoute1;
+                                            bestroute2 = tempRoute2;
+                                            bestRoute1Index = k;
+                                            bestRoute2Index = l;
+                                            c1 = c1Temp;
                                         }
+                                        c1Routes[k] = currentRoute1;
+                                        c1Routes[l] = currentRoute2;
                                     }
                                 }
                             }
+
                         }
                     }
                 }
-                try {
-                    assert bestroute1 != null;
+                if (bestroute1 != null) {
                     c1Routes[bestRoute1Index] = new ArrayList<>(bestroute1);
-                    assert bestroute2 != null;
+                }
+                if (bestroute2 != null) {
                     c1Routes[bestRoute2Index] = new ArrayList<>(bestroute2);
-                } catch (Exception e) {
-                    System.out.println("Exception \n" + s);
-                    for (ArrayList m : c1Routes) {
-                        System.out.println(m);
-                    }
-                    System.out.println("Caregivers1" + caregivers1);
-                    System.out.println("Caregivers2" + caregivers2);
-                    throw new RuntimeException(e);
                 }
 
             } else {
@@ -140,12 +132,13 @@ public class BCRC_CrossoverTask implements Runnable {
                         }
                     }
                 }
-                assert bestroute1 != null;
-                c1Routes[bestRoute1Index] = new ArrayList<>(bestroute1);
+                if (bestroute1 != null) {
+                    c1Routes[bestRoute1Index] = new ArrayList<>(bestroute1);
+                }
             }
 
         }
-        if(mutRate>0){
+        if (mutRate > 0) {
             if (Math.random() < mutRate) {
                 c1 = ga.mutationSelection(c1);
             }
