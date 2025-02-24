@@ -29,13 +29,13 @@ public class Main {
             //for parameter settings
             for (Parameters p : parameters){
                 //for instance size
-                for (int x = 0; x <= 0; x++) {
+                for (int x = 4; x <= 4; x++) {
                     String instanceName = Instances[x];
                     //for instance type
                     for (int y = 1; y <= 1; y++) {
                         //Read dataset
                         startTime = System.currentTimeMillis();
-                        PrintStream fileout = new PrintStream("src/main/java/org/example/Result_" + instanceName + "_" + y +"_"+p.selectionTechnique()+
+                        PrintStream fileout = new PrintStream("src/main/java/org/example/Results/Result_" + instanceName + "_" + y +"_"+p.selectionTechnique()+
                                 "_"+p.crossoverType()+"_"+p.mutationType()+"_"+p.mutationRate()+".txt");
                         System.setOut(fileout);
                         instance = ReadData.read(new File("src/main/java/org/example/Data/instance/" + instanceName + "_" + y + ".json"));
@@ -100,7 +100,7 @@ public class Main {
         String[] crossType = {"BC", "BD", "MP"};
         String[] mutType = {"M","M1"};
         //-1f for local search
-        float[] mutRate = {0.0f, 0.05f ,0.1f, -1f};
+        float[] mutRate = {0.0f,0.05f,0.1f, -1f};
         List<Parameters> parameters = new ArrayList<>();
         for (char s: selectType){
             for (String c: crossType){
@@ -109,6 +109,7 @@ public class Main {
                         if(c.equals("MP")&& n == -1f)
                             continue;
                         parameters.add(new Parameters(s,c,m,n));
+                        System.out.println(s+" , "+c+","+m+","+n);
                     }
                 }
             }
