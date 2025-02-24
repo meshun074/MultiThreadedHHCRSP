@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 
 import static org.example.GA.EvaluationFunction.EvaluateFitness;
 import static org.example.GA.EvaluationFunction.getIdOfObject;
+import static org.example.Main.startTime;
 
 public class GeneticAlgorithm implements Runnable {
     private final int popSize;
@@ -825,11 +826,12 @@ public class GeneticAlgorithm implements Runnable {
     private void performanceUpdate(List<Chromosome> population, int iterations) {
         sortPopulation(population);
         double averageFitness = population.stream().mapToDouble(Chromosome::getFitness).sum();
-        System.out.println("Index " + identity +" Iteration " +iterations + " Best fitness: " + population.getFirst().getFitness() + " Average fitness: " + averageFitness/popSize);
+        long time = (System.currentTimeMillis() - startTime) / (1000);
+        System.out.println("Time at: " + time + " Index " + identity +" Iteration " +iterations + " Best fitness: " + population.getFirst().getFitness() + " Average fitness: " + averageFitness/popSize );
         if (iterations == gen) {
             population.getFirst().showSolution(identity);
             bestChromosome = population.getFirst();
-            System.out.println("Index " + identity +" Iteration " + iterations + " Fitness: " + bestChromosome.getFitness() + " Total Distance: " + bestChromosome.getTotalTravelCost() + " Total Tardiness: " + bestChromosome.getTotalTardiness() + " Highest Tardiness: " + bestChromosome.getHighestTardiness());
+            System.out.println( "Time at: " + time+" Index " + identity +" Iteration " + iterations + " Fitness: " + bestChromosome.getFitness() + " Total Distance: " + bestChromosome.getTotalTravelCost() + " Total Tardiness: " + bestChromosome.getTotalTardiness() + " Highest Tardiness: " + bestChromosome.getHighestTardiness());
         }
     }
 
