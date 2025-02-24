@@ -4,414 +4,51 @@ import org.example.Data.Caregiver;
 import org.example.Data.InstancesClass;
 import org.example.Data.Patient;
 
-import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 import static org.example.GA.EvaluationFunction.EvaluateFitness;
 import static org.example.GA.EvaluationFunction.getIdOfObject;
+import static org.example.GA.GeneticAlgorithm.conflictCheck;
+import static org.example.GA.GeneticAlgorithm.swapPatients;
 
-public class GeneticAlgorithm implements Runnable {
-    private final int popSize;
-    private final int gen;
-    private final int identity;
-    private final int LSRate;
-    private final int TSRate;
-    private final char selectTechnique;
-    private final String crossType;
-    private final String mutType;
-    private final int numOfEliteSearch;
-    private final float elitismRate;
-    private final float mutRate;
+
+public class LocalSearchThread implements Runnable{
+    private GeneticAlgorithm ga;
+    private Chromosome ch;
+    private final Random rand;
+    private final int r;
+    private final ArrayList<Integer> searchedPatients;
     private final InstancesClass data;
-    private Chromosome bestChromosome;
-    private List<Chromosome> nextPopulation;
-    private List<Chromosome> newPopulation;
-    public static List<Chromosome> bestChromosomes;
-    private List<Chromosome> crossoverChromosomes;
-    private final double[] popProbabilities;
-    private Map<Integer, Chromosome> LSChromosomes;
 
-    public GeneticAlgorithm(int identity, int numOfEliteSearch, int LSRate, int TSRate, int popSize, int gen,   float elitismRate,  Parameters p, InstancesClass data) {
-        this.identity = identity;
-        this.numOfEliteSearch = numOfEliteSearch;
-        this.LSRate = LSRate;
-        this.TSRate = TSRate;
-        this.popSize = popSize;
-        this.gen = gen;
-        selectTechnique = p.selectionTechnique();
-        mutType = p.mutationType();
-        crossType = p.crossoverType();
-        this.elitismRate = elitismRate;
-        mutRate = p.mutationRate();
+    public LocalSearchThread(GeneticAlgorithm ga, Chromosome ch, Random rand, int r, InstancesClass data) {
+        this.ga = ga;
+        this.ch = ch;
+        this.rand = rand;
+        this.r = r;
         this.data = data;
-        popProbabilities = new double[popSize];
+        searchedPatients = new ArrayList<>();
     }
 
-    public Chromosome start() {
-        bestChromosome = null;
-        //initialize and evaluate fitness of chromosome
-        newPopulation = Population.initialize(popSize, data.getPatients().length);
-        //Sort population
-        sortPopulation(newPopulation);
-        //printing output
-        performanceUpdate(newPopulation, 0);
-        for (int i = 1; i <= gen; i++) {
-            maintainElitism();
-            //select appropriate crossover;
-            crossoverSelection();
-            //Local search();
-            if(!crossType.equals("MP")&&mutRate==-1f){
-                if (i % LSRate == 0)
-                    LocalSearch();
-            }
-            updatePopulation1();
-            performanceUpdate(newPopulation, i);
-        }
-        return bestChromosome;
-    }
-
-    public List<Chromosome> getCrossoverChromosomes() {
-        return crossoverChromosomes;
-    }
-
-    private void updatePopulation1() {
-        newPopulation.clear();
-        newPopulation.addAll(nextPopulation);
-    }
-
-    private void crossoverSelection(){
-        if(crossType.equals("MP"))
-            MultiParentBCRCD();
-        else if(crossType.equals("BD"))
-            bestCostRouteCrossoverDestruction();
-        else
-            bestCostRouteCrossover();
-    }
-    private void bestCostRouteCrossover() {
-        Random rand = new Random(System.currentTimeMillis()+identity);
-        Chromosome p1, p2;
-        int r1, r2;
-        int count;
-        int index =nextPopulation.size();
-        ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        crossoverChromosomes = Collections.synchronizedList(new ArrayList<>());
-        List<Callable<Void>> crossoverTasks = new ArrayList<>();
-        if(selectTechnique=='R')
-            rouletteWheelSetup();
-        while (index < popSize) {
-            p1 = newPopulation.get(selectionTechnique(rand));
-            count = 0;
+    private Chromosome localSearch(){
+        Chromosome newCh;
+        int sp;
+        do {
+            newCh = ch;
             do {
-                p2 = newPopulation.get(selectionTechnique(rand));
-                count++;
-            }
-            while (count < 10 && p2.toString().equals(p1.toString()));
-            do {
-                r1 = rand.nextInt(p2.getGenes().length);
-                r2 = rand.nextInt(p1.getGenes().length);
-            }while (p1.getGenes()[r2].isEmpty() && p2.getGenes()[r1].isEmpty());
-
-            Chromosome finalP1 = p1;
-            Chromosome finalP2 = p2;
-            int finalR1 = r1;
-            int finalR2 = r2;
-            crossoverTasks.add(() -> {
-                new BCRC_CrossoverTask(this,identity,mutRate,finalP1, finalP2, finalR1,data).run();
-                return null;
-            });
-            index++;
-
-
-            if (index < popSize) {
-                crossoverTasks.add(() -> {
-                    new BCRC_CrossoverTask(this,identity,mutRate,finalP2, finalP1, finalR2,data).run();
-                    return null;
-                });
-                index++;
-            }
-        }
-        invokeThreads(service, crossoverTasks);
+                sp = rand.nextInt(data.getPatients().length);
+            } while (searchedPatients.contains(sp));
+            ch = search(ch, sp);
+            searchedPatients.add(sp);
+        } while (ch.getFitness() < newCh.getFitness() || searchedPatients.size() < Math.ceilDiv(data.getPatients().length, 4));
+//        newPopulation.set(r, newCh);
+        return newCh;
     }
-
-    private void invokeThreads(ExecutorService service, List<Callable<Void>> crossoverTasks) {
-        try {
-            service.invokeAll(crossoverTasks);
-            List<Chromosome> xChromosomes = crossoverChromosomes;
-            synchronized (xChromosomes){
-                nextPopulation.addAll(xChromosomes);
-            }
-        }catch (InterruptedException e){
-            Thread.currentThread().interrupt();
-        }finally {
-            service.shutdown();
-        }
+    @Override
+    public void run() {
+        ga.getLSChromosomes().put(r,localSearch());
     }
-
-    private void bestCostRouteCrossoverDestruction() {
-        Random rand = new Random(System.currentTimeMillis()+identity);
-        Chromosome p1, p2;
-        int r1, r2;
-        int count;
-        int index =nextPopulation.size();
-        ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        crossoverChromosomes = Collections.synchronizedList(new ArrayList<>());
-        List<Callable<Void>> crossoverTasks = new ArrayList<>();
-        if(selectTechnique=='R')
-            rouletteWheelSetup();
-        while (index < popSize) {
-            p1 = newPopulation.get(selectionTechnique(rand));
-            count = 0;
-            do {
-                p2 = newPopulation.get(selectionTechnique(rand));
-                count++;
-            }
-            while (count < 10 && p2.toString().equals(p1.toString()));
-            do {
-                r1 = rand.nextInt(p2.getGenes().length);
-                r2 = rand.nextInt(p1.getGenes().length);
-            }while (p1.getGenes()[r2].isEmpty() && p2.getGenes()[r1].isEmpty());
-
-            Chromosome finalP1 = p1;
-            Chromosome finalP2 = p2;
-            int finalR1 = r1;
-            int finalR2 = r2;
-
-            crossoverTasks.add(() -> {
-                new BCRCD_CrossoverTask(this,identity,mutRate,finalP1, finalP2, finalR1,finalR2, data).run();
-                return null;
-            });
-            index++;
-
-
-            if (index < popSize) {
-                crossoverTasks.add(() -> {
-                    new BCRCD_CrossoverTask(this,identity,mutRate,finalP2, finalP1, finalR2,finalR1, data).run();
-                    return null;
-                });
-                index++;
-            }
-        }
-        invokeThreads(service, crossoverTasks);
-    }
-
-    private void MultiParentBCRCD() {
-        Random rand = new Random(System.currentTimeMillis()+identity);
-        Chromosome p1, p2, p3;
-        int r1, r2, r3;
-        int count;
-        int index =nextPopulation.size();
-        List<String> uniqueParents = new ArrayList<>();
-        ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        crossoverChromosomes = Collections.synchronizedList(new ArrayList<>());
-        List<Callable<Void>> crossoverTasks = new ArrayList<>();
-        if(selectTechnique=='R')
-            rouletteWheelSetup();
-        while (index < popSize) {
-            p1 = newPopulation.get(selectionTechnique(rand));
-            uniqueParents.add(p1.toString());
-            count = 0;
-            do {
-                p2 = newPopulation.get(selectionTechnique(rand));
-                count++;
-            }
-            while (count < 10 && uniqueParents.contains(p2.toString()));
-
-            count = 0;
-            do {
-                p3 = newPopulation.get(selectionTechnique(rand));
-                count++;
-            }
-            while (count < 10 && uniqueParents.contains(p3.toString()));
-            do {
-                r1 = rand.nextInt(p2.getGenes().length);
-                r2 = rand.nextInt(p3.getGenes().length);
-                r3 = rand.nextInt(p1.getGenes().length);
-            } while (p1.getGenes()[r3].isEmpty() && p2.getGenes()[r1].isEmpty() && p3.getGenes()[r2].isEmpty());
-
-            Chromosome finalP1 = p1;
-            Chromosome finalP2 = p2;
-            Chromosome finalP3 = p3;
-            int finalR1 = r1;
-            int finalR2 = r2;
-            int finalR3 = r3;
-            crossoverTasks.add(() -> {
-                new MPBCRCD_CrossoverTask(this,identity,mutRate,finalP1, finalP2, finalP3, finalR1, finalR2,finalR3,data).run();
-                return null;
-            });
-            index++;
-
-
-            if (index < popSize) {
-                crossoverTasks.add(() -> {
-                    new MPBCRCD_CrossoverTask(this,identity,mutRate,finalP2, finalP3, finalP1, finalR2, finalR3, finalR1,data).run();
-                    return null;
-                });
-                index++;
-            }
-            if (index < popSize) {
-                crossoverTasks.add(() -> {
-                    new MPBCRCD_CrossoverTask( this,identity,mutRate,finalP3, finalP1, finalP2,  finalR3, finalR1, finalR2, data).run();
-                    return null;
-                });
-                index++;
-            }
-        }
-        invokeThreads(service, crossoverTasks);
-    }
-    private int selectionTechnique(Random rand) {
-        if (selectTechnique=='W'){
-            return rouletteWheelSelection();
-        }else if (selectTechnique=='T'){
-            return tournamentSelection(TSRate);
-        }else
-            return rand.nextInt(popSize);
-    }
-
-    private int tournamentSelection(int k) {
-        ArrayList<Integer> list = new ArrayList<>();
-        Random rand = new Random(System.currentTimeMillis()+identity);
-        for (int i = 0; i < k; i++) {
-            list.add(rand.nextInt(popSize));
-        }
-        if (Math.random() < 0.8) {
-            list.sort(Comparator.comparingInt(Integer::intValue));
-            return list.getFirst();
-        }
-        return list.get(rand.nextInt(list.size()));
-    }
-    private void rouletteWheelSetup(){
-        double total = 0.0;
-        for (int i = 0; i < newPopulation.size(); i++){
-            popProbabilities[i] = 1 / newPopulation.get(i).getFitness();
-            total+=popProbabilities[i];
-        }
-        for(int i = 0; i < popProbabilities.length; i++){
-            popProbabilities[i] = popProbabilities[i] / total;
-        }
-    }
-    private int rouletteWheelSelection(){
-        double rand = Math.random();
-      for(int i = 0; i < newPopulation.size(); i++){
-          if(rand<popProbabilities[i])
-              return i;
-      }
-      return (int)(rand*popSize);
-    }
-
-    public Chromosome mutationSelection(Chromosome c){
-        if(mutType.equals("M"))
-            return mutation(c);
-        else return mutation1(c);
-    }
-    private Chromosome mutation(Chromosome c){
-        Random rand = new Random(System.currentTimeMillis()+identity);
-        Chromosome newCh = search(c, rand.nextInt(data.getPatients().length));
-        if(newCh.getFitness()<c.getFitness())
-            return newCh;
-        return c;
-    }
-    private Chromosome mutation1(Chromosome ch){
-        Random rand = new Random(System.currentTimeMillis()+identity);
-        Chromosome c = new Chromosome(ch.getGenes(),ch.getFitness(),true);
-        int selectedRoute = rand.nextInt(c.getGenes().length);
-        ArrayList<String> route  = new ArrayList<>(c.getGenes()[selectedRoute]);
-        int index;
-        int limit;
-        String holder;
-        if(route.size()>1){
-            if(route.size()==2){
-                route.reversed();
-            }else {
-                index = rand.nextInt(route.size());
-                limit = route.size()-index;
-                if (limit==1){
-                    if(index==1){
-                        holder = route.getFirst();
-                        route.set(0,route.get(index));
-                        route.set(index, holder);
-                    }else{
-                        if(rand.nextBoolean()){
-                            holder = route.get(index);
-                            route.set(index, route.get(index-1));
-                            route.set(index-1, holder);
-                        }else {
-                            holder = route.get(index);
-                            route.set(index, route.get(index-2));
-                            route.set(index-2, holder);
-                        }
-                    }
-                }else if(limit==2){
-                    holder = route.get(index);
-                    route.set(index,route.get(index+1));
-                    route.set(index+1, holder);
-                }else {
-                    if(rand.nextBoolean()){
-                        holder = route.get(index);
-                        route.set(index, route.get(index+1));
-                        route.set(index+1, holder);
-                    }else {
-                        holder = route.get(index);
-                        route.set(index, route.get(index+2));
-                        route.set(index+2, holder);
-                    }
-                }
-            }
-            c.getGenes()[selectedRoute] = new ArrayList(route);
-        }
-        EvaluateFitness(Collections.singletonList(c), data);
-        if(c.getFitness()==Double.POSITIVE_INFINITY)
-            return c;
-        return ch;
-    }
-
-    public Map<Integer, Chromosome> getLSChromosomes() {
-        return LSChromosomes;
-    }
-
-    private void LocalSearch() {
-        Random rand = new Random(System.currentTimeMillis()+identity);
-        Chromosome ch;
-        int r;
-        ArrayList<Integer> keys = new ArrayList<>();
-
-        ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        HashMap<Integer, Chromosome> newMap = new HashMap<>();
-        LSChromosomes =Collections.synchronizedMap(newMap);
-        List<Callable<Void>> LSTasks = new ArrayList<>();
-        for (int i = 1; i <= numOfEliteSearch; i++) {
-            r = rand.nextInt((int) (popSize * elitismRate));
-            while (keys.contains(r)) {
-                r = rand.nextInt(popSize);
-            }
-            keys.add(r);
-            ch = newPopulation.get(r);
-//            System.out.println("Chromosome before: "+ r+" -"+ ch.getFitness());
-
-            Chromosome finalCh = ch;
-            int finalR = r;
-            LSTasks.add(() -> {
-                new LocalSearchThread(this, finalCh,rand, finalR, data).run();
-                return null;
-            });
-        }
-        try {
-            service.invokeAll(LSTasks);
-            Map<Integer, Chromosome> sChromosomes = LSChromosomes;
-            synchronized (sChromosomes){
-                for(Map.Entry<Integer, Chromosome> entry : sChromosomes.entrySet()){
-                    newPopulation.set(entry.getKey(), entry.getValue());
-//                    System.out.println("Chromosome after: "+ entry.getKey()+" -"+ entry.getValue().getFitness());
-                }
-            }
-        }catch (InterruptedException e){
-            Thread.currentThread().interrupt();
-        }finally {
-            service.shutdown();
-        }
-    }
-
     public Chromosome search(Chromosome ch, int sp) {
         Chromosome tempCh;
         Chromosome bestCh = ch;
@@ -772,34 +409,6 @@ public class GeneticAlgorithm implements Runnable {
         }
         return bestCh;
     }
-
-    public static void swapPatients(ArrayList<String> base, int b, int g) {
-        String keyB = base.get(b);
-        base.set(b, base.get(g));
-        base.set(g, keyB);
-    }
-
-
-    private boolean noEvaluationConflicts(ArrayList<String> c1Route, ArrayList<String> c2Route, int m, int n) {
-        return conflictCheck(c1Route, c2Route, m, n);
-    }
-
-    static boolean conflictCheck(ArrayList<String> c1Route, ArrayList<String> c2Route, int m, int n) {
-        int index1;
-        int index2;
-        for (int i = 0; i < c1Route.size(); i++) {
-            if (c2Route.contains(c1Route.get(i))) {
-                index1 = c1Route.indexOf(c1Route.get(i));
-                index2 = c2Route.indexOf(c1Route.get(i));
-                if (m <= index1 && n > index2 || m > index1 && n <= index2) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-
     private ArrayList<Integer> getQualifiedCaregiver(String service) {
         ArrayList<Integer> caregivers = new ArrayList<>();
         for (Caregiver c : data.getCaregivers()) {
@@ -809,32 +418,7 @@ public class GeneticAlgorithm implements Runnable {
         }
         return caregivers;
     }
-
-    private void maintainElitism() {
-        nextPopulation = new ArrayList<>();
-        sortPopulation(newPopulation);
-        for (int i = 0; i < popSize * elitismRate; i++) {
-            nextPopulation.add(newPopulation.get(i));
-        }
-    }
-
-    private void sortPopulation(List<Chromosome> population) {
-        population.sort(Comparator.comparingDouble(Chromosome::getFitness));
-    }
-
-    private void performanceUpdate(List<Chromosome> population, int iterations) {
-        sortPopulation(population);
-        double averageFitness = population.stream().mapToDouble(Chromosome::getFitness).sum();
-        System.out.println("Index " + identity +" Iteration " +iterations + " Best fitness: " + population.getFirst().getFitness() + " Average fitness: " + averageFitness/popSize);
-        if (iterations == gen) {
-            population.getFirst().showSolution(identity);
-            bestChromosome = population.getFirst();
-            System.out.println("Index " + identity +" Iteration " + iterations + " Fitness: " + bestChromosome.getFitness() + " Total Distance: " + bestChromosome.getTotalTravelCost() + " Total Tardiness: " + bestChromosome.getTotalTardiness() + " Highest Tardiness: " + bestChromosome.getHighestTardiness());
-        }
-    }
-
-    @Override
-    public void run() {
-        bestChromosomes.add(start());
+    private boolean noEvaluationConflicts(ArrayList<String> c1Route, ArrayList<String> c2Route, int m, int n) {
+        return conflictCheck(c1Route, c2Route, m, n);
     }
 }

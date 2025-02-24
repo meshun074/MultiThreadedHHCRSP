@@ -96,7 +96,7 @@ public class Main {
     }
 
     private static List<Parameters> getParametersList() {
-        char[] selectType = {'r','T','R'};
+        char[] selectType = {'r','T','W'};
         String[] crossType = {"BC", "BD", "MP"};
         String[] mutType = {"M","M1"};
         //-1f for local search
@@ -106,6 +106,8 @@ public class Main {
             for (String c: crossType){
                 for (String m : mutType){
                     for (float n : mutRate){
+                        if(c.equals("MP")&& n == -1f)
+                            continue;
                         parameters.add(new Parameters(s,c,m,n));
                     }
                 }
