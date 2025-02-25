@@ -40,7 +40,7 @@ public class BCRCD_CrossoverTask implements Runnable {
 
     private Chromosome Crossover() {
         Chromosome c1 = p2, c1Temp;
-        Random rand = new Random(System.currentTimeMillis() + identity);
+        Random rand = new Random(System.currentTimeMillis());
         ArrayList[] p1Routes, c1Routes;
         ArrayList<String> selectRoute, route, tempRoute1,
                 tempRoute2, currentRoute1, currentRoute2, bestroute1, bestroute2;

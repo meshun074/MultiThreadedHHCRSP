@@ -91,7 +91,7 @@ public class GeneticAlgorithm implements Runnable {
             bestCostRouteCrossover();
     }
     private void bestCostRouteCrossover() {
-        Random rand = new Random(System.currentTimeMillis()+identity);
+        Random rand = new Random(System.currentTimeMillis());
         Chromosome p1, p2;
         int r1, r2;
         int count;
@@ -151,7 +151,7 @@ public class GeneticAlgorithm implements Runnable {
     }
 
     private void bestCostRouteCrossoverDestruction() {
-        Random rand = new Random(System.currentTimeMillis()+identity);
+        Random rand = new Random(System.currentTimeMillis());
         Chromosome p1, p2;
         int r1, r2;
         int count;
@@ -198,7 +198,7 @@ public class GeneticAlgorithm implements Runnable {
     }
 
     private void MultiParentBCRCD() {
-        Random rand = new Random(System.currentTimeMillis()+identity);
+        Random rand = new Random(System.currentTimeMillis());
         Chromosome p1, p2, p3;
         int r1, r2, r3;
         int count;
@@ -272,7 +272,7 @@ public class GeneticAlgorithm implements Runnable {
 
     private int tournamentSelection(int k) {
         ArrayList<Integer> list = new ArrayList<>();
-        Random rand = new Random(System.currentTimeMillis()+identity);
+        Random rand = new Random(System.currentTimeMillis());
         for (int i = 0; i < k; i++) {
             list.add(rand.nextInt(popSize));
         }
@@ -307,14 +307,14 @@ public class GeneticAlgorithm implements Runnable {
         else return mutation1(c);
     }
     private Chromosome mutation(Chromosome c){
-        Random rand = new Random(System.currentTimeMillis()+identity);
+        Random rand = new Random(System.currentTimeMillis());
         Chromosome newCh = search(c, rand.nextInt(data.getPatients().length));
         if(newCh.getFitness()<c.getFitness())
             return newCh;
         return c;
     }
     private Chromosome mutation1(Chromosome ch){
-        Random rand = new Random(System.currentTimeMillis()+identity);
+        Random rand = new Random(System.currentTimeMillis());
         Chromosome c = new Chromosome(ch.getGenes(),ch.getFitness(),true);
         int selectedRoute = rand.nextInt(c.getGenes().length);
         ArrayList<String> route  = new ArrayList<>(c.getGenes()[selectedRoute]);
@@ -372,7 +372,7 @@ public class GeneticAlgorithm implements Runnable {
     }
 
     private void LocalSearch() {
-        Random rand = new Random(System.currentTimeMillis()+identity);
+        Random rand = new Random(System.currentTimeMillis());
         Chromosome ch;
         int r;
         ArrayList<Integer> keys = new ArrayList<>();
