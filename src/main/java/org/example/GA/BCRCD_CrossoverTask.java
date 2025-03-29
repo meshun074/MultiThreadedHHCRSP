@@ -17,15 +17,17 @@ public class BCRCD_CrossoverTask implements Runnable {
     private final GeneticAlgorithm ga;
     private final int identity;
     private final float mutRate;
+    private boolean cross;
     private final int r1;
     private final int r2;
     private final Chromosome p1, p2;
     private final InstancesClass data;
 
-    public BCRCD_CrossoverTask(GeneticAlgorithm ga, int identity, float mutRate, Chromosome p1, Chromosome p2, int r1, int r2, InstancesClass data) {
+    public BCRCD_CrossoverTask(GeneticAlgorithm ga, int identity, float mutRate, Chromosome p1, Chromosome p2, int r1, int r2, boolean cross, InstancesClass data) {
         this.ga = ga;
         this.identity = identity;
         this.mutRate = mutRate;
+        this.cross = cross;
         this.r1 = r1;
         this.r2 = r2;
         this.p1 = p1;
@@ -39,6 +41,9 @@ public class BCRCD_CrossoverTask implements Runnable {
     }
 
     private Chromosome Crossover() {
+        if (!cross) {
+            return p1;
+        }
         Chromosome c1 = p2, c1Temp;
         Random rand = new Random(System.currentTimeMillis());
         ArrayList[] p1Routes, c1Routes;

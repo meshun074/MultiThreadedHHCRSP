@@ -1,0 +1,116 @@
+package org.example.GA;
+
+import org.example.Data.Caregiver;
+
+import java.util.ArrayList;
+
+public class ShiftUp {
+    private Caregiver caregiver;
+    private ArrayList<String> route;
+    private ArrayList<Double> currentTime = new ArrayList<>();
+    private ArrayList<Double> travelCost = new ArrayList<>();
+    private ArrayList<Double> tardiness = new ArrayList<>();
+    private ArrayList<Double> maxTardiness = new ArrayList<>();
+    private ArrayList<Double> load = new ArrayList<>();
+
+    public ShiftUp(Caregiver caregiver, ArrayList<String> route, double currentTime) {
+        this.caregiver = caregiver;
+        this.route = route;
+        this.currentTime = new ArrayList<>();
+        this.currentTime.add(currentTime);
+        this.travelCost = new ArrayList<>();
+        this.tardiness = new ArrayList<>();
+        this.maxTardiness = new ArrayList<>();
+        this.load = new ArrayList<>();
+        travelCost.add(0.0);
+        load.add(0.0);
+        tardiness.add(0.0);
+        maxTardiness.add(0.0);
+    }
+    public ShiftUp(Caregiver caregiver,  ArrayList<String> route, ArrayList<Double> currentTime, ArrayList<Double> travelCost, ArrayList<Double> tardiness, ArrayList<Double> maxTardiness) {
+        this.caregiver = caregiver;
+        this.route = route;
+        this.currentTime = currentTime;
+        this.travelCost = travelCost;
+        this.tardiness = tardiness;
+        this.maxTardiness = maxTardiness;
+    }
+
+
+    public Caregiver getCaregiver() {
+        return caregiver;
+    }
+
+    public void setCaregiver(Caregiver caregiver) {
+        this.caregiver = caregiver;
+    }
+
+    public ArrayList<String> getRoute() {
+        return route;
+    }
+
+    public void setRoute(ArrayList<String> route) {
+        this.route = route;
+    }
+    public void updateRoute(String patient) {
+        route.add(patient);
+    }
+
+    public ArrayList<Double> getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(double currentTime) {
+        this.currentTime.add(currentTime);
+    }
+
+    public ArrayList<Double> getLoad() {
+        return load;
+    }
+
+    public void setLoad(double load) {
+        this.load.add(load);
+    }
+    public void updateLoad(double load) {
+        this.load.add(load+this.load.getLast());
+    }
+
+    public ArrayList<Double> getTardiness() {
+        return tardiness;
+    }
+
+    public void setTardiness(double tardiness) {
+        this.tardiness.add(tardiness);
+    }
+    public void updateTardiness(double tardiness) {
+        this.tardiness.add(this.tardiness.getLast()+tardiness);
+        updateMaxTardiness(tardiness);
+    }
+
+    public ArrayList<Double> getMaxTardiness() {
+        return maxTardiness;
+    }
+
+    public void updateMaxTardiness(double maxTardiness) {
+        this.maxTardiness.add(Math.max(this.maxTardiness.getLast(), maxTardiness));
+    }
+
+    public ArrayList<Double> getTravelCost() {
+        return travelCost;
+    }
+
+    public void setTravelCost(ArrayList<Double> travelCost) {
+        this.travelCost= new ArrayList<>(travelCost);
+    }
+    public void updateTravelCost(double travelCost) {
+        this.travelCost.add(this.travelCost.getLast() + travelCost);
+    }
+    public void showInfo(){
+        System.out.println("Route -- "+route);
+        System.out.println("Time -- "+ currentTime);
+        System.out.println("tardiness -- "+ tardiness);
+        System.out.println("Maxtardiness -- "+ maxTardiness);
+        System.out.println("travel cost-- "+ travelCost);
+    }
+}
+

@@ -14,16 +14,18 @@ public class MPBCRCD_CrossoverTask implements Runnable {
     private final Chromosome p1, p2, p3;
     private final int r1, r2, r3, identity;
     private final float mutRate;
+    private final boolean cross;
     private final InstancesClass data;
     private GeneticAlgorithm ga;
 
-    public MPBCRCD_CrossoverTask(GeneticAlgorithm ga, int identity, float mutRate, Chromosome p1, Chromosome p2, Chromosome p3, int r1, int r2, int r3, InstancesClass data) {
+    public MPBCRCD_CrossoverTask(GeneticAlgorithm ga, int identity, float mutRate, Chromosome p1, Chromosome p2, Chromosome p3, int r1, int r2, int r3, boolean cross, InstancesClass data) {
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;
         this.r1 = r1;
         this.r2 = r2;
         this.r3 = r3;
+        this.cross = cross;
         this.data = data;
         this.ga =ga;
         this.identity =identity;
@@ -35,6 +37,9 @@ public class MPBCRCD_CrossoverTask implements Runnable {
         ga.getCrossoverChromosomes().add(Crossover());
     }
     private Chromosome Crossover() {
+        if(!cross){
+            return p1;
+        }
         Chromosome c1 = p2, c1Temp;
         Random rand = new Random(System.currentTimeMillis());
         ArrayList[] p1Routes, c1Routes;
@@ -45,7 +50,10 @@ public class MPBCRCD_CrossoverTask implements Runnable {
         String patient;
         Patient p;
         double bestCost;
-        selectRoute = new ArrayList<>(p1.getGenes()[r3]);
+        if(true)
+            selectRoute = new ArrayList<>(p1.getGenes()[r3]);
+        else
+            selectRoute = new ArrayList<>();
         selectRoute.addAll(p2.getGenes()[r1]);
         selectRoute.addAll(p3.getGenes()[r2]);
         p1Routes = p1.getGenes();

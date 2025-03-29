@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-import static org.example.GA.EvaluationFunction.EvaluateFitness;
+import static org.example.GA.EvaluationFunctionUp.EvaluateFitness;
 import static org.example.GA.EvaluationFunction.getIdOfObject;
 import static org.example.GA.GeneticAlgorithm.conflictCheck;
 
@@ -16,14 +16,16 @@ public class BCRC_CrossoverTask implements Runnable {
     private final GeneticAlgorithm ga;
     private final int identity;
     private final float mutRate;
+    private final boolean cross;
     private final int r;
     private final Chromosome p1, p2;
     private final InstancesClass data;
 
-    public BCRC_CrossoverTask(GeneticAlgorithm ga, int identity, float mutRate, Chromosome p1, Chromosome p2, int r, InstancesClass data) {
+    public BCRC_CrossoverTask(GeneticAlgorithm ga, int identity, float mutRate, Chromosome p1, Chromosome p2, int r, boolean cross, InstancesClass data) {
         this.ga = ga;
         this.identity = identity;
         this.mutRate = mutRate;
+        this.cross = cross;
         this.p1 = p1;
         this.p2 = p2;
         this.r = r;
@@ -31,6 +33,9 @@ public class BCRC_CrossoverTask implements Runnable {
     }
 
     private Chromosome Crossover() {
+        if (!cross) {
+            return p1;
+        }
         Chromosome c1 = p2, c1Temp;
         Random rand = new Random(System.currentTimeMillis() );
         ArrayList[] p1Routes, c1Routes;

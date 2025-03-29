@@ -6,6 +6,9 @@
         <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
       </element>
       <element id="module-output" name="GAforHHCRSP" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jackson-databind-2.18.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jackson-annotations-2.18.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jackson-core-2.18.2.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

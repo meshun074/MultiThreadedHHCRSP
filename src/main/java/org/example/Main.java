@@ -71,7 +71,7 @@ public class Main {
             List<Callable<Void>> gaTasks = new ArrayList<>();
 
             gaTasks.add(() -> {
-                new GeneticAlgorithm(randomSeed, 6, 10, 4, 300, 800, 0.1f, p, instance).run();
+                new GeneticAlgorithm(randomSeed, 6, 10, 4, 300, 600, 0.03f,9.0f, p, instance).run();
                 return null;
             });
 

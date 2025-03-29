@@ -11,6 +11,7 @@ public class Chromosome {
     private double highestTardiness;
     private ArrayList[] genes;
     private Shift[] caregiversRoute;
+    private ShiftUp[] caregiversRouteUp;
     public Chromosome(int caregivers) {
         this.caregivers = caregivers;
         fitness = 0;
@@ -41,6 +42,10 @@ public class Chromosome {
         this.caregivers = genes.length;
         this.fitness = fitness;
         caregiversRoute = new Shift[caregivers];
+        caregiversRouteUp = new ShiftUp[caregivers];
+        this.totalTravelCost = 0;
+        this.totalTardiness = 0;
+        this.highestTardiness = 0;
     }
 
     public int getRank() {
@@ -81,6 +86,12 @@ public class Chromosome {
 
     public void setCaregiversRoute(Shift[] caregiversRoute) {
         this.caregiversRoute = caregiversRoute;
+    }
+    public void setCaregiversRouteUp(ShiftUp[] caregiversRouteUp) {
+        this.caregiversRouteUp = caregiversRouteUp;
+    }
+    public ShiftUp[] getCaregiversRouteUp() {
+        return caregiversRouteUp;
     }
 
     public double getTotalTravelCost() {
