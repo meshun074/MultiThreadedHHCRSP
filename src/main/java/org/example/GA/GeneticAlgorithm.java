@@ -68,6 +68,9 @@ public class GeneticAlgorithm implements Runnable {
         bestChromosome = null;
         //initialize and evaluate fitness of chromosome
         newPopulation = Population.initialize(popSize, data.getPatients().length);
+        if(!crossType.equals("MP")&&mutRate==-1f){
+            LocalSearch();
+        }
         //Sort population
         sortPopulation(newPopulation);
         //printing output
@@ -96,7 +99,8 @@ public class GeneticAlgorithm implements Runnable {
     private void updatePopulation1() {
         newPopulation.clear();
         newPopulation.addAll(nextPopulation);
-        Collections.shuffle(tempPopulation);
+        //Collections.shuffle(tempPopulation);
+        sortPopulation(tempPopulation);
         for(Chromosome c : tempPopulation){
             if(newPopulation.size()<popSize){
                 newPopulation.add(c);
@@ -533,6 +537,7 @@ public class GeneticAlgorithm implements Runnable {
     }
 
     private void LocalSearch() {
+        System.out.println("LocalSearch");
         Random rand = new Random(System.currentTimeMillis());
         Chromosome ch;
         int r;

@@ -50,7 +50,6 @@ public class MPBCRCD_CrossoverTaskUp implements Runnable {
         LinkedHashSet<String> route1;
         String patient;
         Patient p;
-        double bestCost;
         if(true)
             selectRoute = new ArrayList<>(p1.getGenes()[r3]);
         else
@@ -76,10 +75,12 @@ public class MPBCRCD_CrossoverTaskUp implements Runnable {
 
         String service1, service2;
         ArrayList<Integer> caregivers1, caregivers2;
-        Move move1, bestMove;
+        MoveUp move1, bestMove;
         ArrayList<String> listOfMoves;
         String moveSign;
-        ArrayList<Move> possibleMoves;
+        ArrayList<Process> processes;
+        Process process;
+        ArrayList<MoveUp> possibleMoves;
         c2Temp = new Chromosome(c1Routes, 0.0, true);
         EvaluateFitness(Collections.singletonList(c2Temp), data);
 
@@ -105,9 +106,14 @@ public class MPBCRCD_CrossoverTaskUp implements Runnable {
                                         tempRoute2 = new ArrayList<>(c1Routes[l]);
                                         tempRoute1.add(m, s);
                                         tempRoute2.add(n, s);
+                                        processes = new ArrayList<>();
                                         moveSign = tempRoute1+" - "+ tempRoute2;
-                                        if(!listOfMoves.contains(moveSign)) {
-                                            move1 = new Move(tempRoute1, tempRoute2, s, m, k, n, l);
+                                        if(!listOfMoves.contains(moveSign)&&!listOfMoves.contains(tempRoute2 + " - " + tempRoute1)) {
+                                            process = new Process(tempRoute1,s,m,k);
+                                            processes.add(process);
+                                            process = new Process(tempRoute2,s,n,l);
+                                            processes.add(process);
+                                            move1 = new MoveUp(processes);
                                             possibleMoves.add(move1);
                                             listOfMoves.add(moveSign);
                                         }
@@ -117,13 +123,14 @@ public class MPBCRCD_CrossoverTaskUp implements Runnable {
                         }
                     }
                 }
-                for (Move m : possibleMoves) {
+                for (MoveUp m : possibleMoves) {
                     bestMove = evaluateMove(m, bestMove, c2Temp);
                 }
 
                 if (bestMove != null) {
-                    c1Routes[bestMove.getRouteIndex1()] = new ArrayList<>(bestMove.getRoute1());
-                    c1Routes[bestMove.getRouteIndex2()] = new ArrayList<>(bestMove.getRoute2());
+                    for (Process process1: bestMove.getProcesses()) {
+                        c1Routes[process1.getRouteIndex()] = new ArrayList<>(process1.getRoute());
+                    }
                     c2Temp = bestMove.getChromosome();
                 }
             } else {
@@ -132,15 +139,20 @@ public class MPBCRCD_CrossoverTaskUp implements Runnable {
                     for (int k = 0; k <= c1Routes[j].size(); k++) {
                         tempRoute1 = new ArrayList<>(c1Routes[j]);
                         tempRoute1.add(k, s);
-                        move1 = new Move(tempRoute1, s, k, j);
+                        processes = new ArrayList<>();
+                        process = new Process(tempRoute1,s,k,j);
+                        processes.add(process);
+                        move1 = new MoveUp(processes);
                         possibleMoves.add(move1);
                     }
                 }
-                for (Move m : possibleMoves) {
+                for (MoveUp m : possibleMoves) {
                     bestMove = evaluateMove(m, bestMove, c2Temp);
                 }
                 if (bestMove != null) {
-                    c1Routes[bestMove.getRouteIndex1()] = new ArrayList<>(bestMove.getRoute1());
+                    for (Process process1: bestMove.getProcesses()) {
+                        c1Routes[process1.getRouteIndex()] = new ArrayList<>(process1.getRoute());
+                    }
                     c2Temp = bestMove.getChromosome();
                 }
             }
@@ -153,37 +165,20 @@ public class MPBCRCD_CrossoverTaskUp implements Runnable {
         return c2Temp;
     }
 
-    private Move evaluateMove(Move m, Move bestMove, Chromosome c) {
+    private MoveUp evaluateMove(MoveUp m, MoveUp bestMove, Chromosome c) {
         Chromosome tempCh = new Chromosome(c.getGenes(), 0.0, true);
         int[] routeEndPoint = new int[c.getGenes().length];
         Arrays.fill(routeEndPoint, -1);
         Map<Integer, Integer> affectedRoutes = new ConcurrentHashMap<>();
-        affectedRoutes.put(m.getRouteIndex1(), m.getInsertPosition1());
-        routeEndPoint[m.getRouteIndex1()] = m.getInsertPosition1();
-        if (m.getRouteIndex2() != -1) {
-            routeEndPoint[m.getRouteIndex2()] = m.getInsertPosition2();
-            affectedRoutes.put(m.getRouteIndex2(), m.getInsertPosition2());
+        for(Process process: m.getProcesses()){
+            affectedRoutes.put(process.getRouteIndex(), process.getInsertPosition());
+            routeEndPoint[process.getRouteIndex()] = process.getInsertPosition();
         }
-//        System.out.println(Arrays.toString(routeEndPoint) + " endpoint 1");
-//        System.out.println("In evaluate move ");
-//        c.showSolution(78);
         removeAffectedPatients(m, c, affectedRoutes);
-//        System.out.println(m.getRoute1() + " " + m.getRouteIndex2());
-//        System.out.println("Affected routes: " + affectedRoutes);
         for (Map.Entry<Integer, Integer> entry : affectedRoutes.entrySet()) {
             routeEndPoint[entry.getKey()] = entry.getValue();
             //System.out.println(entry.getKey() + " yaya " + routeEndPoint[entry.getKey()]);
         }
-//        System.out.println(Arrays.toString(routeEndPoint) + " endpoint 2");
-//        tempCh.showSolution(90);
-//        for(ShiftUp s : c.getCaregiversRouteUp()) {
-//            System.out.println("Route "+s.getRoute());
-//            System.out.println("time "+s.getCurrentTime());
-//            System.out.println("travel "+s.getTravelCost());
-//            System.out.println("tard "+s.getTardiness());
-//            System.out.println("Max "+s.getMaxTardiness());
-//        }
-//        System.out.println(" Masa aden ");
         int index;
         for (int i = 0; i < routeEndPoint.length; i++) {
             ArrayList<String> route;
@@ -212,18 +207,9 @@ public class MPBCRCD_CrossoverTaskUp implements Runnable {
         }
 //        System.out.println(" After endpoint");
         //changing routes with move routes
-        tempCh.getGenes()[m.getRouteIndex1()] = m.getRoute1();
-        if (m.getRouteIndex2() != -1) {
-            tempCh.getGenes()[m.getRouteIndex2()] = m.getRoute2();
+        for(Process process: m.getProcesses()){
+            tempCh.getGenes()[process.getRouteIndex()] = process.getRoute();
         }
-//        tempCh.showSolution(95);
-//        for (ShiftUp s : tempCh.getCaregiversRouteUp()) {
-//            System.out.println("Route " + s.getRoute());
-//            System.out.println("time " + s.getCurrentTime());
-//            System.out.println("travel " + s.getTravelCost());
-//            System.out.println("tard " + s.getTardiness());
-//            System.out.println("Max " + s.getMaxTardiness());
-//        }
 
 
         double totalTravelCost = 0;
@@ -235,35 +221,14 @@ public class MPBCRCD_CrossoverTaskUp implements Runnable {
             highestTardiness = Math.max(highestTardiness, s.getMaxTardiness().getLast());
         }
 
-//        System.out.println(" After objectives setup");
-//        tempCh.showSolution(57);
+
         tempCh.setTotalTravelCost(totalTravelCost);
         tempCh.setTotalTardiness(totalTardiness);
         tempCh.setHighestTardiness(highestTardiness);
         tempCh.setFitness(0.0);
 
-
-//        System.out.println("About to evaluate");
-//        tempCh.showSolution(-1);
-//        for(ShiftUp s : tempCh.getCaregiversRouteUp()) {
-//            System.out.println("Route "+s.getRoute());
-//            System.out.println("time "+s.getCurrentTime());
-//            System.out.println("travel "+s.getTravelCost());
-//            System.out.println("tard "+s.getTardiness());
-//            System.out.println("Max "+s.getMaxTardiness());
-//        }
-
         evaluate(tempCh, routeEndPoint, bestMove);
-//        System.out.println("evaluateMove ");
-//        tempCh.showSolution(76);
-//        for(ShiftUp s : tempCh.getCaregiversRouteUp()) {
-//            System.out.println("Route "+s.getRoute());
-//            System.out.println("time "+s.getCurrentTime());
-//            System.out.println("travel "+s.getTravelCost());
-//            System.out.println("tard "+s.getTardiness());
-//            System.out.println("Max "+s.getMaxTardiness());
-//        }
-        //System.exit(1);
+
         if (bestMove == null || tempCh.getFitness() < bestMove.getFitness()) {
             m.setChromosome(tempCh);
             m.setFitness(tempCh.getFitness());
@@ -272,7 +237,7 @@ public class MPBCRCD_CrossoverTaskUp implements Runnable {
         return bestMove;
     }
 
-    private void evaluate(Chromosome ch, int[] routeEndPoint, Move bestMove) {
+    private void evaluate(Chromosome ch, int[] routeEndPoint, MoveUp bestMove) {
         ArrayList<String> route;
         ShiftUp[] routes = ch.getCaregiversRouteUp();
         ShiftUp caregiver1;
@@ -310,52 +275,27 @@ public class MPBCRCD_CrossoverTaskUp implements Runnable {
     private static void UpdateCost(Chromosome ch) {
         ch.setFitness((1 / 3d * ch.getTotalTravelCost()) + (1 / 3d * ch.getTotalTardiness()) + (1 / 3d * ch.getHighestTardiness()));
     }
-    private void removeAffectedPatients(Move m, Chromosome c, Map<Integer, Integer> affectedRoutes) {
+    private void removeAffectedPatients(MoveUp r, Chromosome c, Map<Integer, Integer> affectedRoutes) {
         int routeIndex;
         Patient p;
-//        System.out.println("Executing removeAffectedPatients");
-//        c.showSolution(89);
-//        System.out.println(m.getRoute1().subList(m.getInsertPosition1(), m.getRoute1().size()));
-        for (int i = m.getInsertPosition1(); i < c.getGenes()[m.getRouteIndex1()].size(); i++) {
-            p = data.getPatients()[getIdOfObject(c.getGenes()[m.getRouteIndex1()].get(i).toString())];
-            if (p.getRequired_caregivers().length > 1) {
-                routeIndex = getRouteIndex(p.getId(), m.getRouteIndex1(), c.getGenes());
-                if (affectedRoutes.containsKey(routeIndex) && affectedRoutes.get(routeIndex) > c.getGenes()[routeIndex].indexOf(p.getId())) {
-                    affectedRoutes.replace(routeIndex, c.getGenes()[routeIndex].indexOf(p.getId()));
-//                    System.out.println("Removing affected patients from caregivers route 1");
-//                    System.exit(1);
-                    removeAffectedPatients(new Move(new ArrayList<>(c.getGenes()[routeIndex]), p.getId(), c.getGenes()[routeIndex].indexOf(p.getId()), routeIndex), c, affectedRoutes);
-                } else if (!affectedRoutes.containsKey(routeIndex)) {
-                    int index = getPatientIndexInRoute(p.getId(), routeIndex, c);
-                    affectedRoutes.put(routeIndex, index);
-//                    System.out.println("Removing affected patients from caregivers route 2");
-//                    System.exit(1);
-                    removeAffectedPatients(new Move(new ArrayList<>(c.getGenes()[routeIndex]), p.getId(), c.getGenes()[routeIndex].indexOf(p.getId()), routeIndex), c, affectedRoutes);
-                }
-            }
-//            System.out.println("Removing affected top");
-//            System.exit(1);
-        }
-        if (m.getRouteIndex2() != -1) {
-            for (int i = m.getInsertPosition2(); i < c.getGenes()[m.getRouteIndex2()].size(); i++) {
-                p = data.getPatients()[getIdOfObject(c.getGenes()[m.getRouteIndex2()].get(i).toString())];
+        ArrayList<Process> process1;
+        for(Process process : r.getProcesses()){
+            for (int i = process.getInsertPosition(); i < c.getGenes()[process.getRouteIndex()].size(); i++) {
+                p = data.getPatients()[getIdOfObject(c.getGenes()[process.getRouteIndex()].get(i).toString())];
                 if (p.getRequired_caregivers().length > 1) {
-                    routeIndex = getRouteIndex(p.getId(), m.getRouteIndex2(), c.getGenes());
+                    routeIndex = getRouteIndex(p.getId(), process.getRouteIndex(), c.getGenes());
+                    process1 = new ArrayList<>();
                     if (affectedRoutes.containsKey(routeIndex) && affectedRoutes.get(routeIndex) > c.getGenes()[routeIndex].indexOf(p.getId())) {
                         affectedRoutes.replace(routeIndex, c.getGenes()[routeIndex].indexOf(p.getId()));
-//                    System.out.println("Removing affected patients from caregivers route 1");
-//                    System.exit(1);
-                        removeAffectedPatients(new Move(new ArrayList<>(c.getGenes()[routeIndex]), p.getId(), c.getGenes()[routeIndex].indexOf(p.getId()), routeIndex), c, affectedRoutes);
+                        process1.add(new Process(new ArrayList<>(c.getGenes()[routeIndex]), p.getId(),c.getGenes()[routeIndex].indexOf(p.getId()), routeIndex));
+                        removeAffectedPatients(new MoveUp(process1), c, affectedRoutes);
                     } else if (!affectedRoutes.containsKey(routeIndex)) {
                         int index = getPatientIndexInRoute(p.getId(), routeIndex, c);
                         affectedRoutes.put(routeIndex, index);
-//                    System.out.println("Removing affected patients from caregivers route 2");
-//                    System.exit(1);
-                        removeAffectedPatients(new Move(new ArrayList<>(c.getGenes()[routeIndex]), p.getId(), c.getGenes()[routeIndex].indexOf(p.getId()), routeIndex), c, affectedRoutes);
+                        process1.add(new Process(new ArrayList<>(c.getGenes()[routeIndex]), p.getId(), c.getGenes()[routeIndex].indexOf(p.getId()), routeIndex));
+                        removeAffectedPatients(new MoveUp(process1), c, affectedRoutes);
                     }
                 }
-//            System.out.println("Removing affected top");
-//            System.exit(1);
             }
         }
     }
