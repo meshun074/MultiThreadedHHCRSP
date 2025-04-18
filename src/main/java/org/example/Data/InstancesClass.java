@@ -1,6 +1,5 @@
 package org.example.Data;
 
-import java.util.ArrayList;
 
 public class InstancesClass {
     private Patient[] patients;

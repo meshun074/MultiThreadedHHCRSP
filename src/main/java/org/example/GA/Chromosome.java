@@ -1,6 +1,6 @@
 package org.example.GA;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class Chromosome {
     private int rank;
@@ -12,6 +12,7 @@ public class Chromosome {
     private ArrayList[] genes;
     private Shift[] caregiversRoute;
     private ShiftUp[] caregiversRouteUp;
+    private final Map<String, Set<Integer>> patientToRoutesMap = new HashMap<>();
     public Chromosome(int caregivers) {
         this.caregivers = caregivers;
         fitness = 0;
@@ -58,6 +59,29 @@ public class Chromosome {
 
     public int getCaregivers() {
         return caregivers;
+    }
+
+
+
+
+    // Call this once when `genes` is initialized or updated
+    public void buildPatientRouteMap() {
+        patientToRoutesMap.clear();
+        Set<String> patients;
+        for (int i = 0; i < genes.length; i++) {
+            patients = new HashSet<>(genes[i]);
+            for (String patient : patients) {
+                patientToRoutesMap.computeIfAbsent(patient, k -> new HashSet<>()).add(i);
+            }
+        }
+    }
+
+    public  Map<String, Set<Integer>> getPatientToRoutesMap(){
+        return patientToRoutesMap;
+    }
+
+    public Set<Integer> getPatientRoutes(String patient) {
+        return patientToRoutesMap.get(patient);
     }
 
     public void setCaregivers(int caregivers) {

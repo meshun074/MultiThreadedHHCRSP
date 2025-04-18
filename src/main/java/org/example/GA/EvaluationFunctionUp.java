@@ -192,8 +192,16 @@ public class EvaluationFunctionUp {
             }}, 0.0);
     }
 
+    //    static int getIdOfObject(String s) {
+//        return Integer.parseInt(s.substring(1)) - 1;
+//    }
     static int getIdOfObject(String s) {
-        return Integer.parseInt(s.substring(1)) - 1;
+        // Skip first char and parse the rest
+        int id = 0;
+        for (int i = 1; i < s.length(); i++) {
+            id = id * 10 + (s.charAt(i) - '0');
+        }
+        return id - 1;
     }
 
     //gets the index of a location of a patient or depot

@@ -29,7 +29,7 @@ public class Main {
             System.err.println("Usage: java GeneticAlgorithmRunner <config-file>");
             return;
         }
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 1; i++) {
             startTime = System.currentTimeMillis();
             long endTime;
             long averageTime;

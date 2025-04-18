@@ -238,7 +238,7 @@ public class GeneticAlgorithm implements Runnable {
         int count;
         int index =0;
         boolean cross;
-        List<String> uniqueParents = new ArrayList<>();
+        Set<String> uniqueParents = new HashSet<>();
         ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         crossoverChromosomes = Collections.synchronizedList(new ArrayList<>());
         List<Callable<Void>> crossoverTasks = new ArrayList<>();
@@ -362,7 +362,7 @@ public class GeneticAlgorithm implements Runnable {
         int count;
         int index =0;
         boolean cross;
-        List<String> uniqueParents = new ArrayList<>();
+        Set<String> uniqueParents = new HashSet<>();
         ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         crossoverChromosomes = Collections.synchronizedList(new ArrayList<>());
         List<Callable<Void>> crossoverTasks = new ArrayList<>();
@@ -537,11 +537,11 @@ public class GeneticAlgorithm implements Runnable {
     }
 
     private void LocalSearch() {
-        System.out.println("LocalSearch");
+        //System.out.println("LocalSearch");
         Random rand = new Random(System.currentTimeMillis());
         Chromosome ch;
         int r;
-        ArrayList<Integer> keys = new ArrayList<>();
+        Set<Integer> keys = new HashSet<>();
 
         ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         HashMap<Integer, Chromosome> newMap = new HashMap<>();
@@ -559,7 +559,7 @@ public class GeneticAlgorithm implements Runnable {
             Chromosome finalCh = ch;
             int finalR = r;
             LSTasks.add(() -> {
-                new LocalSearchThread(this, finalCh,rand, finalR, data).run();
+                new LocalSearchThreadUp(this, finalCh,rand, finalR, data).run();
                 return null;
             });
         }
@@ -588,7 +588,7 @@ public class GeneticAlgorithm implements Runnable {
         double bestCost;
         String service1, service2;
         ArrayList<String> tempRoute1, tempRoute2, currentRoute1, currentRoute2, currentRoute3, currentRoute4;
-        ArrayList<Integer> caregivers1, caregivers2;
+        HashSet<Integer> caregivers1, caregivers2;
         ArrayList[] routes = new ArrayList[ch.getGenes().length];
         //Removing selected patient
         for (int i = 0; i < ch.getGenes().length; i++) {
@@ -644,6 +644,7 @@ public class GeneticAlgorithm implements Runnable {
             //Swap
             ArrayList<Integer> b = new ArrayList<>();
             ArrayList<Integer> r = new ArrayList<>();
+            Set<String> genes;
             int b1, b2, r1, r2;
             String s;
             Patient p2;
@@ -651,7 +652,8 @@ public class GeneticAlgorithm implements Runnable {
             // getting initial routes for swap operation
             for (int i = 0; i < ch.getGenes().length; i++) {
                 route = new ArrayList<>();
-                if (ch.getGenes()[i].contains(patient.getId())) {
+                genes = new HashSet<>(ch.getGenes()[i]);
+                if (genes.contains(patient.getId())) {
                     r.add(i);
                     b.add(ch.getGenes()[i].indexOf(patient.getId()));
                 }
@@ -954,8 +956,9 @@ public class GeneticAlgorithm implements Runnable {
     static boolean conflictCheck(ArrayList<String> c1Route, ArrayList<String> c2Route, int m, int n) {
         int index1;
         int index2;
+        Set<String> route2 = new HashSet<>(c2Route);
         for (int i = 0; i < c1Route.size(); i++) {
-            if (c2Route.contains(c1Route.get(i))) {
+            if (route2.contains(c1Route.get(i))) {
                 index1 = c1Route.indexOf(c1Route.get(i));
                 index2 = c2Route.indexOf(c1Route.get(i));
                 if (m <= index1 && n > index2 || m > index1 && n <= index2) {
@@ -967,11 +970,13 @@ public class GeneticAlgorithm implements Runnable {
     }
 
 
-    private ArrayList<Integer> getQualifiedCaregiver(String service) {
-        ArrayList<Integer> caregivers = new ArrayList<>();
+    private HashSet<Integer> getQualifiedCaregiver(String service) {
+        HashSet<Integer> caregivers = new HashSet<>();
+        Set<String> abilities;
         for (Caregiver c : data.getCaregivers()) {
-            if (c.getAbilities().contains(service)) {
-                caregivers.add(getIdOfObject(c.getId()));
+            abilities = new HashSet<>(c.getAbilities());
+            if (abilities.contains(service)) {
+                caregivers.add(c.getCacheId());
             }
         }
         return caregivers;
@@ -993,11 +998,11 @@ public class GeneticAlgorithm implements Runnable {
         sortPopulation(population);
         double averageFitness = population.stream().mapToDouble(Chromosome::getFitness).sum();
         long time = (System.currentTimeMillis() - startTime) / (1000);
-        System.out.println("Time at: " + time + " Index " + identity +" Iteration " +iterations + " Best fitness: " + population.getFirst().getFitness() + " Average fitness: " + averageFitness/popSize );
+        System.out.println("Time at: " + time + " Index " + identity +" Generation " +iterations + " Best fitness: " + population.getFirst().getFitness() + " Average fitness: " + averageFitness/popSize );
         if (iterations == gen) {
             population.getFirst().showSolution(identity);
             bestChromosome = population.getFirst();
-            System.out.println( "Time at: " + time+" Index " + identity +" Iteration " + iterations + " Fitness: " + bestChromosome.getFitness() + " Total Distance: " + bestChromosome.getTotalTravelCost() + " Total Tardiness: " + bestChromosome.getTotalTardiness() + " Highest Tardiness: " + bestChromosome.getHighestTardiness());
+            System.out.println( "Time at: " + time+" Index " + identity +" Generation " + iterations + " Fitness: " + bestChromosome.getFitness() + " Total Distance: " + bestChromosome.getTotalTravelCost() + " Total Tardiness: " + bestChromosome.getTotalTardiness() + " Highest Tardiness: " + bestChromosome.getHighestTardiness());
         }
     }
 
