@@ -241,7 +241,7 @@ public class MPBCRCD_CrossoverTaskUp implements Runnable {
         ArrayList<String> route;
         ShiftUp[] routes = ch.getCaregiversRouteUp();
         ShiftUp caregiver1;
-        ArrayList<String> track = new ArrayList<>();
+        Set<String> track = new HashSet<>();
         for (int i = 0; i < routeEndPoint.length; i++) {
             route = new ArrayList<>(ch.getGenes()[i]);
             caregiver1 = routes[i];
@@ -257,7 +257,7 @@ public class MPBCRCD_CrossoverTaskUp implements Runnable {
                         if (bestMove != null && ch.getFitness() > bestMove.getFitness()) {
                             return;
                         }
-                        track = new ArrayList<>();
+                        track.clear();
                     }
                 }
             }

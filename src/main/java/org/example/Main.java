@@ -61,6 +61,8 @@ public class Main {
                 System.out.printf("Config Parameters: parameterIndex=%d, ProblemSize=%d, instanceNumber=%d, seed=%d\n", paramIndex, problemSize, instanceNumber, randomSeed);
 
                 instance = ReadData.read(new File("src/main/java/org/example/Data/instance/" + instanceName + "_" + instanceNumber + ".json"));
+//                System.out.println(instance.getQualifiedCaregiver("s5"));
+//                System.exit(1);
 
                 // GA execution setup
                 double total = 0;
@@ -71,7 +73,7 @@ public class Main {
                 List<Callable<Void>> gaTasks = new ArrayList<>();
 
                 gaTasks.add(() -> {
-                    new GeneticAlgorithm(randomSeed, 6, 10, 4, 300, 600, 0.1f, 1.0f, p, instance).run();
+                    new GeneticAlgorithm(randomSeed, 6, 10, 4, 200, 600, 0.1f, 1.0f, p, instance).run();
                     return null;
                 });
 

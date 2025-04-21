@@ -588,7 +588,7 @@ public class GeneticAlgorithm implements Runnable {
         double bestCost;
         String service1, service2;
         ArrayList<String> tempRoute1, tempRoute2, currentRoute1, currentRoute2, currentRoute3, currentRoute4;
-        HashSet<Integer> caregivers1, caregivers2;
+        Set<Integer> caregivers1, caregivers2;
         ArrayList[] routes = new ArrayList[ch.getGenes().length];
         //Removing selected patient
         for (int i = 0; i < ch.getGenes().length; i++) {
@@ -607,8 +607,8 @@ public class GeneticAlgorithm implements Runnable {
         if (patient.getRequired_caregivers().length > 1) {
             //Relocate
             service2 = patient.getRequired_caregivers()[1].getService();
-            caregivers1 = getQualifiedCaregiver(service1);
-            caregivers2 = getQualifiedCaregiver(service2);
+            caregivers1 = data.getQualifiedCaregiver(service1);
+            caregivers2 = data.getQualifiedCaregiver(service2);
 
             for (int k = 0; k < routes.length; k++) {
                 if (caregivers1.contains(k)) {
@@ -723,9 +723,9 @@ public class GeneticAlgorithm implements Runnable {
                                                 p2 = data.getPatients()[getIdOfObject((String) routes[k].get(l))];
                                                 if (!routes[r2].contains(p2.getId())) {
                                                     s = p2.getRequired_caregivers()[0].getService();
-                                                    if (!getQualifiedCaregiver(s).contains(k) && p2.getRequired_caregivers().length > 1)
+                                                    if (!data.getQualifiedCaregiver(s).contains(k) && p2.getRequired_caregivers().length > 1)
                                                         s = p2.getRequired_caregivers()[1].getService();
-                                                    if (getQualifiedCaregiver(s).contains(r2)) {
+                                                    if (data.getQualifiedCaregiver(s).contains(r2)) {
                                                         tempRoute1 = new ArrayList(routes[k]);
                                                         tempRoute2 = new ArrayList(routes[r2]);
                                                         tempRoute1.set(l, patient.getId());
@@ -764,9 +764,9 @@ public class GeneticAlgorithm implements Runnable {
                             p2 = data.getPatients()[getIdOfObject((String) routes[j].get(w))];
                             if (!routes[r1].contains(p2.getId())) {
                                 s = p2.getRequired_caregivers()[0].getService();
-                                if (!getQualifiedCaregiver(s).contains(j) && p2.getRequired_caregivers().length > 1)
+                                if (!data.getQualifiedCaregiver(s).contains(j) && p2.getRequired_caregivers().length > 1)
                                     s = p2.getRequired_caregivers()[1].getService();
-                                if (getQualifiedCaregiver(s).contains(r1)) {
+                                if (data.getQualifiedCaregiver(s).contains(r1)) {
                                     tempRoute1 = new ArrayList(routes[j]);
                                     tempRoute2 = new ArrayList(routes[r1]);
                                     tempRoute1.set(w, patient.getId());
@@ -811,9 +811,9 @@ public class GeneticAlgorithm implements Runnable {
                                                         p2 = data.getPatients()[getIdOfObject((String) routes[k].get(l))];
                                                         if (!routes[r2].contains(p2.getId())) {
                                                             s = p2.getRequired_caregivers()[0].getService();
-                                                            if (!getQualifiedCaregiver(s).contains(k) && p2.getRequired_caregivers().length > 1)
+                                                            if (!data.getQualifiedCaregiver(s).contains(k) && p2.getRequired_caregivers().length > 1)
                                                                 s = p2.getRequired_caregivers()[1].getService();
-                                                            if (getQualifiedCaregiver(s).contains(r2)) {
+                                                            if (data.getQualifiedCaregiver(s).contains(r2)) {
                                                                 tempRoute1 = new ArrayList(routes[k]);
                                                                 tempRoute2 = new ArrayList(routes[r2]);
                                                                 tempRoute1.set(l, patient.getId());
@@ -853,7 +853,7 @@ public class GeneticAlgorithm implements Runnable {
         }
         //Single service patient local search
         else {
-            caregivers1 = getQualifiedCaregiver(service1);
+            caregivers1 = data.getQualifiedCaregiver(service1);
             //relocate
             for (int j = 0; j < routes.length; j++) {
                 if (caregivers1.contains(j)) {
@@ -914,9 +914,9 @@ public class GeneticAlgorithm implements Runnable {
                         p2 = data.getPatients()[getIdOfObject((String) routes[k].get(l))];
                         if (!routes[r].contains(p2.getId())) {
                             s = p2.getRequired_caregivers()[0].getService();
-                            if (!getQualifiedCaregiver(s).contains(k) && p2.getRequired_caregivers().length > 1)
+                            if (!data.getQualifiedCaregiver(s).contains(k) && p2.getRequired_caregivers().length > 1)
                                 s = p2.getRequired_caregivers()[1].getService();
-                            if (getQualifiedCaregiver(s).contains(r)) {
+                            if (data.getQualifiedCaregiver(s).contains(r)) {
                                 tempRoute1 = new ArrayList(routes[k]);
                                 tempRoute2 = new ArrayList(routes[r]);
                                 tempRoute1.set(l, patient.getId());
@@ -970,17 +970,17 @@ public class GeneticAlgorithm implements Runnable {
     }
 
 
-    private HashSet<Integer> getQualifiedCaregiver(String service) {
-        HashSet<Integer> caregivers = new HashSet<>();
-        Set<String> abilities;
-        for (Caregiver c : data.getCaregivers()) {
-            abilities = new HashSet<>(c.getAbilities());
-            if (abilities.contains(service)) {
-                caregivers.add(c.getCacheId());
-            }
-        }
-        return caregivers;
-    }
+//    private HashSet<Integer> getQualifiedCaregiver(String service) {
+//        HashSet<Integer> caregivers = new HashSet<>();
+//        Set<String> abilities;
+//        for (Caregiver c : data.getCaregivers()) {
+//            abilities = new HashSet<>(c.getAbilities());
+//            if (abilities.contains(service)) {
+//                caregivers.add(c.getCacheId());
+//            }
+//        }
+//        return caregivers;
+//    }
 
     private void maintainElitism() {
         nextPopulation = new ArrayList<>();

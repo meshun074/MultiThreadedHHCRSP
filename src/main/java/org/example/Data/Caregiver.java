@@ -1,10 +1,10 @@
 package org.example.Data;
 
-import java.util.ArrayList;
+import java.util.Set;
 
 public class Caregiver {
     private String id;
-    private ArrayList<String> abilities;
+    private Set<String> abilities;
     private int cacheId = - 1;
 
     public String getId() {
@@ -25,7 +25,7 @@ public class Caregiver {
     public int getCacheId() {
         return cacheId;
     }
-    public ArrayList<String> getAbilities() {
+    public Set<String> getAbilities() {
         return abilities;
     }
 
