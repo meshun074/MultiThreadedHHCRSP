@@ -73,21 +73,25 @@ public class Main {
                 List<Callable<Void>> gaTasks = new ArrayList<>();
 
                 gaTasks.add(() -> {
-                    new GeneticAlgorithm(randomSeed, 6, 10, 4, 200, 600, 0.1f, 1.0f, p, instance).run();
+                    new GeneticAlgorithm(randomSeed, 6, 10, 4, 300, 600, 0.1f, 1.0f, p, instance).run();
                     return null;
                 });
 
                 // Execute GA tasks
-                executor.invokeAll(gaTasks);
-                List<Chromosome> gaChromosomes = GeneticAlgorithm.bestChromosomes;
-                synchronized (gaChromosomes) {
-                    for (Chromosome ch : gaChromosomes) {
-                        if (ch.getFitness() < best) {
-                            best = ch.getFitness();
-                            bestChromosome = ch;
+                try{
+                    executor.invokeAll(gaTasks);
+                    List<Chromosome> gaChromosomes = GeneticAlgorithm.bestChromosomes;
+                    synchronized (gaChromosomes) {
+                        for (Chromosome ch : gaChromosomes) {
+                            if (ch.getFitness() < best) {
+                                best = ch.getFitness();
+                                bestChromosome = ch;
+                            }
+                            total += ch.getFitness();
                         }
-                        total += ch.getFitness();
                     }
+                }finally {
+                    executor.shutdown();
                 }
 
                 double mean = total;
@@ -101,7 +105,7 @@ public class Main {
                 bestChromosome.showSolution(0);
                 System.out.println("All GA tasks completed. " + gaTasks.size());
 
-                executor.shutdown();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
