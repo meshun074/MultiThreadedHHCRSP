@@ -103,7 +103,6 @@ public class Main {
                 bestChromosome.showSolution(0);
                 System.out.println("All GA tasks completed. " + gaTasks.size());
 
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
