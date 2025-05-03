@@ -51,13 +51,13 @@ public class Main {
                 String[] Instances = {"10", "25", "50", "75", "100", "200", "300"};
                 String instanceName = Instances[problemSize];
 
-                //create result directory
-                String resultDir = "src/main/java/org/example/Config_" + paramIndex + "_" + problemSize + "_" + instanceNumber + "_results";
-                new File(resultDir).mkdirs();
-
-                // Read dataset
-                PrintStream fileout = new PrintStream(resultDir + "/Result_" + instanceName + "_" + instanceNumber + "_" + p.selectionTechnique() + "_" + p.crossoverType() + "_" + p.mutationType() + "_" + p.mutationRate() + "_" + randomSeed + ".txt");
-                System.setOut(fileout);
+//                //create result directory
+//                String resultDir = "src/main/java/org/example/Config_" + paramIndex + "_" + problemSize + "_" + instanceNumber + "_results";
+//                new File(resultDir).mkdirs();
+//
+//                // Read dataset
+//                PrintStream fileout = new PrintStream(resultDir + "/Result_" + instanceName + "_" + instanceNumber + "_" + p.selectionTechnique() + "_" + p.crossoverType() + "_" + p.mutationType() + "_" + p.mutationRate() + "_" + randomSeed + ".txt");
+//                System.setOut(fileout);
                 System.out.printf("Config Parameters: parameterIndex=%d, ProblemSize=%d, instanceNumber=%d, seed=%d\n", paramIndex, problemSize, instanceNumber, randomSeed);
 
                 instance = ReadData.read(new File("src/main/java/org/example/Data/instance/" + instanceName + "_" + instanceNumber + ".json"));
@@ -65,43 +65,20 @@ public class Main {
                 // GA execution setup
                 double total = 0;
                 double best = Double.MAX_VALUE;
-                Chromosome bestChromosome = null;
-                ExecutorService executor = Executors.newFixedThreadPool(1);
-                GeneticAlgorithm.bestChromosomes = Collections.synchronizedList(new ArrayList<>());
-                List<Callable<Void>> gaTasks = new ArrayList<>();
 
-                gaTasks.add(() -> {
-                    new GeneticAlgorithm(randomSeed, 6, 10, 4, 300, 600, 0.1f, 1.0f, p, instance).run();
-                    return null;
-                });
-
+                GeneticAlgorithm ga = new GeneticAlgorithm(randomSeed, 6, 10, 4, 100, 600, 0.1f, 1.0f, p, instance);
+                Chromosome bestChromosome = ga.start();
                 // Execute GA tasks
-                try{
-                    executor.invokeAll(gaTasks);
-                    List<Chromosome> gaChromosomes = GeneticAlgorithm.bestChromosomes;
-                    synchronized (gaChromosomes) {
-                        for (Chromosome ch : gaChromosomes) {
-                            if (ch.getFitness() < best) {
-                                best = ch.getFitness();
-                                bestChromosome = ch;
-                            }
-                            total += ch.getFitness();
-                        }
-                    }
-                }finally {
-                    executor.shutdown();
-                }
 
-                double mean = total;
                 endTime = System.currentTimeMillis();
                 averageTime = (endTime - startTime) / 1000;
 
                 assert bestChromosome != null;
                 System.out.println("----------------- Solution ----------------------");
-                System.out.println("Instance_" + instanceName + "_" + instanceNumber + " Best Fitness: " + best + " Average Fitness: " + mean + " Average Time: " + averageTime + "s");
+                System.out.println("Instance_" + instanceName + "_" + instanceNumber + " Best Fitness: " + bestChromosome.getFitness() + " Time: " + averageTime + "s");
                 System.out.println("Total Distance: " + bestChromosome.getTotalTravelCost() + " Total Tardiness: " + bestChromosome.getTotalTardiness() + " Highest Tardiness: " + bestChromosome.getHighestTardiness());
                 bestChromosome.showSolution(0);
-                System.out.println("All GA tasks completed. " + gaTasks.size());
+
 
             } catch (Exception e) {
                 e.printStackTrace();

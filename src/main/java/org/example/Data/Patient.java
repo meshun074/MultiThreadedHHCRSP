@@ -29,4 +29,6 @@ public class Patient {
     public Synchronization getSynchronization() {
         return synchronization;
     }
+
+
 }

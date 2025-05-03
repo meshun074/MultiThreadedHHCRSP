@@ -5,7 +5,9 @@ import org.example.Data.InstancesClass;
 import org.example.Data.Patient;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class EvaluationFunction {
     private static InstancesClass dataset;
@@ -28,7 +30,7 @@ public class EvaluationFunction {
         ch.setFitness(Double.POSITIVE_INFINITY);
         ArrayList<String> route;
         Shift caregiver1;
-        ArrayList<String> track =new ArrayList<>();
+        Set<String> track =new HashSet<>();
 
         for (int i = 0; i < routes.length; i++) {
             route = new ArrayList<>(ch.getGenes()[i]);
@@ -40,7 +42,7 @@ public class EvaluationFunction {
                         ch.setFitness(Double.POSITIVE_INFINITY);
                         return;
                     }
-                    track =new ArrayList<>();
+                    track =new HashSet<>();
                 }
             }
         }
@@ -53,7 +55,7 @@ public class EvaluationFunction {
         ch.setFitness((1 / 3d * ch.getTotalTravelCost()) + (1 / 3d * ch.getTotalTardiness()) + (1 / 3d * ch.getHighestTardiness()));
     }
 
-    private static boolean patientAssignment(Chromosome ch, String patient, Shift caregiver1, Shift[] routes, int i, ArrayList<String> track) {
+    private static boolean patientAssignment(Chromosome ch, String patient, Shift caregiver1, Shift[] routes, int i, Set<String> track) {
         double maxTardiness;
         double travelCost;
         double tardiness;
@@ -132,7 +134,7 @@ public class EvaluationFunction {
         return true;
     }
 
-    private static int findSecondCaregiver(Patient p, int route1, Shift[] routes, Chromosome ch, ArrayList<String> track) {
+    private static int findSecondCaregiver(Patient p, int route1, Shift[] routes, Chromosome ch, Set<String> track) {
         ArrayList<String> route = null;
         ArrayList[] genes = ch.getGenes();
         int routeIndex = 0;
