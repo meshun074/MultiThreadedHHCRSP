@@ -14,7 +14,7 @@ import java.util.Random;
 public class Main {
     public static InstancesClass instance;
     public static long startTime;
-    public static CPUTimer timer;
+    public static CPUTimer timer =new CPUTimer();
     /*
     Usage: main arg1-int:parameter settings (0-65) arg2-int:problem size (0-6) arg3-int:instance number (1-10) arg4-int:seed
      */
