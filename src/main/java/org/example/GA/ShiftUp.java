@@ -7,10 +7,10 @@ import java.util.ArrayList;
 public class ShiftUp {
     private Caregiver caregiver;
     private ArrayList<String> route;
-    private ArrayList<Double> currentTime = new ArrayList<>();
-    private ArrayList<Double> travelCost = new ArrayList<>();
-    private ArrayList<Double> tardiness = new ArrayList<>();
-    private ArrayList<Double> maxTardiness = new ArrayList<>();
+    private ArrayList<Double> currentTime;
+    private ArrayList<Double> travelCost;
+    private ArrayList<Double> tardiness;
+    private ArrayList<Double> maxTardiness;
 
     public ShiftUp(Caregiver caregiver, ArrayList<String> route, double currentTime) {
         this.caregiver = caregiver;
@@ -69,8 +69,10 @@ public class ShiftUp {
     public void setTardiness(double tardiness) {
         this.tardiness.add(tardiness);
     }
+
     public void updateTardiness(double tardiness) {
-        this.tardiness.add(this.tardiness.getLast()+tardiness);
+        double newValue = this.tardiness.getLast() + tardiness;
+        this.tardiness.add(newValue);
         updateMaxTardiness(tardiness);
     }
 
@@ -79,7 +81,8 @@ public class ShiftUp {
     }
 
     public void updateMaxTardiness(double maxTardiness) {
-        this.maxTardiness.add(Math.max(this.maxTardiness.getLast(), maxTardiness));
+        double currentMax = this.maxTardiness.getLast();
+        this.maxTardiness.add(Math.max(currentMax, maxTardiness));
     }
 
     public ArrayList<Double> getTravelCost() {
@@ -89,15 +92,20 @@ public class ShiftUp {
     public void setTravelCost(ArrayList<Double> travelCost) {
         this.travelCost= new ArrayList<>(travelCost);
     }
+
     public void updateTravelCost(double travelCost) {
-        this.travelCost.add(this.travelCost.getLast() + travelCost);
+        double newValue = this.travelCost.getLast() + travelCost;
+        this.travelCost.add(newValue);
     }
-    public void showInfo(){
-        System.out.println("Route -- "+route);
-        System.out.println("Time -- "+ currentTime);
-        System.out.println("tardiness -- "+ tardiness);
-        System.out.println("Maxtardiness -- "+ maxTardiness);
-        System.out.println("travel cost-- "+ travelCost);
+
+    public void showInfo() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Route -- ").append(route).append("\n")
+                .append("Time -- ").append(currentTime).append("\n")
+                .append("Tardiness -- ").append(tardiness).append("\n")
+                .append("MaxTardiness -- ").append(maxTardiness).append("\n")
+                .append("Travel cost -- ").append(travelCost);
+        System.out.println(sb);
     }
 }
 

@@ -180,7 +180,7 @@ public class Uniform_CrossoverTask implements Runnable {
                         if (k != l) {
                             int m = c1Routes[k].size();
                             int n = c1Routes[l].size();
-                            if (noEvaluationConflicts(c1Routes[k], c1Routes[l], m, n)) {
+                            if (noEvaluationConflicts(c1Routes[k], c1Routes[l], m, n,data)) {
                                 tempRoute1 = new ArrayList<>(c1Routes[k]);
                                 tempRoute2 = new ArrayList<>(c1Routes[l]);
                                 tempRoute1.add(m, s);
@@ -407,7 +407,7 @@ public class Uniform_CrossoverTask implements Runnable {
         return caregivers;
     }
 
-    private boolean noEvaluationConflicts(ArrayList<String> c1Route, ArrayList<String> c2Route, int m, int n) {
+    private boolean noEvaluationConflicts(ArrayList<String> c1Route, ArrayList<String> c2Route, int m, int n, InstancesClass data) {
         return conflictCheck(c1Route, c2Route, m, n);
     }
 

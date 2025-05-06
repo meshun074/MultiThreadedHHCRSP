@@ -87,7 +87,7 @@ public class LocalSearchThread implements Runnable{
 
                             for (int m = 0; m <= routes[k].size(); m++) {
                                 for (int n = 0; n <= routes[l].size(); n++) {
-                                    if (noEvaluationConflicts(routes[k], routes[l], m, n)) {
+                                    if (noEvaluationConflicts(routes[k], routes[l], m, n,data)) {
                                         tempRoute1 = new ArrayList<>(routes[k]);
                                         tempRoute2 = new ArrayList<>(routes[l]);
                                         tempRoute1.add(m, patient.getId());
@@ -155,7 +155,7 @@ public class LocalSearchThread implements Runnable{
                             swapPatients(tempRoute1, b1, w);
                             currentRoute1 = routes[j];
                             routes[j] = tempRoute1;
-                            if (noEvaluationConflicts(tempRoute1, routes[r2], w, b2)) {
+                            if (noEvaluationConflicts(tempRoute1, routes[r2], w, b2,data)) {
                                 tempCh = new Chromosome(routes, 0.0, true);
                                 EvaluateFitness(Collections.singletonList(tempCh), data);
                                 if (tempCh.getFitness() < bestCost) {
@@ -172,7 +172,7 @@ public class LocalSearchThread implements Runnable{
                                                 swapPatients(tempRoute1, b2, l);
                                                 currentRoute3 = routes[k];
                                                 routes[k] = tempRoute1;
-                                                if (noEvaluationConflicts(tempRoute1, routes[r1], l, b1)) {
+                                                if (noEvaluationConflicts(tempRoute1, routes[r1], l, b1,data)) {
                                                     tempCh = new Chromosome(routes, 0.0, true);
                                                     EvaluateFitness(Collections.singletonList(tempCh), data);
                                                     if (tempCh.getFitness() < bestCost) {
@@ -202,7 +202,7 @@ public class LocalSearchThread implements Runnable{
                                                         currentRoute4 = routes[r2];
                                                         routes[k] = tempRoute1;
                                                         routes[r2] = tempRoute2;
-                                                        if (noEvaluationConflicts(tempRoute1, routes[r1], l, b1)){
+                                                        if (noEvaluationConflicts(tempRoute1, routes[r1], l, b1,data)){
                                                             tempCh = new Chromosome(routes, 0.0, true);
                                                             EvaluateFitness(Collections.singletonList(tempCh), data);
                                                             if (tempCh.getFitness() < bestCost) {
@@ -243,7 +243,7 @@ public class LocalSearchThread implements Runnable{
                                     currentRoute2 = routes[r1];
                                     routes[j] = tempRoute1;
                                     routes[r1] = tempRoute2;
-                                    if (noEvaluationConflicts(tempRoute1, routes[r2], w, b2)){
+                                    if (noEvaluationConflicts(tempRoute1, routes[r2], w, b2,data)){
                                         tempCh = new Chromosome(routes, 0.0, true);
                                         EvaluateFitness(Collections.singletonList(tempCh), data);
                                         if (tempCh.getFitness() < bestCost) {
@@ -260,7 +260,7 @@ public class LocalSearchThread implements Runnable{
                                                         swapPatients(tempRoute1, b2, l);
                                                         currentRoute3 = routes[k];
                                                         routes[k] = tempRoute1;
-                                                        if (noEvaluationConflicts(tempRoute1, routes[r1], l, b1)) {
+                                                        if (noEvaluationConflicts(tempRoute1, routes[r1], l, b1,data)) {
                                                             tempCh = new Chromosome(routes, 0.0, true);
                                                             EvaluateFitness(Collections.singletonList(tempCh), data);
                                                             if (tempCh.getFitness() < bestCost) {
@@ -290,7 +290,7 @@ public class LocalSearchThread implements Runnable{
                                                                 currentRoute4 = routes[r2];
                                                                 routes[k] = tempRoute1;
                                                                 routes[r2] = tempRoute2;
-                                                                if (noEvaluationConflicts(tempRoute1, routes[r1], l, b1)){
+                                                                if (noEvaluationConflicts(tempRoute1, routes[r1], l, b1,data)){
                                                                     tempCh = new Chromosome(routes, 0.0, true);
                                                                     EvaluateFitness(Collections.singletonList(tempCh), data);
                                                                     if (tempCh.getFitness() < bestCost) {
@@ -418,7 +418,7 @@ public class LocalSearchThread implements Runnable{
         }
         return caregivers;
     }
-    private boolean noEvaluationConflicts(ArrayList<String> c1Route, ArrayList<String> c2Route, int m, int n) {
+    private boolean noEvaluationConflicts(ArrayList<String> c1Route, ArrayList<String> c2Route, int m, int n, InstancesClass data) {
         return conflictCheck(c1Route, c2Route, m, n);
     }
 }

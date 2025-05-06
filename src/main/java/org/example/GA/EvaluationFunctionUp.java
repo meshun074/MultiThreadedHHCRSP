@@ -82,11 +82,13 @@ public class EvaluationFunctionUp {
         double startTime1 = Math.max(arrivalTime1, timeWindow[0]);
         if (p.getRequired_caregivers().length > 1) {
             if (track.contains(patient)) {
+                //
                 return false;
             }
             track.add(patient);
             index = findSecondCaregiver(p, i, routes, ch, track);
             if (index > dataset.getCaregivers().length - 1) {
+                // Testing
                 return false;
             }
             caregiver2 = routes[index];
@@ -221,3 +223,4 @@ public class EvaluationFunctionUp {
     }
 
 }
+

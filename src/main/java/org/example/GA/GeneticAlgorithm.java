@@ -13,7 +13,7 @@ import static org.example.GA.EvaluationFunction.EvaluateFitness;
 import static org.example.GA.EvaluationFunction.getIdOfObject;
 import static org.example.Main.startTime;
 
-public class GeneticAlgorithm implements Runnable {
+public class GeneticAlgorithm{
     private final int popSize;
     private final int gen;
     private final int identity;
@@ -31,10 +31,13 @@ public class GeneticAlgorithm implements Runnable {
     private List<Chromosome> nextPopulation;
     private List<Chromosome> tempPopulation;
     private List<Chromosome> newPopulation;
-    public static List<Chromosome> bestChromosomes;
     private List<Chromosome> crossoverChromosomes;
     private final double[] popProbabilities;
     private Map<Integer, Chromosome> LSChromosomes;
+    private int terminator =0;
+    private final int maxSearch;
+    private final int patientLength;
+
 
     public GeneticAlgorithm(int identity, int numOfEliteSearch, int LSRate, int TSRate, int popSize, int gen,   float elitismRate, float crossRate,  Parameters p, InstancesClass data) {
         this.identity = identity;
@@ -51,25 +54,17 @@ public class GeneticAlgorithm implements Runnable {
         mutRate = p.mutationRate();
         this.data = data;
         popProbabilities = new double[popSize];
+        patientLength = data.getPatients().length;
+        maxSearch = (patientLength < 75 ? Math.ceilDiv(patientLength, 6) : 20);
     }
 
     public Chromosome start() {
-//        ArrayList[] cells = new ArrayList[data.getCaregivers().length];
-//        String[] c1 = {"p10", "p3", "p9", "p5", "p7"};
-//        String[] c2 = {"p8"};
-//        String[] c3 = {"p8", "p10", "p6", "p2", "p1", "p9", "p4"};
-//        cells[0] = new ArrayList<>(List.of(c1));
-//        cells[1] = new ArrayList<>(List.of(c2));
-//        cells[2] = new ArrayList<>(List.of(c3));
-//        Chromosome test = new Chromosome(cells,0.0);
-//        EvaluateFitness(Collections.singletonList(test),data);
-//        test.showSolution(98);
         System.out.printf("Population Size: %d, Generation: %d, LSRate: %d, TSRate: %d, Crossover type: %s\n CrossRate: %f, EliteRate: %f, Mutation Rate: %f, Number of Elite Search: %d\n", popSize,gen,LSRate,TSRate,crossType,crossRate,elitismRate,mutRate,numOfEliteSearch);
         bestChromosome = null;
         //initialize and evaluate fitness of chromosome
-        newPopulation = Population.initialize(popSize, data.getPatients().length);
+        newPopulation = Population.initialize(popSize, patientLength);
         if(!crossType.equals("MP")&&mutRate==-1f){
-            LocalSearch();
+            LocalSearch(maxSearch,0);
         }
         //Sort population
         sortPopulation(newPopulation);
@@ -82,12 +77,13 @@ public class GeneticAlgorithm implements Runnable {
             //Local search();
             if(!crossType.equals("MP")&&mutRate==-1f){
                 if (i % LSRate == 0)
-                    LocalSearch();
+                    LocalSearch(maxSearch,i);
             }
             //if (i % LSRate == 0)
             //MultiParentBCRCDLS();
             updatePopulation1();
             performanceUpdate(newPopulation, i);
+            if(terminator == 30) break;
         }
         return bestChromosome;
     }
@@ -336,7 +332,7 @@ public class GeneticAlgorithm implements Runnable {
             boolean finalCross = cross;
 
             crossoverTasks.add(() -> {
-                new BCRCD_CrossoverTask(this,identity,mutRate,finalP1, finalP2, finalR1,finalR2, finalCross, data).run();
+                new BCRCD_CrossoverTaskUp(this,identity,mutRate,finalP1, finalP2, finalR1,finalR2, finalCross, data).run();
                 return null;
             });
             index++;
@@ -346,7 +342,7 @@ public class GeneticAlgorithm implements Runnable {
                 cross = index < popSize * crossRate;
                 boolean finalCross1 = cross;
                 crossoverTasks.add(() -> {
-                    new BCRCD_CrossoverTask(this,identity,mutRate,finalP2, finalP1, finalR2,finalR1, finalCross1, data).run();
+                    new BCRCD_CrossoverTaskUp(this,identity,mutRate,finalP2, finalP1, finalR2,finalR1, finalCross1, data).run();
                     return null;
                 });
                 index++;
@@ -473,7 +469,7 @@ public class GeneticAlgorithm implements Runnable {
     }
     private Chromosome mutation(Chromosome c){
         Random rand = new Random(System.currentTimeMillis());
-        Chromosome newCh = search(c, rand.nextInt(data.getPatients().length));
+        Chromosome newCh = search(c, rand.nextInt(patientLength));
         if(newCh.getFitness()<c.getFitness())
             return newCh;
         return c;
@@ -536,7 +532,7 @@ public class GeneticAlgorithm implements Runnable {
         return LSChromosomes;
     }
 
-    private void LocalSearch() {
+    private void LocalSearch(int max, int genNum) {
         //System.out.println("LocalSearch");
         Random rand = new Random(System.currentTimeMillis());
         Chromosome ch;
@@ -544,6 +540,7 @@ public class GeneticAlgorithm implements Runnable {
         Set<Integer> keys = new HashSet<>();
 
         ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        //ExecutorService service = Executors.newFixedThreadPool(1);
         HashMap<Integer, Chromosome> newMap = new HashMap<>();
         LSChromosomes =Collections.synchronizedMap(newMap);
         List<Callable<Void>> LSTasks = new ArrayList<>();
@@ -559,7 +556,7 @@ public class GeneticAlgorithm implements Runnable {
             Chromosome finalCh = ch;
             int finalR = r;
             LSTasks.add(() -> {
-                new LocalSearchThreadUp(this, finalCh,rand, finalR, data).run();
+                new LocalSearchThreadUp(this, finalCh,rand,max, finalR, genNum, data).run();
                 return null;
             });
         }
@@ -586,6 +583,7 @@ public class GeneticAlgorithm implements Runnable {
         ArrayList<String> route;
         String p;
         double bestCost;
+        boolean isSeq = false;
         String service1, service2;
         ArrayList<String> tempRoute1, tempRoute2, currentRoute1, currentRoute2, currentRoute3, currentRoute4;
         Set<Integer> caregivers1, caregivers2;
@@ -609,6 +607,7 @@ public class GeneticAlgorithm implements Runnable {
             service2 = patient.getRequired_caregivers()[1].getService();
             caregivers1 = data.getQualifiedCaregiver(service1);
             caregivers2 = data.getQualifiedCaregiver(service2);
+            isSeq = patient.getSynchronization().getType().equals("sequential");
 
             for (int k = 0; k < routes.length; k++) {
                 if (caregivers1.contains(k)) {
@@ -617,7 +616,7 @@ public class GeneticAlgorithm implements Runnable {
 
                             for (int m = 0; m <= routes[k].size(); m++) {
                                 for (int n = 0; n <= routes[l].size(); n++) {
-                                    if (noEvaluationConflicts(routes[k], routes[l], m, n)) {
+                                    if (isSeq||noEvaluationConflicts(routes[k], routes[l], m, n)) {
                                         tempRoute1 = new ArrayList<>(routes[k]);
                                         tempRoute2 = new ArrayList<>(routes[l]);
                                         tempRoute1.add(m, patient.getId());
@@ -687,7 +686,7 @@ public class GeneticAlgorithm implements Runnable {
                             swapPatients(tempRoute1, b1, w);
                             currentRoute1 = routes[j];
                             routes[j] = tempRoute1;
-                            if (noEvaluationConflicts(tempRoute1, routes[r2], w, b2)) {
+                            if (isSeq||noEvaluationConflicts(tempRoute1, routes[r2], w, b2)) {
                                 tempCh = new Chromosome(routes, 0.0, true);
                                 EvaluateFitness(Collections.singletonList(tempCh), data);
                                 if (tempCh.getFitness() < bestCost) {
@@ -704,7 +703,7 @@ public class GeneticAlgorithm implements Runnable {
                                                 swapPatients(tempRoute1, b2, l);
                                                 currentRoute3 = routes[k];
                                                 routes[k] = tempRoute1;
-                                                if (noEvaluationConflicts(tempRoute1, routes[r1], l, b1)) {
+                                                if (isSeq||noEvaluationConflicts(tempRoute1, routes[r1], l, b1)) {
                                                     tempCh = new Chromosome(routes, 0.0, true);
                                                     EvaluateFitness(Collections.singletonList(tempCh), data);
                                                     if (tempCh.getFitness() < bestCost) {
@@ -734,7 +733,7 @@ public class GeneticAlgorithm implements Runnable {
                                                         currentRoute4 = routes[r2];
                                                         routes[k] = tempRoute1;
                                                         routes[r2] = tempRoute2;
-                                                        if (noEvaluationConflicts(tempRoute1, routes[r1], l, b1)){
+                                                        if (isSeq||noEvaluationConflicts(tempRoute1, routes[r1], l, b1)){
                                                             tempCh = new Chromosome(routes, 0.0, true);
                                                             EvaluateFitness(Collections.singletonList(tempCh), data);
                                                             if (tempCh.getFitness() < bestCost) {
@@ -775,7 +774,7 @@ public class GeneticAlgorithm implements Runnable {
                                     currentRoute2 = routes[r1];
                                     routes[j] = tempRoute1;
                                     routes[r1] = tempRoute2;
-                                    if (noEvaluationConflicts(tempRoute1, routes[r2], w, b2)){
+                                    if (isSeq||noEvaluationConflicts(tempRoute1, routes[r2], w, b2)){
                                         tempCh = new Chromosome(routes, 0.0, true);
                                         EvaluateFitness(Collections.singletonList(tempCh), data);
                                         if (tempCh.getFitness() < bestCost) {
@@ -792,7 +791,7 @@ public class GeneticAlgorithm implements Runnable {
                                                         swapPatients(tempRoute1, b2, l);
                                                         currentRoute3 = routes[k];
                                                         routes[k] = tempRoute1;
-                                                        if (noEvaluationConflicts(tempRoute1, routes[r1], l, b1)) {
+                                                        if (isSeq||noEvaluationConflicts(tempRoute1, routes[r1], l, b1)) {
                                                             tempCh = new Chromosome(routes, 0.0, true);
                                                             EvaluateFitness(Collections.singletonList(tempCh), data);
                                                             if (tempCh.getFitness() < bestCost) {
@@ -822,7 +821,7 @@ public class GeneticAlgorithm implements Runnable {
                                                                 currentRoute4 = routes[r2];
                                                                 routes[k] = tempRoute1;
                                                                 routes[r2] = tempRoute2;
-                                                                if (noEvaluationConflicts(tempRoute1, routes[r1], l, b1)){
+                                                                if (isSeq||noEvaluationConflicts(tempRoute1, routes[r1], l, b1)){
                                                                     tempCh = new Chromosome(routes, 0.0, true);
                                                                     EvaluateFitness(Collections.singletonList(tempCh), data);
                                                                     if (tempCh.getFitness() < bestCost) {
@@ -970,18 +969,6 @@ public class GeneticAlgorithm implements Runnable {
     }
 
 
-//    private HashSet<Integer> getQualifiedCaregiver(String service) {
-//        HashSet<Integer> caregivers = new HashSet<>();
-//        Set<String> abilities;
-//        for (Caregiver c : data.getCaregivers()) {
-//            abilities = new HashSet<>(c.getAbilities());
-//            if (abilities.contains(service)) {
-//                caregivers.add(c.getCacheId());
-//            }
-//        }
-//        return caregivers;
-//    }
-
     private void maintainElitism() {
         nextPopulation = new ArrayList<>();
         sortPopulation(newPopulation);
@@ -996,18 +983,18 @@ public class GeneticAlgorithm implements Runnable {
 
     private void performanceUpdate(List<Chromosome> population, int iterations) {
         sortPopulation(population);
+        if(iterations>0&&bestChromosome.getFitness()==population.getFirst().getFitness()){
+            terminator++;
+        }else {
+            terminator=0;
+        }
+        bestChromosome = population.getFirst();
         double averageFitness = population.stream().mapToDouble(Chromosome::getFitness).sum();
         long time = (System.currentTimeMillis() - startTime) / (1000);
-        System.out.println("Time at: " + time + " Index " + identity +" Generation " +iterations + " Best fitness: " + population.getFirst().getFitness() + " Average fitness: " + averageFitness/popSize );
+        System.out.println("Time at: " + time + " Index " + identity +" Generation " +iterations + " Best fitness: " + bestChromosome.getFitness() + " Average fitness: " + averageFitness/popSize );
         if (iterations == gen) {
             population.getFirst().showSolution(identity);
-            bestChromosome = population.getFirst();
             System.out.println( "Time at: " + time+" Index " + identity +" Generation " + iterations + " Fitness: " + bestChromosome.getFitness() + " Total Distance: " + bestChromosome.getTotalTravelCost() + " Total Tardiness: " + bestChromosome.getTotalTardiness() + " Highest Tardiness: " + bestChromosome.getHighestTardiness());
         }
-    }
-
-    @Override
-    public void run() {
-        bestChromosomes.add(start());
     }
 }

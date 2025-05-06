@@ -4,6 +4,7 @@ import org.example.Data.Caregiver;
 import org.example.Data.InstancesClass;
 import org.example.Data.Patient;
 
+import javax.xml.crypto.Data;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -450,7 +451,9 @@ public class BCRC_CrossoverTaskUpR implements Runnable {
         ArrayList<String> route;
         ShiftUp[] routes = ch.getCaregiversRouteUp();
         ShiftUp caregiver1;
-        Set<String> track = new HashSet<>();
+        Set<String> track = new LinkedHashSet<>();
+        Map<String,List<Integer>> sycTrack = new HashMap<>();
+        int simCounter = 0;
         for (int i = 0; i < routeEndPoint.length; i++) {
             route = new ArrayList<>(ch.getGenes()[i]);
             caregiver1 = routes[i];
@@ -467,6 +470,7 @@ public class BCRC_CrossoverTaskUpR implements Runnable {
                             return;
                         }
                         track.clear();
+                        sycTrack.clear();
                     }
                 }
             }
@@ -481,7 +485,9 @@ public class BCRC_CrossoverTaskUpR implements Runnable {
         ArrayList<String> route;
         ShiftUp[] routes = ch.getCaregiversRouteUp();
         ShiftUp caregiver1;
-        Set<String> track = new HashSet<>();
+        Set<String> track = new LinkedHashSet<>();
+        Map<String,List<Integer>> sycTrack = new HashMap<>();
+        int simCounter = 0;
         for (int i = 0; i < routeEndPoint.length; i++) {
             route = new ArrayList<>(ch.getGenes()[i]);
             caregiver1 = routes[i];
@@ -498,6 +504,7 @@ public class BCRC_CrossoverTaskUpR implements Runnable {
                             return;
                         }
                         track.clear();
+                        sycTrack.clear();
                     }
                 }
             }

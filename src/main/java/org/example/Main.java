@@ -11,11 +11,7 @@ import java.io.File;
 import java.io.PrintStream;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Main {
     public static InstancesClass instance;
@@ -61,49 +57,23 @@ public class Main {
                 System.out.printf("Config Parameters: parameterIndex=%d, ProblemSize=%d, instanceNumber=%d, seed=%d\n", paramIndex, problemSize, instanceNumber, randomSeed);
 
                 instance = ReadData.read(new File("src/main/java/org/example/Data/instance/" + instanceName + "_" + instanceNumber + ".json"));
-//                System.out.println(instance.getQualifiedCaregiver("s5"));
-//                System.exit(1);
 
                 // GA execution setup
                 double total = 0;
                 double best = Double.MAX_VALUE;
-                Chromosome bestChromosome = null;
-                ExecutorService executor = Executors.newFixedThreadPool(1);
-                GeneticAlgorithm.bestChromosomes = Collections.synchronizedList(new ArrayList<>());
-                List<Callable<Void>> gaTasks = new ArrayList<>();
 
-                gaTasks.add(() -> {
-                    new GeneticAlgorithm(randomSeed, 6, 10, 4, 300, 600, 0.1f, 1.0f, p, instance).run();
-                    return null;
-                });
-
+                GeneticAlgorithm ga = new GeneticAlgorithm(randomSeed, 6, 10, 4, 100, 600, 0.1f, 1.0f, p, instance);
+                Chromosome bestChromosome = ga.start();
                 // Execute GA tasks
-                try{
-                    executor.invokeAll(gaTasks);
-                    List<Chromosome> gaChromosomes = GeneticAlgorithm.bestChromosomes;
-                    synchronized (gaChromosomes) {
-                        for (Chromosome ch : gaChromosomes) {
-                            if (ch.getFitness() < best) {
-                                best = ch.getFitness();
-                                bestChromosome = ch;
-                            }
-                            total += ch.getFitness();
-                        }
-                    }
-                }finally {
-                    executor.shutdown();
-                }
 
-                double mean = total;
                 endTime = System.currentTimeMillis();
                 averageTime = (endTime - startTime) / 1000;
 
                 assert bestChromosome != null;
                 System.out.println("----------------- Solution ----------------------");
-                System.out.println("Instance_" + instanceName + "_" + instanceNumber + " Best Fitness: " + best + " Average Fitness: " + mean + " Average Time: " + averageTime + "s");
+                System.out.println("Instance_" + instanceName + "_" + instanceNumber + " Best Fitness: " + bestChromosome.getFitness() + " Time: " + averageTime + "s");
                 System.out.println("Total Distance: " + bestChromosome.getTotalTravelCost() + " Total Tardiness: " + bestChromosome.getTotalTardiness() + " Highest Tardiness: " + bestChromosome.getHighestTardiness());
                 bestChromosome.showSolution(0);
-                System.out.println("All GA tasks completed. " + gaTasks.size());
 
 
             } catch (Exception e) {
