@@ -62,7 +62,7 @@ public class Main {
                 double total = 0;
                 double best = Double.MAX_VALUE;
 
-                GeneticAlgorithm ga = new GeneticAlgorithm(randomSeed, 6, 10, 4, 100, 600, 0.1f, 1.0f, p, instance);
+                GeneticAlgorithm ga = new GeneticAlgorithm(randomSeed, 6, 10, 4, 100, 6000, 0.1f, 1.0f, p, instance);
                 Chromosome bestChromosome = ga.start();
                 // Execute GA tasks
 

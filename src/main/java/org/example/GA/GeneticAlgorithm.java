@@ -83,7 +83,7 @@ public class GeneticAlgorithm{
             //MultiParentBCRCDLS();
             updatePopulation1();
             performanceUpdate(newPopulation, i);
-            if(terminator == 30) break;
+            if(terminator == 60) break;
         }
         return bestChromosome;
     }
