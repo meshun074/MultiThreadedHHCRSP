@@ -84,7 +84,11 @@ public class GeneticAlgorithm{
             //MultiParentBCRCDLS();
             updatePopulation1();
             performanceUpdate(newPopulation, i);
-            if(terminator == 60) break;
+            if(patientLength<=100){
+                if(terminator == patientLength/2) break;
+            }else {
+                if (terminator == 60) break;
+            }
         }
         return bestChromosome;
     }
