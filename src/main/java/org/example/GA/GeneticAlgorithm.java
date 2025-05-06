@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 import static org.example.GA.EvaluationFunction.EvaluateFitness;
 import static org.example.GA.EvaluationFunction.getIdOfObject;
 import static org.example.Main.startTime;
+import static org.example.Main.timer;
 
 public class GeneticAlgorithm{
     private final int popSize;
@@ -989,10 +990,10 @@ public class GeneticAlgorithm{
         bestChromosome = population.getFirst();
         double averageFitness = population.stream().mapToDouble(Chromosome::getFitness).sum();
         long time = (System.currentTimeMillis() - startTime) / (1000);
-        System.out.println("Time at: " + time + " Index " + identity +" Generation " +iterations + " Best fitness: " + bestChromosome.getFitness() + " Average fitness: " + averageFitness/popSize );
+        System.out.println("Time at: " + time +" CPU Timer"+ String.format("%.3f", timer.getTotalCPUTimeSeconds()) +" seconds Index " + identity +" Generation " +iterations + " Best fitness: " + bestChromosome.getFitness() + " Average fitness: " + averageFitness/popSize );
         if (iterations == gen) {
             population.getFirst().showSolution((int)identity);
-            System.out.println( "Time at: " + time+" Index " + identity +" Generation " + iterations + " Fitness: " + bestChromosome.getFitness() + " Total Distance: " + bestChromosome.getTotalTravelCost() + " Total Tardiness: " + bestChromosome.getTotalTardiness() + " Highest Tardiness: " + bestChromosome.getHighestTardiness());
+            System.out.println( "Time at: " + time+" CPU Timer"+ String.format("%.3f", timer.getTotalCPUTimeSeconds()) +" seconds Index " + identity +" Generation " + iterations + " Fitness: " + bestChromosome.getFitness() + " Total Distance: " + bestChromosome.getTotalTravelCost() + " Total Tardiness: " + bestChromosome.getTotalTardiness() + " Highest Tardiness: " + bestChromosome.getHighestTardiness());
         }
     }
 }

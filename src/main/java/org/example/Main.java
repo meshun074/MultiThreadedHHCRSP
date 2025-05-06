@@ -14,6 +14,7 @@ import java.util.Random;
 public class Main {
     public static InstancesClass instance;
     public static long startTime;
+    public static CPUTimer timer;
     /*
     Usage: main arg1-int:parameter settings (0-65) arg2-int:problem size (0-6) arg3-int:instance number (1-10) arg4-int:seed
      */
@@ -24,6 +25,7 @@ public class Main {
             return;
         }
         for (int i = 0; i < 1; i++) {
+            timer.start();
             startTime = System.currentTimeMillis();
             long endTime;
             long averageTime;
