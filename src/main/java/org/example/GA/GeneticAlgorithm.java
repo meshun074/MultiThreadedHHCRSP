@@ -1,6 +1,6 @@
 package org.example.GA;
 
-import org.example.Data.Caregiver;
+
 import org.example.Data.InstancesClass;
 import org.example.Data.Patient;
 
@@ -16,7 +16,7 @@ import static org.example.Main.startTime;
 public class GeneticAlgorithm{
     private final int popSize;
     private final int gen;
-    private final int identity;
+    private final long identity;
     private final int LSRate;
     private final int TSRate;
     private final char selectTechnique;
@@ -39,7 +39,7 @@ public class GeneticAlgorithm{
     private final int patientLength;
 
 
-    public GeneticAlgorithm(int identity, int numOfEliteSearch, int LSRate, int TSRate, int popSize, int gen,   float elitismRate, float crossRate,  Parameters p, InstancesClass data) {
+    public GeneticAlgorithm(long identity, int numOfEliteSearch, int LSRate, int TSRate, int popSize, int gen,   float elitismRate, float crossRate,  Parameters p, InstancesClass data) {
         this.identity = identity;
         this.numOfEliteSearch = numOfEliteSearch;
         this.LSRate = LSRate;
@@ -62,7 +62,7 @@ public class GeneticAlgorithm{
         System.out.printf("Population Size: %d, Generation: %d, LSRate: %d, TSRate: %d, Crossover type: %s\n CrossRate: %f, EliteRate: %f, Mutation Rate: %f, Number of Elite Search: %d\n", popSize,gen,LSRate,TSRate,crossType,crossRate,elitismRate,mutRate,numOfEliteSearch);
         bestChromosome = null;
         //initialize and evaluate fitness of chromosome
-        newPopulation = Population.initialize(popSize, patientLength);
+        newPopulation = Population.initialize(popSize, patientLength,identity);
         if(!crossType.equals("MP")&&mutRate==-1f){
             LocalSearch(maxSearch,0);
         }
@@ -143,8 +143,6 @@ public class GeneticAlgorithm{
             }
             Chromosome finalP1 = p1;
             Chromosome finalP2 = p2;
-            int finalR1 = r1;
-            int finalR2 = r2;
             crossoverTasks.add(() -> {
                 new Uniform_CrossoverTask(this,identity,mutRate,finalP1, finalP2, r,data).run();
                 return null;
@@ -583,7 +581,7 @@ public class GeneticAlgorithm{
         ArrayList<String> route;
         String p;
         double bestCost;
-        boolean isSeq = false;
+        boolean isSeq;
         String service1, service2;
         ArrayList<String> tempRoute1, tempRoute2, currentRoute1, currentRoute2, currentRoute3, currentRoute4;
         Set<Integer> caregivers1, caregivers2;
@@ -993,7 +991,7 @@ public class GeneticAlgorithm{
         long time = (System.currentTimeMillis() - startTime) / (1000);
         System.out.println("Time at: " + time + " Index " + identity +" Generation " +iterations + " Best fitness: " + bestChromosome.getFitness() + " Average fitness: " + averageFitness/popSize );
         if (iterations == gen) {
-            population.getFirst().showSolution(identity);
+            population.getFirst().showSolution((int)identity);
             System.out.println( "Time at: " + time+" Index " + identity +" Generation " + iterations + " Fitness: " + bestChromosome.getFitness() + " Total Distance: " + bestChromosome.getTotalTravelCost() + " Total Tardiness: " + bestChromosome.getTotalTardiness() + " Highest Tardiness: " + bestChromosome.getHighestTardiness());
         }
     }

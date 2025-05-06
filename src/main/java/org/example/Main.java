@@ -2,16 +2,14 @@ package org.example;
 
 import org.example.Data.InstancesClass;
 import org.example.Data.ReadData;
-import org.example.GA.Chromosome;
-import org.example.GA.Config;
-import org.example.GA.GeneticAlgorithm;
-import org.example.GA.Parameters;
+import org.example.GA.*;
 
 import java.io.File;
 import java.io.PrintStream;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Main {
     public static InstancesClass instance;
@@ -29,8 +27,7 @@ public class Main {
             startTime = System.currentTimeMillis();
             long endTime;
             long averageTime;
-            SecureRandom random = new SecureRandom();
-            int randomSeed = random.nextInt(Integer.MAX_VALUE);
+
 
             try {
                 // Read configuration file
@@ -42,6 +39,9 @@ public class Main {
                 int problemSize = config.getProblemSize();
                 int instanceNumber = config.getInstanceIndex();
 
+                int runCount = RunCounter.getAndIncrementRunCount(instanceNumber);
+                long randomSeed = System.currentTimeMillis() + runCount;
+
                 List<Parameters> parameters = getParametersList();
                 Parameters p = parameters.get(paramIndex);
                 String[] Instances = {"10", "25", "50", "75", "100", "200", "300"};
@@ -52,7 +52,7 @@ public class Main {
                 new File(resultDir).mkdirs();
 
                 // Read dataset
-                PrintStream fileout = new PrintStream(resultDir + "/Result_" + instanceName + "_" + instanceNumber + "_" + p.selectionTechnique() + "_" + p.crossoverType() + "_" + p.mutationType() + "_" + p.mutationRate() + "_" + randomSeed + ".txt");
+                PrintStream fileout = new PrintStream(resultDir + "/Result_" + instanceName + "_" + instanceNumber + "_" + runCount + "_"+ p.selectionTechnique() + "_" + p.crossoverType() + "_" + p.mutationType() + "_" + p.mutationRate() + "_" + randomSeed + ".txt");
                 System.setOut(fileout);
                 System.out.printf("Config Parameters: parameterIndex=%d, ProblemSize=%d, instanceNumber=%d, seed=%d\n", paramIndex, problemSize, instanceNumber, randomSeed);
 

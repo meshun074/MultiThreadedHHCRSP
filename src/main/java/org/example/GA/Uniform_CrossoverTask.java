@@ -12,13 +12,13 @@ import static org.example.GA.GeneticAlgorithm.conflictCheck;
 
 public class Uniform_CrossoverTask implements Runnable {
     private final GeneticAlgorithm ga;
-    private final int identity;
+    private final long identity;
     private final float mutRate;
     private final ArrayList<Double> r;
     private final Chromosome p1, p2;
     private final InstancesClass data;
 
-    public Uniform_CrossoverTask(GeneticAlgorithm ga, int identity, float mutRate, Chromosome p1, Chromosome p2, ArrayList<Double> r, InstancesClass data) {
+    public Uniform_CrossoverTask(GeneticAlgorithm ga, long identity, float mutRate, Chromosome p1, Chromosome p2, ArrayList<Double> r, InstancesClass data) {
         this.ga = ga;
         this.identity = identity;
         this.mutRate = mutRate;

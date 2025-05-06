@@ -15,14 +15,14 @@ import static org.example.GA.GeneticAlgorithm.conflictCheck;
 
 public class BCRC_CrossoverTaskUpR implements Runnable {
     private final GeneticAlgorithm ga;
-    private final int identity;
+    private final long identity;
     private final boolean cross;
     private final float mutRate;
     private final int r;
     private final Chromosome p1, p2;
     private final InstancesClass data;
 
-    public BCRC_CrossoverTaskUpR(GeneticAlgorithm ga, int identity, float mutRate, Chromosome p1, Chromosome p2, int r, boolean cross, InstancesClass data) {
+    public BCRC_CrossoverTaskUpR(GeneticAlgorithm ga, long identity, float mutRate, Chromosome p1, Chromosome p2, int r, boolean cross, InstancesClass data) {
         this.ga = ga;
         this.identity = identity;
         this.mutRate = mutRate;
@@ -38,7 +38,7 @@ public class BCRC_CrossoverTaskUpR implements Runnable {
             return p1;
         }
         Chromosome c2Temp;
-        Random rand = new Random(System.currentTimeMillis());
+        Random rand = new Random(identity);
         ArrayList[] p1Routes, c1Routes;
         ArrayList<String> selectRoute, route, route1, tempRoute1,
                 tempRoute2;

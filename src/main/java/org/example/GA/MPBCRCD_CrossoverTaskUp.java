@@ -14,7 +14,8 @@ import static org.example.GA.GeneticAlgorithm.conflictCheck;
 
 public class MPBCRCD_CrossoverTaskUp implements Runnable {
     private final Chromosome p1, p2, p3;
-    private final int r1, r2, r3, identity;
+    private final int r1, r2, r3;
+    private final long identity;
     private final float mutRate;
     private final InstancesClass data;
     private final boolean cross;
@@ -22,7 +23,7 @@ public class MPBCRCD_CrossoverTaskUp implements Runnable {
     private final Patient[] allPatients;
     private final double[][] distanceMatrix;
 
-    public MPBCRCD_CrossoverTaskUp(GeneticAlgorithm ga, int identity, float mutRate, Chromosome p1, Chromosome p2, Chromosome p3, int r1, int r2, int r3, boolean cross, InstancesClass data) {
+    public MPBCRCD_CrossoverTaskUp(GeneticAlgorithm ga, long identity, float mutRate, Chromosome p1, Chromosome p2, Chromosome p3, int r1, int r2, int r3, boolean cross, InstancesClass data) {
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;

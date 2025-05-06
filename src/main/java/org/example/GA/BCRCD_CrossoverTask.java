@@ -15,7 +15,7 @@ import static org.example.GA.GeneticAlgorithm.conflictCheck;
 
 public class BCRCD_CrossoverTask implements Runnable {
     private final GeneticAlgorithm ga;
-    private final int identity;
+    private final long identity;
     private final float mutRate;
     private boolean cross;
     private final int r1;
@@ -23,7 +23,7 @@ public class BCRCD_CrossoverTask implements Runnable {
     private final Chromosome p1, p2;
     private final InstancesClass data;
 
-    public BCRCD_CrossoverTask(GeneticAlgorithm ga, int identity, float mutRate, Chromosome p1, Chromosome p2, int r1, int r2, boolean cross, InstancesClass data) {
+    public BCRCD_CrossoverTask(GeneticAlgorithm ga, long identity, float mutRate, Chromosome p1, Chromosome p2, int r1, int r2, boolean cross, InstancesClass data) {
         this.ga = ga;
         this.identity = identity;
         this.mutRate = mutRate;
