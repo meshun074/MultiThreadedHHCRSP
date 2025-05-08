@@ -994,7 +994,7 @@ public class GeneticAlgorithm{
         bestChromosome = population.getFirst();
         double averageFitness = population.stream().mapToDouble(Chromosome::getFitness).sum();
         long time = (System.currentTimeMillis() - startTime) / (1000);
-        System.out.println("Time at: " + time +" CPU Timer"+ String.format("%.3f", timer.getTotalCPUTimeSeconds()) +" seconds Index " + identity +" Generation " +iterations + " Best fitness: " + bestChromosome.getFitness() + " Average fitness: " + averageFitness/popSize );
+        System.out.println("Time at: " + time +" CPU Timer "+ String.format("%.3f", timer.getTotalCPUTimeSeconds()) +" seconds Index " + identity +" Generation " +iterations + " Best fitness: " + bestChromosome.getFitness() + " Average fitness: " + averageFitness/popSize );
         if (iterations == gen) {
             population.getFirst().showSolution((int)identity);
             System.out.println( "Time at: " + time+" CPU Timer "+ String.format("%.3f", timer.getTotalCPUTimeSeconds()) +" seconds Index " + identity +" Generation " + iterations + " Fitness: " + bestChromosome.getFitness() + " Total Distance: " + bestChromosome.getTotalTravelCost() + " Total Tardiness: " + bestChromosome.getTotalTardiness() + " Highest Tardiness: " + bestChromosome.getHighestTardiness());

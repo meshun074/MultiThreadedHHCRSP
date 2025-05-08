@@ -6,7 +6,7 @@ import java.nio.file.*;
 public class RunCounter {
 
 
-    public static int getAndIncrementRunCount(int i) {
+    public static int getAndIncrementRunCount(long i) {
         String COUNTER_FILE = "run_counter"+i+".txt";
         try {
             // Create file if it doesn't exist

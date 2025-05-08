@@ -29,36 +29,60 @@ public class Main {
             startTime = System.currentTimeMillis();
             long endTime;
             long averageTime;
-
+            long randomSeed;
+            long instanceNumber;
+            String instanceName;
+            Parameters p;
 
             try {
                 // Read configuration file
                 File configFile = new File(args[0]);
-                Config config = Config.read(configFile);
+                if(args[0].contains("HHCRSP")){
+                    Config1 config1 = Config1.read(configFile);
+                    instanceNumber = config1.getInstanceIndex();
+                    instanceName = config1.getInstanceName();
+                    int runCount = RunCounter.getAndIncrementRunCount(instanceNumber);
+                    randomSeed = System.currentTimeMillis() + runCount;
+                    List<Parameters> parameters = getParametersList();
+                    p = parameters.get(44);
+                    //create result directory
+                    String resultDir = "src/main/java/org/example/Config_" + instanceName + "_" + instanceNumber + "_results";
+                    new File(resultDir).mkdirs();
+                    // Read dataset
+                    PrintStream fileout = new PrintStream(resultDir + "/Result_" + instanceName + "_" + instanceNumber + "_" + runCount + "_" + p.selectionTechnique() + "_" + p.crossoverType() + "_" + p.mutationType() + "_" + p.mutationRate() + "_" + randomSeed + ".txt");
+                    System.setOut(fileout);
+                    System.out.printf("Config Parameters: parameterIndex=44, instanceNumber=%d, seed=%d\n", instanceNumber, randomSeed);
 
-                // Extract parameters from JSON
-                int paramIndex = config.getParameterIndex();
-                int problemSize = config.getProblemSize();
-                int instanceNumber = config.getInstanceIndex();
+                    instance = ReadData.read(new File("src/main/java/org/example/Data/kummer/" + instanceName));
 
-                int runCount = RunCounter.getAndIncrementRunCount(instanceNumber);
-                long randomSeed = System.currentTimeMillis() + runCount;
+                }else
+                {
+                    Config config = Config.read(configFile);
 
-                List<Parameters> parameters = getParametersList();
-                Parameters p = parameters.get(paramIndex);
-                String[] Instances = {"10", "25", "50", "75", "100", "200", "300"};
-                String instanceName = Instances[problemSize];
+                    // Extract parameters from JSON
+                    int paramIndex = config.getParameterIndex();
+                    int problemSize = config.getProblemSize();
+                    instanceNumber = config.getInstanceIndex();
 
-                //create result directory
-                String resultDir = "src/main/java/org/example/Config_" + paramIndex + "_" + problemSize + "_" + instanceNumber + "_results";
-                new File(resultDir).mkdirs();
+                    int runCount = RunCounter.getAndIncrementRunCount(instanceNumber);
+                    randomSeed = System.currentTimeMillis() + runCount;
 
-                // Read dataset
-                PrintStream fileout = new PrintStream(resultDir + "/Result_" + instanceName + "_" + instanceNumber + "_" + runCount + "_"+ p.selectionTechnique() + "_" + p.crossoverType() + "_" + p.mutationType() + "_" + p.mutationRate() + "_" + randomSeed + ".txt");
-                System.setOut(fileout);
-                System.out.printf("Config Parameters: parameterIndex=%d, ProblemSize=%d, instanceNumber=%d, seed=%d\n", paramIndex, problemSize, instanceNumber, randomSeed);
+                    List<Parameters> parameters = getParametersList();
+                    p = parameters.get(paramIndex);
+                    String[] Instances = {"10", "25", "50", "75", "100", "200", "300"};
+                    instanceName = Instances[problemSize];
 
-                instance = ReadData.read(new File("src/main/java/org/example/Data/instance/" + instanceName + "_" + instanceNumber + ".json"));
+                    //create result directory
+                    String resultDir = "src/main/java/org/example/Config_" + paramIndex + "_" + problemSize + "_" + instanceNumber + "_results";
+                    new File(resultDir).mkdirs();
+
+                    // Read dataset
+                    PrintStream fileout = new PrintStream(resultDir + "/Result_" + instanceName + "_" + instanceNumber + "_" + runCount + "_" + p.selectionTechnique() + "_" + p.crossoverType() + "_" + p.mutationType() + "_" + p.mutationRate() + "_" + randomSeed + ".txt");
+                    System.setOut(fileout);
+                    System.out.printf("Config Parameters: parameterIndex=%d, ProblemSize=%d, instanceNumber=%d, seed=%d\n", paramIndex, problemSize, instanceNumber, randomSeed);
+
+                    instance = ReadData.read(new File("src/main/java/org/example/Data/instance/" + instanceName + "_" + instanceNumber + ".json"));
+                }
 
                 // GA execution setup
                 double total = 0;
