@@ -177,7 +177,7 @@ public class BCRC_CrossoverTaskUp implements Runnable {
             return p1;
         }
         Chromosome c2Temp;
-        Random rand = new Random(identity);
+        Random rand = new Random(identity+System.currentTimeMillis());
         ArrayList[] p1Routes, c1Routes;
         ArrayList<String> route, route1, tempRoute1,
                 tempRoute2;
