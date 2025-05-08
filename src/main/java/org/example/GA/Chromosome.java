@@ -10,7 +10,7 @@ public class Chromosome {
     private double totalTardiness;
     private double highestTardiness;
     private ArrayList[] genes;
-    private Shift[] caregiversRoute;
+
     private ShiftUp[] caregiversRouteUp;
     private final Map<String, Set<Integer>> patientToRoutesMap = new HashMap<>();
     public Chromosome(int caregivers) {
@@ -20,20 +20,20 @@ public class Chromosome {
         for (int i = 0; i < caregivers; i++) {
             genes[i] = new ArrayList();
         }
-        caregiversRoute = new Shift[caregivers];
+        caregiversRouteUp = new ShiftUp[caregivers];
     }
     public Chromosome(ArrayList[] genes, double fitness, int rank) {
         this.rank = rank;
         this.genes = genes;
         this.caregivers = genes.length;
         this.fitness = fitness;
-        caregiversRoute = new Shift[caregivers];
+        caregiversRouteUp = new ShiftUp[caregivers];
     }
     public Chromosome(ArrayList[] genes, double fitness) {
         this.genes = genes;
         this.caregivers = genes.length;
         this.fitness = fitness;
-        caregiversRoute = new Shift[caregivers];
+        caregiversRouteUp = new ShiftUp[caregivers];
     }
     public Chromosome(ArrayList[] genes, double fitness, boolean newChromosome) {
         this.genes = new ArrayList[genes.length];
@@ -42,7 +42,6 @@ public class Chromosome {
         }
         this.caregivers = genes.length;
         this.fitness = fitness;
-        caregiversRoute = new Shift[caregivers];
         caregiversRouteUp = new ShiftUp[caregivers];
         this.totalTravelCost = 0;
         this.totalTardiness = 0;
@@ -104,13 +103,6 @@ public class Chromosome {
         this.genes = genes;
     }
 
-    public Shift[] getCaregiversRoute() {
-        return caregiversRoute;
-    }
-
-    public void setCaregiversRoute(Shift[] caregiversRoute) {
-        this.caregiversRoute = caregiversRoute;
-    }
     public void setCaregiversRouteUp(ShiftUp[] caregiversRouteUp) {
         this.caregiversRouteUp = caregiversRouteUp;
     }
@@ -149,11 +141,17 @@ public class Chromosome {
     }
 
     public void showSolution(int index) {
-        System.out.print("index : "+index+"\t");
-        for (ArrayList route : genes) {
-            System.out.print(route+" - ");
+        System.out.print("\n Best Solution : "+index+"\n");
+        for (int i =0; i< genes.length; i++) {
+            ArrayList<String> route = genes[i];
+            ShiftUp Caregiver = caregiversRouteUp[i];
+            System.out.println(Caregiver.getCaregiver().getId() +" - "+ route);
+            System.out.println("Travel Cost to patients\n"+Caregiver.getTravelCost());
+            System.out.println("Service completed time at patients\n"+Caregiver.getCurrentTime());
+            System.out.println("Route total tardiness: "+Caregiver.getTardiness().getLast()+" Route Highest tardiness: "+Caregiver.getMaxTardiness().getLast());
+            System.out.println();
         }
-        System.out.println("fitness: "+fitness);
+
     }
     public String toString() {
         StringBuilder genesStrings= new StringBuilder();

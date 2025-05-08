@@ -20,16 +20,16 @@ public class EvaluationFunction {
     }
 
     private static void Evaluate(Chromosome ch) {
-        Shift[] routes = new Shift[ch.getCaregivers()];
+        ShiftUp[] routes = new ShiftUp[ch.getCaregivers()];
         //initializing caregivers shift.
         initializeRoutes(routes);
-        ch.setCaregiversRoute(routes);
+        ch.setCaregiversRouteUp(routes);
         ch.setHighestTardiness(0);
         ch.setTotalTardiness(0);
         ch.setTotalTravelCost(0);
         ch.setFitness(Double.POSITIVE_INFINITY);
         ArrayList<String> route;
-        Shift caregiver1;
+        ShiftUp caregiver1;
         Set<String> track =new HashSet<>();
 
         for (int i = 0; i < routes.length; i++) {
@@ -46,7 +46,7 @@ public class EvaluationFunction {
                 }
             }
         }
-        for (Shift s : routes)
+        for (ShiftUp s : routes)
             ch.updateTotalTravelCost(dataset.getDistances()[getIdOfObjectLocation(s.getRoute().getLast())][0]);
         UpdateCost(ch);
     }
@@ -55,16 +55,16 @@ public class EvaluationFunction {
         ch.setFitness((1 / 3d * ch.getTotalTravelCost()) + (1 / 3d * ch.getTotalTardiness()) + (1 / 3d * ch.getHighestTardiness()));
     }
 
-    private static boolean patientAssignment(Chromosome ch, String patient, Shift caregiver1, Shift[] routes, int i, Set<String> track) {
+    private static boolean patientAssignment(Chromosome ch, String patient, ShiftUp caregiver1, ShiftUp[] routes, int i, Set<String> track) {
         double maxTardiness;
         double travelCost;
         double tardiness;
         int index;
-        Shift caregiver2;
+        ShiftUp caregiver2;
         Patient p = dataset.getPatients()[getIdOfObject(patient)];
         int currentLocation1 = getIdOfObjectLocation(caregiver1.getRoute().getLast());
         int nextLocation = getIdOfObjectLocation(p.getId());
-        double arrivalTime1 = caregiver1.getCurrentTime() + dataset.getDistances()[currentLocation1][nextLocation];
+        double arrivalTime1 = caregiver1.getCurrentTime().getLast() + dataset.getDistances()[currentLocation1][nextLocation];
         double startTime1 = Math.max(arrivalTime1, p.getTime_window()[0]);
         if (p.getRequired_caregivers().length > 1) {
             if(track.contains(patient)) {
@@ -86,19 +86,19 @@ public class EvaluationFunction {
             if (service1RoutesList.contains(caregiver2.getCaregiver().getId()) && !service2RoutesList.contains(caregiver2.getCaregiver().getId())
                     || service2RoutesList.contains(caregiver1.getCaregiver().getId()) && !service1RoutesList.contains(caregiver1.getCaregiver().getId())
                     || service1RoutesList.contains(caregiver2.getCaregiver().getId()) && !service1RoutesList.contains(caregiver1.getCaregiver().getId())) {
-                Shift temp = caregiver1;
+                ShiftUp temp = caregiver1;
                 caregiver1 = caregiver2;
                 caregiver2 = temp;
 
                 //initialize again since you have made a swap
                 currentLocation1 = getIdOfObjectLocation(caregiver1.getRoute().getLast());
-                arrivalTime1 = caregiver1.getCurrentTime() + dataset.getDistances()[currentLocation1][nextLocation];
+                arrivalTime1 = caregiver1.getCurrentTime().getLast() + dataset.getDistances()[currentLocation1][nextLocation];
                 startTime1 = Math.max(arrivalTime1, p.getTime_window()[0]);
             }
 
 
             int currentLocation2 = getIdOfObjectLocation(caregiver2.getRoute().getLast());
-            double arrivalTime2 = caregiver2.getCurrentTime() + dataset.getDistances()[currentLocation2][nextLocation];
+            double arrivalTime2 = caregiver2.getCurrentTime().getLast() + dataset.getDistances()[currentLocation2][nextLocation];
             double startTime2 = Math.max(arrivalTime2, p.getTime_window()[0]);
 
             if (p.getSynchronization().getType().equals("sequential")) {
@@ -134,7 +134,7 @@ public class EvaluationFunction {
         return true;
     }
 
-    private static int findSecondCaregiver(Patient p, int route1, Shift[] routes, Chromosome ch, Set<String> track) {
+    private static int findSecondCaregiver(Patient p, int route1, ShiftUp[] routes, Chromosome ch, Set<String> track) {
         ArrayList<String> route = null;
         ArrayList[] genes = ch.getGenes();
         int routeIndex = 0;
@@ -149,7 +149,7 @@ public class EvaluationFunction {
             }
         }
         assert route != null;
-        Shift caregiver = routes[routeIndex];
+        ShiftUp caregiver = routes[routeIndex];
         patientPositionInRoute = route.indexOf(p.getId());
         int i = caregiver.getRoute().size() - 1;
         while (caregiver.getRoute().size() - 1 != patientPositionInRoute && i < route.size()) {
@@ -162,10 +162,10 @@ public class EvaluationFunction {
         return routeIndex;
     }
 
-    private static void initializeRoutes(Shift[] routes) {
+    private static void initializeRoutes(ShiftUp[] routes) {
         for (int s = 0; s < routes.length; s++)
             //Initialize the shift of the caregivers
-            routes[s] = new Shift(dataset.getCaregivers()[s], new ArrayList<>() {{
+            routes[s] = new ShiftUp(dataset.getCaregivers()[s], new ArrayList<>() {{
                 add("d0");
             }}, 0.0);
     }

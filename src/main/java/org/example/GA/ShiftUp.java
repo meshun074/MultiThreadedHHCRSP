@@ -11,6 +11,7 @@ public class ShiftUp {
     private ArrayList<Double> travelCost;
     private ArrayList<Double> tardiness;
     private ArrayList<Double> maxTardiness;
+    private double load;
 
     public ShiftUp(Caregiver caregiver, ArrayList<String> route, double currentTime) {
         this.caregiver = caregiver;
@@ -20,6 +21,7 @@ public class ShiftUp {
         this.travelCost = new ArrayList<>();
         this.tardiness = new ArrayList<>();
         this.maxTardiness = new ArrayList<>();
+        this.load = 0.0;
         travelCost.add(0.0);
         tardiness.add(0.0);
         maxTardiness.add(0.0);
@@ -76,6 +78,16 @@ public class ShiftUp {
         updateMaxTardiness(tardiness);
     }
 
+    public double getLoad() {
+        return load;
+    }
+
+    public void setLoad(double load) {
+        this.load = load;
+    }
+    public void updateLoad(double load) {
+        this.load += load;
+    }
     public ArrayList<Double> getMaxTardiness() {
         return maxTardiness;
     }

@@ -8,7 +8,7 @@ public class RouteInitializer {
         private double totalTravelCost;
         private double totalTardiness;
         private double highestTardiness;
-        private Shift[] caregiversRoute;
+        private ShiftUp[] caregiversRoute;
         private ArrayList<Double> caregiversCost;
 
         public RouteInitializer(ArrayList<Integer> alleles, double solutionCost) {
@@ -47,7 +47,7 @@ public class RouteInitializer {
             return routes;
         }
 
-        public void setCaregiversRoute(Shift[] caregiversRoute) {
+        public void setCaregiversRoute(ShiftUp[] caregiversRoute) {
             this.caregiversRoute = caregiversRoute;
         }
 

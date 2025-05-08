@@ -17,11 +17,11 @@ public class AssignPatients {
     private static double greedyCheapestInsertionHeuristics(RouteInitializer ch) {
         boolean convHull = !(ch.getAlleles().get(ch.getAlleles().size() - 2) < 0.5);
         boolean wLoadHeuristic = !(ch.getAlleles().getLast() < 0.5);
-        Shift[] caregivers = new Shift[data.getCaregivers().length];
+        ShiftUp[] caregivers = new ShiftUp[data.getCaregivers().length];
         //initializing caregivers shift.
         for (int s = 0; s< caregivers.length; s++)
             //Initialize the shift of the caregivers
-            caregivers[s] = new Shift(data.getCaregivers()[s], new ArrayList<>(){{add("d0");}},0.0);
+            caregivers[s] = new ShiftUp(data.getCaregivers()[s], new ArrayList<>(){{add("d0");}},0.0);
         ch.setCaregiversRoute(caregivers);
         ch.setHighestTardiness(0);
         ch.setTotalTardiness(0);
@@ -94,7 +94,7 @@ public class AssignPatients {
         //add distance from last visited patient of the caregiver to the depot
         if(!convHull)
         {
-            for (Shift s: caregivers)
+            for (ShiftUp s: caregivers)
                 ch.updateTotalTravelCost(data.getDistances()[getIdOfObjectLocation(s.getRoute().getLast())][0]);
         }
         //update and return the cost of the function
@@ -112,18 +112,18 @@ public class AssignPatients {
         return caregivers;
     }
 
-    private static void UpdateRoutes(RouteInitializer ch, Shift[] c, String c1, String c2, Patient p, boolean convHull){
-        Shift caregiver1 = c[getIdOfObject(c1)];
+    private static void UpdateRoutes(RouteInitializer ch, ShiftUp[] c, String c1, String c2, Patient p, boolean convHull){
+        ShiftUp caregiver1 = c[getIdOfObject(c1)];
         int currentLocation1 = getIdOfObjectLocation(caregiver1.getRoute().getLast());
         int nextLocation = getIdOfObjectLocation(p.getId());
-        double arrivalTime1 = caregiver1.getCurrentTime()+data.getDistances()[currentLocation1][nextLocation];
+        double arrivalTime1 = caregiver1.getCurrentTime().getLast()+data.getDistances()[currentLocation1][nextLocation];
         double startTime1  = Math.max(arrivalTime1, p.getTime_window()[0]);
 
 
         if(p.getRequired_caregivers().length>1) {
-            Shift caregiver2 = c[getIdOfObject(c2)];
+            ShiftUp caregiver2 = c[getIdOfObject(c2)];
             int currentLocation2 = getIdOfObjectLocation(caregiver2.getRoute().getLast());
-            double arrivalTime2 = caregiver2.getCurrentTime()+data.getDistances()[currentLocation2][nextLocation];
+            double arrivalTime2 = caregiver2.getCurrentTime().getLast()+data.getDistances()[currentLocation2][nextLocation];
             double startTime2  = Math.max(arrivalTime2, p.getTime_window()[0]);
             double tardiness;
             double maxTardiness;
@@ -182,10 +182,10 @@ public class AssignPatients {
     }
     //total cost insertion
     //single
-    private static double findInsertionCost(RouteInitializer ch, Shift caregiverShift, Patient p, boolean convHull){
+    private static double findInsertionCost(RouteInitializer ch, ShiftUp caregiverShift, Patient p, boolean convHull){
         int currentLocation = getIdOfObjectLocation(caregiverShift.getRoute().getLast());
         int nextLocation = getIdOfObjectLocation(p.getId());
-        double arrivalTime = caregiverShift.getCurrentTime()+data.getDistances()[currentLocation][nextLocation];
+        double arrivalTime = caregiverShift.getCurrentTime().getLast()+data.getDistances()[currentLocation][nextLocation];
         double startTime  = Math.max(arrivalTime, p.getTime_window()[0]);
         double tardiness = Math.max(0, startTime - p.getTime_window()[1]);
         double maxTardiness = Math.max(tardiness, ch.getHighestTardiness());
@@ -197,12 +197,12 @@ public class AssignPatients {
         return (1/3d*travelCost)+(1/3d*tardiness)+(1/3d*maxTardiness);
     }
     //double
-    private static double findInsertionCost(RouteInitializer ch, Shift c1, Shift c2, Patient p, boolean convHull){
+    private static double findInsertionCost(RouteInitializer ch, ShiftUp c1, ShiftUp c2, Patient p, boolean convHull){
         int c1CurrentLocation = getIdOfObjectLocation(c1.getRoute().getLast());
         int c2CurrentLocation = getIdOfObjectLocation(c2.getRoute().getLast());
         int nextLocation = getIdOfObjectLocation(p.getId());
-        double startTime1 = Math.max(p.getTime_window()[0], c1.getCurrentTime()+data.getDistances()[c1CurrentLocation][nextLocation]);
-        double startTime2 = Math.max(p.getTime_window()[0], c2.getCurrentTime()+data.getDistances()[c2CurrentLocation][nextLocation]);
+        double startTime1 = Math.max(p.getTime_window()[0], c1.getCurrentTime().getLast()+data.getDistances()[c1CurrentLocation][nextLocation]);
+        double startTime2 = Math.max(p.getTime_window()[0], c2.getCurrentTime().getLast()+data.getDistances()[c2CurrentLocation][nextLocation]);
         double travelCost = data.getDistances()[c1CurrentLocation][nextLocation] + data.getDistances()[c2CurrentLocation][nextLocation];
         double tardiness;
         double maxTardiness;

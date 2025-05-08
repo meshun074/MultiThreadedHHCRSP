@@ -997,7 +997,7 @@ public class GeneticAlgorithm{
         System.out.println("Time at: " + time +" CPU Timer"+ String.format("%.3f", timer.getTotalCPUTimeSeconds()) +" seconds Index " + identity +" Generation " +iterations + " Best fitness: " + bestChromosome.getFitness() + " Average fitness: " + averageFitness/popSize );
         if (iterations == gen) {
             population.getFirst().showSolution((int)identity);
-            System.out.println( "Time at: " + time+" CPU Timer"+ String.format("%.3f", timer.getTotalCPUTimeSeconds()) +" seconds Index " + identity +" Generation " + iterations + " Fitness: " + bestChromosome.getFitness() + " Total Distance: " + bestChromosome.getTotalTravelCost() + " Total Tardiness: " + bestChromosome.getTotalTardiness() + " Highest Tardiness: " + bestChromosome.getHighestTardiness());
+            System.out.println( "Time at: " + time+" CPU Timer "+ String.format("%.3f", timer.getTotalCPUTimeSeconds()) +" seconds Index " + identity +" Generation " + iterations + " Fitness: " + bestChromosome.getFitness() + " Total Distance: " + bestChromosome.getTotalTravelCost() + " Total Tardiness: " + bestChromosome.getTotalTardiness() + " Highest Tardiness: " + bestChromosome.getHighestTardiness());
         }
     }
 }
