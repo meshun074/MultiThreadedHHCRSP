@@ -92,7 +92,7 @@ public class BCRC_CrossoverTaskUp implements Runnable {
 
                             for (int m = 0; m <= c1Routes[k].size(); m++) {
                                 for (int n = 0; n <= c1Routes[l].size(); n++) {
-                                    if (isSeq||noEvaluationConflicts(c1Routes[k], c1Routes[l], m, n)) {
+                                    if (isSeq || noEvaluationConflicts(c1Routes[k], c1Routes[l], m, n)) {
                                         tempRoute1 = new ArrayList<>(c1Routes[k]);
                                         tempRoute2 = new ArrayList<>(c1Routes[l]);
                                         tempRoute1.add(m, s);
@@ -176,6 +176,7 @@ public class BCRC_CrossoverTaskUp implements Runnable {
         if (!cross) {
             return p1;
         }
+//        System.out.println("maast ");
         Chromosome c2Temp;
         Random rand = new Random(System.currentTimeMillis());
         ArrayList[] p1Routes, c1Routes;
@@ -184,20 +185,20 @@ public class BCRC_CrossoverTaskUp implements Runnable {
         String patient;
         Patient p;
         int patientLength = allPatients.length;
-        int size = 40;
+        //int size = patientLength>75?20:patientLength/(int)(patientLength*0.2);
         /*
         100 - 20 1757.859
         50 - 40
         50-20--1749.651
         */
-//        Set<String> selectRoute = new HashSet<>(p2.getGenes()[r]);
-        Set<String> selectRoute = new HashSet<>(size);
-
-        int sp;
-        while (selectRoute.size() < size) {
-            sp = rand.nextInt(patientLength);
-            selectRoute.add(allPatients[sp].getId());
-        }
+        Set<String> selectRoute = new HashSet<>(p2.getGenes()[r]);
+//        Set<String> selectRoute = new HashSet<>(size);
+//
+//        int sp;
+//        while (selectRoute.size() < size) {
+//            sp = rand.nextInt(patientLength);
+//            selectRoute.add(allPatients[sp].getId());
+//        }
         p1Routes = p1.getGenes();
         c1Routes = new ArrayList[p1.getGenes().length];
         //removing patients of selected route from parent routes
@@ -225,6 +226,7 @@ public class BCRC_CrossoverTaskUp implements Runnable {
         EvaluateFitness(Collections.singletonList(c2Temp), data);
 
         for (int y = 0; y < route1.size(); y++) {
+//            System.out.println("maa ");
             String s = route1.get(y);
             bestMove = null;
             p = allPatients[getIdOfObject(s)];
@@ -244,7 +246,7 @@ public class BCRC_CrossoverTaskUp implements Runnable {
 
                             for (int m = 0; m <= c1Routes[k].size(); m++) {
                                 for (int n = 0; n <= c1Routes[l].size(); n++) {
-                                    if (isSeq||noEvaluationConflicts(c1Routes[k], c1Routes[l], m, n)) {
+                                    if (isSeq || noEvaluationConflicts(c1Routes[k], c1Routes[l], m, n)) {
                                         tempRoute1 = new ArrayList<>(c1Routes[k]);
                                         tempRoute2 = new ArrayList<>(c1Routes[l]);
                                         tempRoute1.add(m, s);
@@ -311,6 +313,8 @@ public class BCRC_CrossoverTaskUp implements Runnable {
             }
         }
         return c2Temp;
+
+//        System.out.println("maasend ");
         //return p1;
     }
 
@@ -500,7 +504,7 @@ public class BCRC_CrossoverTaskUp implements Runnable {
         ShiftUp caregiver1;
         int routeEnd;
         Set<String> track = new LinkedHashSet<>();
-        Map<String,List<Integer>> sycTrack = new HashMap<>();
+        Map<String, List<Integer>> sycTrack = new HashMap<>();
         int simCounter = 0;
         for (int i = 0; i < routeEndPoint.length; i++) {
             route = new ArrayList<>(ch.getGenes()[i]);
@@ -510,7 +514,7 @@ public class BCRC_CrossoverTaskUp implements Runnable {
                 for (int j = routeEnd; j < route.size(); j++) {
                     String patient = route.get(j);
                     if (!caregiver1.getRoute().contains(patient)) {
-                        if (!patientAssignment(ch, patient, caregiver1, routes, i, track)) {
+                        if (!patientAssignment(ch, patient, caregiver1, routes, i, track, sycTrack, simCounter)) {
                             ch.setFitness(Double.POSITIVE_INFINITY);
                             return;
                         }

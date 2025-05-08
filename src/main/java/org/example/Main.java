@@ -2,10 +2,7 @@ package org.example;
 
 import org.example.Data.InstancesClass;
 import org.example.Data.ReadData;
-import org.example.GA.Chromosome;
-import org.example.GA.Config;
-import org.example.GA.GeneticAlgorithm;
-import org.example.GA.Parameters;
+import org.example.GA.*;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -47,22 +44,45 @@ public class Main {
                 String[] Instances = {"10", "25", "50", "75", "100", "200", "300"};
                 String instanceName = Instances[problemSize];
 
-                //create result directory
-                String resultDir = "src/main/java/org/example/Config_" + paramIndex + "_" + problemSize + "_" + instanceNumber + "_results";
-                new File(resultDir).mkdirs();
-
-                // Read dataset
-                PrintStream fileout = new PrintStream(resultDir + "/Result_" + instanceName + "_" + instanceNumber + "_" + p.selectionTechnique() + "_" + p.crossoverType() + "_" + p.mutationType() + "_" + p.mutationRate() + "_" + randomSeed + ".txt");
-                System.setOut(fileout);
+//                //create result directory
+//                String resultDir = "src/main/java/org/example/Config_" + paramIndex + "_" + problemSize + "_" + instanceNumber + "_results";
+//                new File(resultDir).mkdirs();
+//
+//                // Read dataset
+//                PrintStream fileout = new PrintStream(resultDir + "/Result_" + instanceName + "_" + instanceNumber + "_" + p.selectionTechnique() + "_" + p.crossoverType() + "_" + p.mutationType() + "_" + p.mutationRate() + "_" + randomSeed + ".txt");
+//                System.setOut(fileout);
                 System.out.printf("Config Parameters: parameterIndex=%d, ProblemSize=%d, instanceNumber=%d, seed=%d\n", paramIndex, problemSize, instanceNumber, randomSeed);
 
                 instance = ReadData.read(new File("src/main/java/org/example/Data/instance/" + instanceName + "_" + instanceNumber + ".json"));
 
-                // GA execution setup
-                double total = 0;
-                double best = Double.MAX_VALUE;
+//                ArrayList[] genes = new ArrayList[3];
+//                ArrayList<String> gen = new ArrayList<>();
+//                gen.add("p3");
+//                gen.add("p9");
+//                gen.add("p7");
+//                gen.add("p5");
+//                gen.add("p10");
+//                genes[0] = new ArrayList<>(gen);
+//                gen = new ArrayList<>();
+//                gen.add("p6");
+//                gen.add("p10");
+//                gen.add("p8");
+////                gen.add("p6");
+//                genes[1] = new ArrayList<>(gen);
+//                gen = new ArrayList<>();
+//                gen.add("p8");
+//                gen.add("p9");
+//                gen.add("p4");
+//                gen.add("p2");
+//                gen.add("p1");
+//                genes[2] = new ArrayList<>(gen);
+//                Chromosome chromosome = new Chromosome(genes, 0);
+//                EvaluationFunctionUp.EvaluateFitness(Collections.singletonList(chromosome), instance);
+//                chromosome.showSolution(0);
+//                chromosome.trail();
+//                System.exit(1);
 
-                GeneticAlgorithm ga = new GeneticAlgorithm(randomSeed, 6, 10, 4, 100, 600, 0.1f, 1.0f, p, instance);
+                GeneticAlgorithm ga = new GeneticAlgorithm(randomSeed, 6, 10, 4, 100, 5000, 0.1f, 1.0f, p, instance);
                 Chromosome bestChromosome = ga.start();
                 // Execute GA tasks
 
@@ -103,3 +123,6 @@ public class Main {
         return parameters;
     }
 }
+//[p3, p9, p10, p5, p7]
+// [p10, p8, p6]
+// [p4, p8, p9, p1, p2]

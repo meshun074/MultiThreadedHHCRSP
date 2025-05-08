@@ -362,7 +362,7 @@ public class BCRCD_CrossoverTaskUp implements Runnable {
                 for (int j = routeEnd; j < route.size(); j++) {
                     String patient = route.get(j);
                     if (!caregiver1.getRoute().contains(patient)) {
-                        if (!patientAssignment(ch, patient, caregiver1, routes, i, track)) {
+                        if (!patientAssignment(ch, patient, caregiver1, routes, i, track,sycTrack,simCounter)) {
                             ch.setFitness(Double.POSITIVE_INFINITY);
                             return;
                         }

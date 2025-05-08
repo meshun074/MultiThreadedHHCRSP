@@ -4,7 +4,6 @@ import org.example.Data.Caregiver;
 import org.example.Data.InstancesClass;
 import org.example.Data.Patient;
 
-import javax.xml.crypto.Data;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -46,7 +45,7 @@ public class BCRC_CrossoverTaskUpR implements Runnable {
         Patient p;
         int num;
         selectRoute = new ArrayList<>();
-        while (selectRoute.size() < 20) {
+        while (selectRoute.size() < 40) {
             num = rand.nextInt(data.getPatients().length);
             if(!selectRoute.contains(data.getPatients()[num].getId())){
                 selectRoute.add(data.getPatients()[num].getId());
@@ -461,7 +460,7 @@ public class BCRC_CrossoverTaskUpR implements Runnable {
                 for (int j = routeEndPoint[i]; j < route.size(); j++) {
                     String patient = route.get(j);
                     if (!caregiver1.getRoute().contains(patient)) {
-                        if (!patientAssignment(ch, patient, caregiver1, routes, i, track)) {
+                        if (!patientAssignment(ch, patient, caregiver1, routes, i, track,sycTrack,simCounter)) {
                             ch.setFitness(Double.POSITIVE_INFINITY);
                             return;
                         }
@@ -495,7 +494,7 @@ public class BCRC_CrossoverTaskUpR implements Runnable {
                 for (int j = routeEndPoint[i]; j < route.size(); j++) {
                     String patient = route.get(j);
                     if (!caregiver1.getRoute().contains(patient)) {
-                        if (!patientAssignment(ch, patient, caregiver1, routes, i, track)) {
+                        if (!patientAssignment(ch, patient, caregiver1, routes, i, track,sycTrack,simCounter)) {
                             ch.setFitness(Double.POSITIVE_INFINITY);
                             return;
                         }

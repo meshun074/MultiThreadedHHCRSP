@@ -162,4 +162,11 @@ public class Chromosome {
         }
         return genesStrings.toString();
     }
+    public void trail()
+    {
+        for(ShiftUp s:caregiversRouteUp){
+//            System.out.println(s.getRoute());
+            s.showInfo();
+        }
+    }
 }

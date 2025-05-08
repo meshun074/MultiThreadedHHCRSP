@@ -83,7 +83,7 @@ public class GeneticAlgorithm{
             //MultiParentBCRCDLS();
             updatePopulation1();
             performanceUpdate(newPopulation, i);
-            if(terminator == 30) break;
+            if(terminator == patientLength/2) break;
         }
         return bestChromosome;
     }
@@ -96,7 +96,7 @@ public class GeneticAlgorithm{
         newPopulation.clear();
         newPopulation.addAll(nextPopulation);
         //Collections.shuffle(tempPopulation);
-        sortPopulation(tempPopulation);
+       sortPopulation(tempPopulation);
         for(Chromosome c : tempPopulation){
             if(newPopulation.size()<popSize){
                 newPopulation.add(c);
@@ -170,6 +170,7 @@ public class GeneticAlgorithm{
         boolean cross;
         int index =0;
         ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+//        ExecutorService service = Executors.newFixedThreadPool(1);
         crossoverChromosomes = Collections.synchronizedList(new ArrayList<>());
         List<Callable<Void>> crossoverTasks = new ArrayList<>();
         if(selectTechnique=='R')

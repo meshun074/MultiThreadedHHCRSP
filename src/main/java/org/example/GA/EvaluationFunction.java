@@ -162,6 +162,7 @@ public class EvaluationFunction {
         return routeIndex;
     }
 
+
     private static void initializeRoutes(Shift[] routes) {
         for (int s = 0; s < routes.length; s++)
             //Initialize the shift of the caregivers
