@@ -183,21 +183,21 @@ public class BCRC_CrossoverTaskUp implements Runnable {
                 tempRoute2;
         String patient;
         Patient p;
-        int patientLength = allPatients.length;
-        int size = 40;
+//        int patientLength = allPatients.length;
+//        int size = 40;
         /*
         100 - 20 1757.859
         50 - 40
         50-20--1749.651
         */
-//        Set<String> selectRoute = new HashSet<>(p2.getGenes()[r]);
-        Set<String> selectRoute = new HashSet<>(size);
+        Set<String> selectRoute = new HashSet<>(p2.getGenes()[r]);
+//        Set<String> selectRoute = new HashSet<>(size);
 
-        int sp;
-        while (selectRoute.size() < size) {
-            sp = rand.nextInt(patientLength);
-            selectRoute.add(allPatients[sp].getId());
-        }
+//        int sp;
+//        while (selectRoute.size() < size) {
+//            sp = rand.nextInt(patientLength);
+//            selectRoute.add(allPatients[sp].getId());
+//        }
         p1Routes = p1.getGenes();
         c1Routes = new ArrayList[p1.getGenes().length];
         //removing patients of selected route from parent routes
