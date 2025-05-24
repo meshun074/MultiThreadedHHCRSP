@@ -20,7 +20,7 @@ public class Main {
      */
 
     public static void main(String[] args) {
-        if (args.length < 1) {
+        if (args.length < 2) {
             System.err.println("Usage: java GeneticAlgorithmRunner <config-file>");
             return;
         }
@@ -41,7 +41,7 @@ public class Main {
                     Config1 config1 = Config1.read(configFile);
                     instanceNumber = config1.getInstanceIndex();
                     instanceName = config1.getInstanceName();
-                    int runCount = RunCounter.getAndIncrementRunCount(instanceNumber);
+                    int runCount = Integer.parseInt(args[1]);
                     randomSeed = System.currentTimeMillis() + runCount;
                     List<Parameters> parameters = getParametersList();
                     p = parameters.get(44);
@@ -64,7 +64,7 @@ public class Main {
                     int problemSize = config.getProblemSize();
                     instanceNumber = config.getInstanceIndex();
 
-                    int runCount = RunCounter.getAndIncrementRunCount(instanceNumber);
+                    int runCount = Integer.parseInt(args[1]);
                     randomSeed = System.currentTimeMillis() + runCount;
 
                     List<Parameters> parameters = getParametersList();
