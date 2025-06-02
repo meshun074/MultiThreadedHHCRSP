@@ -16,6 +16,11 @@ public class EvaluationFunctionUp {
             Evaluate(chromosome);
         }
     }
+    public static void EvaluateFitness(Chromosome chromosome, InstancesClass data) {
+        dataset = data;
+            Evaluate(chromosome);
+
+    }
 
     private static void Evaluate(Chromosome ch) {
         // Testing

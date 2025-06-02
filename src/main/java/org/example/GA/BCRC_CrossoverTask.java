@@ -143,11 +143,6 @@ public class BCRC_CrossoverTask implements Runnable {
             }
 
         }
-        if (mutRate > 0) {
-            if (Math.random() < mutRate) {
-                c1 = ga.mutationSelection(c1);
-            }
-        }
         return c1;
     }
 

@@ -1,5 +1,7 @@
 package org.example.Data;
 
+import org.example.GA.CaregiverPair;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,7 +33,55 @@ public class InstancesClass {
     public void setCaregivers(Caregiver[] caregivers) {
         this.caregivers = caregivers;
         initializeCaregiverCache();
+        initializePatientServiceCaregiver();
+        initializeAllPossibleCaregiverCombinations();
     }
+    private void initializePatientServiceCaregiver() {
+        for( Patient p : patients){
+            p.setPossibleFirstCaregiver(getQualifiedCaregiver(p.getRequired_caregivers()[0].getService()));
+            if(p.getRequired_caregivers().length>1){
+                p.setPossibleSecondCaregiver(getQualifiedCaregiver(p.getRequired_caregivers()[1].getService()));
+            }
+        }
+    }
+
+    private void initializeAllPossibleCaregiverCombinations() {
+        for( Patient p : patients){
+            if(p.getRequired_caregivers().length>1){
+                List<CaregiverPair> caregiverPairs = getListOfCaregiverPairs(p);
+                p.setAllPossibleCaregiverCombinations(caregiverPairs);
+            }else {
+                List<CaregiverPair> caregiverPairs = new ArrayList<>();
+                CaregiverPair caregiverPair;
+                Set<Integer>firstCaregivers = p.getPossibleFirstCaregiver();
+                for (int i : firstCaregivers) {
+                    caregiverPair = new CaregiverPair(i, -1);
+                    caregiverPairs.add(caregiverPair);
+                }
+                p.setAllPossibleCaregiverCombinations(caregiverPairs);
+            }
+        }
+    }
+
+    private static List<CaregiverPair> getListOfCaregiverPairs(Patient p) {
+        Set<Integer>firstCaregivers = p.getPossibleFirstCaregiver();
+        Set<Integer>secondCaregivers = p.getPossibleSecondCaregiver();
+        Set<Integer> allCaregivers = new HashSet<>(firstCaregivers);
+        allCaregivers.addAll(secondCaregivers);
+        p.setAllCaregiversForDoubleService(allCaregivers);
+        List<CaregiverPair> caregiverPairs = new ArrayList<>();
+        CaregiverPair caregiverPair;
+        for (int i : firstCaregivers) {
+            for(int j : secondCaregivers){
+                if(i!=j){
+                    caregiverPair = new CaregiverPair(i, j);
+                    caregiverPairs.add(caregiverPair);
+                }
+            }
+        }
+        return caregiverPairs;
+    }
+
     // Initialize the cache at startup or when dataset changes
     private void initializeCaregiverCache() {
         SERVICE_CAREGIVER_CACHE.clear();

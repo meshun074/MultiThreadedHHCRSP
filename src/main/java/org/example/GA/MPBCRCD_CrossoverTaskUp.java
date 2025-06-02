@@ -164,11 +164,11 @@ public class MPBCRCD_CrossoverTaskUp implements Runnable {
                 }
             }
         }
-        if (mutRate > 0) {
-            if (Math.random() < mutRate) {
-                c2Temp = ga.mutationSelection(c2Temp);
-            }
-        }
+//        if (mutRate > 0) {
+//            if (Math.random() < mutRate) {
+//                c2Temp = ga.mutationSelection(c2Temp);
+//            }
+//        }
         return c2Temp;
         //return p1;
     }

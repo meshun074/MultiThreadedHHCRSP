@@ -4,6 +4,7 @@ import org.example.Data.InstancesClass;
 import org.example.Data.Patient;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static org.example.GA.EvaluationFunctionUp.EvaluateFitness;
 import static org.example.GA.EvaluationFunction.getIdOfObject;
@@ -20,6 +21,7 @@ public class BCRC_CrossoverTaskUp implements Runnable {
     private final InstancesClass data;
     private final Patient[] allPatients;
     private final double[][] distanceMatrix;
+    private final Random rand;
 
     public BCRC_CrossoverTaskUp(GeneticAlgorithm ga, long identity, float mutRate, Chromosome p1, Chromosome p2, int r, boolean cross, InstancesClass data) {
         this.ga = ga;
@@ -30,6 +32,7 @@ public class BCRC_CrossoverTaskUp implements Runnable {
         this.p2 = p2;
         this.r = r;
         this.data = data;
+        rand = ThreadLocalRandom.current();
         this.allPatients = data.getPatients();
         this.distanceMatrix = data.getDistances();
     }
@@ -38,135 +41,127 @@ public class BCRC_CrossoverTaskUp implements Runnable {
         if (!cross) {
             return p1;
         }
-        Chromosome c2Temp;
-        Random rand = new Random(System.currentTimeMillis());
+        Chromosome c2Temp = p1;
+        Random rand = ThreadLocalRandom.current();
         ArrayList[] p1Routes, c1Routes;
         ArrayList<String> route, route1, tempRoute1,
                 tempRoute2;
         String patient;
         Patient p;
+
         Set<String> selectRoute = new HashSet<>(p2.getGenes()[r]);
-        p1Routes = p1.getGenes();
-        c1Routes = new ArrayList[p1.getGenes().length];
-        //removing patients of selected route from parent routes
-        for (int i = 0; i < p1Routes.length; i++) {
-            route = new ArrayList<>();
-            for (int j = 0; j < p1Routes[i].size(); j++) {
-                patient = (String) p1Routes[i].get(j);
-                if (!selectRoute.contains(patient)) {
-                    route.add(patient);
-                }
-            }
-            c1Routes[i] = new ArrayList<>(route);
-        }
-        // inserting removed route.
+        c1Routes = new ArrayList[c2Temp.getGenes().length];
         route1 = new ArrayList<>(selectRoute);
         Collections.shuffle(route1, rand);
-        String service1, service2;
-        Set<Integer> caregivers1, caregivers2;
-        MoveUp move1, bestMove;
-        Set<String> listOfMoves;
-        String moveSign1, moveSign2;
-        ArrayList<Process> processes;
-        Process process;
-        ArrayList<MoveUp> possibleMoves;
-        c2Temp = new Chromosome(c1Routes, 0.0, true);
-        EvaluateFitness(Collections.singletonList(c2Temp), data);
 
-        for (int y = 0; y < route1.size(); y++) {
+        for (int y = 0; y < route1.size(); y++){
             String s = route1.get(y);
-            possibleMoves = new ArrayList<>();
-            bestMove = null;
-            p = allPatients[getIdOfObject(s)];
-            service1 = p.getRequired_caregivers()[0].getService();
-            if (p.getRequired_caregivers().length > 1) {
-                listOfMoves = new HashSet<>();
-                service2 = p.getRequired_caregivers()[1].getService();
-                caregivers1 = data.getQualifiedCaregiver(service1);
-                caregivers2 = data.getQualifiedCaregiver(service2);
-                boolean isSeq = p.getSynchronization().getType().equals("sequential");
+            p1Routes = c2Temp.getGenes();
 
-                for (int k : caregivers1) {
-                    for (int l : caregivers2) {
-                        if (k != l) {
+            //removing patients of selected route from parent routes
+            for (int i = 0; i < p1Routes.length; i++) {
+                route = new ArrayList<>();
+                for (int j = 0; j < p1Routes[i].size(); j++) {
+                    patient = (String) p1Routes[i].get(j);
+                    if (!s.equals(patient)) {
+                        route.add(patient);
+                    }
+                }
+                c1Routes[i] = new ArrayList<>(route);
+            }
+            // inserting removed route.
 
-                            for (int m = 0; m <= c1Routes[k].size(); m++) {
-                                for (int n = 0; n <= c1Routes[l].size(); n++) {
-                                    if (isSeq||noEvaluationConflicts(c1Routes[k], c1Routes[l], m, n)) {
-                                        tempRoute1 = new ArrayList<>(c1Routes[k]);
-                                        tempRoute2 = new ArrayList<>(c1Routes[l]);
-                                        tempRoute1.add(m, s);
-                                        tempRoute2.add(n, s);
-                                        processes = new ArrayList<>();
-                                        moveSign1 = tempRoute1 + " - " + tempRoute2;
-                                        moveSign2 = tempRoute2 + " - " + tempRoute1;
-                                        if (!listOfMoves.contains(moveSign1) && !listOfMoves.contains(moveSign2)) {
-                                            process = new Process(tempRoute1, s, m, k);
-                                            processes.add(process);
-                                            process = new Process(tempRoute2, s, n, l);
-                                            processes.add(process);
-                                            move1 = new MoveUp(processes);
-                                            possibleMoves.add(move1);
-                                            listOfMoves.add(moveSign1);
+            String service1, service2;
+            Set<Integer> caregivers1, caregivers2;
+            MoveUp move1, bestMove;
+            Set<String> listOfMoves;
+            String moveSign1, moveSign2;
+            ArrayList<Process> processes;
+            Process process;
+            c2Temp = new Chromosome(c1Routes, 0.0, true);
+            EvaluateFitness(Collections.singletonList(c2Temp), data);
+
+
+
+                bestMove = null;
+                p = allPatients[getIdOfObject(s)];
+                service1 = p.getRequired_caregivers()[0].getService();
+                if (p.getRequired_caregivers().length > 1) {
+                    listOfMoves = new HashSet<>();
+                    service2 = p.getRequired_caregivers()[1].getService();
+                    caregivers1 = data.getQualifiedCaregiver(service1);
+                    caregivers2 = data.getQualifiedCaregiver(service2);
+                    boolean isSeq = p.getSynchronization().getType().equals("sequential");
+                    //set the hashset of the chromosome genes
+                    c2Temp.buildPatientRouteMap();
+
+                    for (int k : caregivers1) {
+                        for (int l : caregivers2) {
+                            if (k != l) {
+
+                                for (int m = 0; m <= c1Routes[k].size(); m++) {
+                                    for (int n = 0; n <= c1Routes[l].size(); n++) {
+                                        if (isSeq || noEvaluationConflicts(c1Routes[k], c1Routes[l], m, n)) {
+                                            tempRoute1 = new ArrayList<>(c1Routes[k]);
+                                            tempRoute2 = new ArrayList<>(c1Routes[l]);
+                                            tempRoute1.add(m, s);
+                                            tempRoute2.add(n, s);
+                                            processes = new ArrayList<>();
+                                            moveSign1 = tempRoute1 + " - " + tempRoute2;
+                                            moveSign2 = tempRoute2 + " - " + tempRoute1;
+                                            if (!listOfMoves.contains(moveSign1) && !listOfMoves.contains(moveSign2)) {
+                                                process = new Process(tempRoute1, s, m, k);
+                                                processes.add(process);
+                                                process = new Process(tempRoute2, s, n, l);
+                                                processes.add(process);
+                                                move1 = new MoveUp(processes);
+                                                bestMove = evaluateMoveUp(move1, bestMove, c2Temp);
+                                                listOfMoves.add(moveSign1);
+                                            }
                                         }
                                     }
                                 }
                             }
-
                         }
                     }
-                }
 
-                //set the hashset of the chromosome genes
-                c2Temp.buildPatientRouteMap();
-                for (int u = 0; u < possibleMoves.size(); ) {
-                    MoveUp m = possibleMoves.get(u);
-                    bestMove = evaluateMoveUp(m, bestMove, c2Temp);
-                }
 
-                if (bestMove != null) {
-                    ArrayList<Process> processesList = bestMove.getProcesses();
-                    for (int z = 0; z < processesList.size(); z++) {
-                        Process process1 = processesList.get(z);
-                        c1Routes[process1.getRouteIndex()] = new ArrayList<>(process1.getRoute());
-                    }
-                    c2Temp = bestMove.getChromosome();
-                }
-
-            } else {
-                caregivers1 = data.getQualifiedCaregiver(service1);
-                for (int j : caregivers1) {
-                    for (int k = 0; k <= c1Routes[j].size(); k++) {
-                        tempRoute1 = new ArrayList(c1Routes[j]);
-                        tempRoute1.add(k, s);
-                        processes = new ArrayList<>();
-                        process = new Process(tempRoute1, s, k, j);
-                        processes.add(process);
-                        move1 = new MoveUp(processes);
-                        possibleMoves.add(move1);
+                    if (bestMove != null) {
+                        ArrayList<Process> processesList = bestMove.getProcesses();
+                        for (int z = 0; z < processesList.size(); z++) {
+                            Process process1 = processesList.get(z);
+                            c1Routes[process1.getRouteIndex()] = new ArrayList<>(process1.getRoute());
+                        }
+                        c2Temp = bestMove.getChromosome();
                     }
 
-                }
-                //set the Map patient ot route of the chromosome genes
-                c2Temp.buildPatientRouteMap();
-                for (int u = 0; u < possibleMoves.size(); ) {
-                    MoveUp m = possibleMoves.get(u);
-                    bestMove = evaluateMoveUp(m, bestMove, c2Temp);
-                }
-                if (bestMove != null) {
-                    ArrayList<Process> processesList = bestMove.getProcesses();
-                    for (int z = 0; z < processesList.size(); z++) {
-                        Process process1 = processesList.get(z);
-                        c1Routes[process1.getRouteIndex()] = new ArrayList<>(process1.getRoute());
+                } else {
+                    caregivers1 = data.getQualifiedCaregiver(service1);
+                    //set the Map patient ot route of the chromosome genes
+                    c2Temp.buildPatientRouteMap();
+                    for (int j : caregivers1) {
+                        for (int k = 0; k <= c1Routes[j].size(); k++) {
+                            tempRoute1 = new ArrayList(c1Routes[j]);
+                            tempRoute1.add(k, s);
+                            processes = new ArrayList<>();
+                            process = new Process(tempRoute1, s, k, j);
+                            processes.add(process);
+                            move1 = new MoveUp(processes);
+                            bestMove = evaluateMoveUp(move1, bestMove, c2Temp);
+                        }
+
                     }
-                    c2Temp = bestMove.getChromosome();
+
+                    if (bestMove != null) {
+                        ArrayList<Process> processesList = bestMove.getProcesses();
+                        for (int z = 0; z < processesList.size(); z++) {
+                            Process process1 = processesList.get(z);
+                            c1Routes[process1.getRouteIndex()] = new ArrayList<>(process1.getRoute());
+                        }
+                        c2Temp = bestMove.getChromosome();
+                    }
                 }
-            }
-        }
-        if (mutRate > 0) {
-            if (Math.random() < mutRate) {
-                c2Temp = ga.mutationSelection(c2Temp);
-            }
+
         }
         return c2Temp;
         //return p1;
@@ -177,7 +172,7 @@ public class BCRC_CrossoverTaskUp implements Runnable {
             return p1;
         }
         Chromosome c2Temp;
-        Random rand = new Random(identity+System.currentTimeMillis());
+        Random rand = ThreadLocalRandom.current();
         ArrayList[] p1Routes, c1Routes;
         ArrayList<String> route, route1, tempRoute1,
                 tempRoute2;
@@ -303,11 +298,6 @@ public class BCRC_CrossoverTaskUp implements Runnable {
                     }
                     c2Temp = bestMove.getChromosome();
                 }
-            }
-        }
-        if (mutRate > 0) {
-            if (Math.random() < mutRate) {
-                c2Temp = ga.mutationSelection(c2Temp);
             }
         }
         return c2Temp;
@@ -444,7 +434,7 @@ public class BCRC_CrossoverTaskUp implements Runnable {
 
 
         evaluateUp(tempCh, routeEndPoint, bestMove);
-        if (bestMove == null || tempCh.getFitness() < bestMove.getFitness()) {
+        if (bestMove == null || tempCh.getFitness() < bestMove.getFitness()||tempCh.getFitness() == bestMove.getFitness()&&rand.nextBoolean()) {
             m.setChromosome(tempCh);
             m.setFitness(tempCh.getFitness());
             return m;

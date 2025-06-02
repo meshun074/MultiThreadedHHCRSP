@@ -31,17 +31,21 @@ public class GeneticAlgorithm{
     private Chromosome bestChromosome;
     private List<Chromosome> nextPopulation;
     private List<Chromosome> tempPopulation;
+    private List<Chromosome> tempMutPopulation;
     private List<Chromosome> newPopulation;
     private List<Chromosome> crossoverChromosomes;
+    private List<Chromosome> mutationChromosomes;
     private final double[] popProbabilities;
     private Map<Integer, Chromosome> LSChromosomes;
     private int terminator =0;
-    private final int maxSearch;
     private final int patientLength;
+    private final Patient[] allPatients;
+    private final Random rand;
 
 
     public GeneticAlgorithm(long identity, int numOfEliteSearch, int LSRate, int TSRate, int popSize, int gen,   float elitismRate, float crossRate,  Parameters p, InstancesClass data) {
         this.identity = identity;
+        rand = new Random(identity);
         this.numOfEliteSearch = numOfEliteSearch;
         this.LSRate = LSRate;
         this.TSRate = TSRate;
@@ -52,11 +56,12 @@ public class GeneticAlgorithm{
         crossType = p.crossoverType();
         this.elitismRate = elitismRate;
         this.crossRate = crossRate;
-        mutRate = p.mutationRate();
+//        mutRate = p.mutationRate();
+        mutRate = 0.05f;
         this.data = data;
         popProbabilities = new double[popSize];
         patientLength = data.getPatients().length;
-        maxSearch = (patientLength < 75 ? Math.ceilDiv(patientLength, 6) : 20);
+        allPatients = data.getPatients();
     }
 
     public Chromosome start() {
@@ -65,7 +70,7 @@ public class GeneticAlgorithm{
         //initialize and evaluate fitness of chromosome
         newPopulation = Population.initialize(popSize, patientLength,identity);
         if(!crossType.equals("MP")&&mutRate==-1f){
-            LocalSearch(maxSearch,0);
+            LocalSearch();
         }
         //Sort population
         sortPopulation(newPopulation);
@@ -78,16 +83,15 @@ public class GeneticAlgorithm{
             //Local search();
             if(!crossType.equals("MP")&&mutRate==-1f){
                 if (i % LSRate == 0)
-                    LocalSearch(maxSearch,i);
+                    LocalSearch();
             }
-            //if (i % LSRate == 0)
-            //MultiParentBCRCDLS();
+            mutationSelection();
             updatePopulation1();
             performanceUpdate(newPopulation, i);
             if(patientLength<=100){
                 if(terminator == patientLength/2) break;
             }else {
-                if (terminator == 60) break;
+                if (terminator == 50) break;
             }
         }
         return bestChromosome;
@@ -96,10 +100,14 @@ public class GeneticAlgorithm{
     public List<Chromosome> getCrossoverChromosomes() {
         return crossoverChromosomes;
     }
+    public List<Chromosome> getMutationChromosomes(){
+        return mutationChromosomes;
+    }
 
     private void updatePopulation1() {
         newPopulation.clear();
         newPopulation.addAll(nextPopulation);
+        newPopulation.addAll(tempMutPopulation);
         //Collections.shuffle(tempPopulation);
         sortPopulation(tempPopulation);
         for(Chromosome c : tempPopulation){
@@ -119,7 +127,6 @@ public class GeneticAlgorithm{
            bestCostRouteCrossover();
     }
     private void UniformCrossover() {
-        Random rand = new Random(System.currentTimeMillis());
         Chromosome p1, p2;
         ArrayList<Double> r = new ArrayList<>();
         int r1, r2;
@@ -166,12 +173,12 @@ public class GeneticAlgorithm{
         invokeThreads(service, crossoverTasks);
     }
     private void bestCostRouteCrossover() {
-        Random rand = new Random(System.currentTimeMillis());
         Chromosome p1, p2;
         int r1, r2;
         int count;
         boolean cross;
         int index =0;
+//        ExecutorService service = Executors.newFixedThreadPool(8);
         ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         crossoverChromosomes = Collections.synchronizedList(new ArrayList<>());
         List<Callable<Void>> crossoverTasks = new ArrayList<>();
@@ -188,7 +195,7 @@ public class GeneticAlgorithm{
             do {
                 r1 = rand.nextInt(p2.getGenes().length);
                 r2 = rand.nextInt(p1.getGenes().length);
-            }while (p1.getGenes()[r2].isEmpty() && p2.getGenes()[r1].isEmpty());
+            }while (p1.getGenes()[r2].isEmpty() || p2.getGenes()[r1].isEmpty());
 
             Chromosome finalP1 = p1;
             Chromosome finalP2 = p2;
@@ -231,7 +238,6 @@ public class GeneticAlgorithm{
         }
     }
     private void MultiParentBCRCDLS() {
-        Random rand = new Random(System.currentTimeMillis());
         Chromosome p1, p2, p3;
         int r1, r2, r3;
         int count;
@@ -303,7 +309,6 @@ public class GeneticAlgorithm{
     }
 
     private void bestCostRouteCrossoverDestruction() {
-        Random rand = new Random(System.currentTimeMillis());
         Chromosome p1, p2;
         int r1, r2;
         int count;
@@ -355,7 +360,6 @@ public class GeneticAlgorithm{
     }
 
     private void MultiParentBCRCD() {
-        Random rand = new Random(System.currentTimeMillis());
         Chromosome p1, p2, p3;
         int r1, r2, r3;
         int count;
@@ -436,7 +440,6 @@ public class GeneticAlgorithm{
 
     private int tournamentSelection(int k) {
         ArrayList<Integer> list = new ArrayList<>();
-        Random rand = new Random(System.currentTimeMillis());
         for (int i = 0; i < k; i++) {
             list.add(rand.nextInt(popSize));
         }
@@ -465,79 +468,58 @@ public class GeneticAlgorithm{
       return (int)(rand*popSize);
     }
 
-    public Chromosome mutationSelection(Chromosome c){
-        if(mutType.equals("M"))
-            return mutation(c);
-        else return mutation1(c);
+    public void mutationSelection(){
+//        if(mutType.equals("M"))
+//            return mutation(c);
+//        else return c;
+        mutation1();
     }
     private Chromosome mutation(Chromosome c){
-        Random rand = new Random(System.currentTimeMillis());
         Chromosome newCh = search(c, rand.nextInt(patientLength));
         if(newCh.getFitness()<c.getFitness())
             return newCh;
         return c;
     }
-    private Chromosome mutation1(Chromosome ch){
-        Random rand = new Random(System.currentTimeMillis());
-        Chromosome c = new Chromosome(ch.getGenes(),ch.getFitness(),true);
-        int selectedRoute = rand.nextInt(c.getGenes().length);
-        ArrayList<String> route  = new ArrayList<>(c.getGenes()[selectedRoute]);
-        int index;
-        int limit;
-        String holder;
-        if(route.size()>1){
-            if(route.size()==2){
-                route.reversed();
-            }else {
-                index = rand.nextInt(route.size());
-                limit = route.size()-index;
-                if (limit==1){
-                    if(index==1){
-                        holder = route.getFirst();
-                        route.set(0,route.get(index));
-                        route.set(index, holder);
-                    }else{
-                        if(rand.nextBoolean()){
-                            holder = route.get(index);
-                            route.set(index, route.get(index-1));
-                            route.set(index-1, holder);
-                        }else {
-                            holder = route.get(index);
-                            route.set(index, route.get(index-2));
-                            route.set(index-2, holder);
-                        }
-                    }
-                }else if(limit==2){
-                    holder = route.get(index);
-                    route.set(index,route.get(index+1));
-                    route.set(index+1, holder);
-                }else {
-                    if(rand.nextBoolean()){
-                        holder = route.get(index);
-                        route.set(index, route.get(index+1));
-                        route.set(index+1, holder);
-                    }else {
-                        holder = route.get(index);
-                        route.set(index, route.get(index+2));
-                        route.set(index+2, holder);
-                    }
-                }
-            }
-            c.getGenes()[selectedRoute] = new ArrayList(route);
+
+    private void mutation1() {
+        int mutNum = (int) (popSize * mutRate);
+        tempMutPopulation = new ArrayList<>(mutNum);
+        ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        mutationChromosomes = Collections.synchronizedList(new ArrayList<>());
+        List<Callable<Void>> mutationTasks = new ArrayList<>();
+        if(selectTechnique=='R')
+            rouletteWheelSetup();
+       for(int i = 0; i <mutNum; i++) {
+            Chromosome p = newPopulation.get(selectionTechnique(rand));
+            mutationTasks.add(() -> {
+                new Mutation2(this, p, rand, data).run();
+                return null;
+            });
         }
-        EvaluateFitness(Collections.singletonList(c), data);
-        if(c.getFitness()==Double.POSITIVE_INFINITY)
-            return ch;
-        return c;
+        invokeMutationThreads(service, mutationTasks);
+    }
+
+
+    private void invokeMutationThreads(ExecutorService service, List<Callable<Void>> mutationTasks) {
+        try {
+            service.invokeAll(mutationTasks);
+            List<Chromosome> xChromosomes = mutationChromosomes;
+            synchronized (xChromosomes){
+                tempMutPopulation.addAll(xChromosomes);
+            }
+        }catch (InterruptedException e){
+            Thread.currentThread().interrupt();
+        }finally {
+            service.shutdown();
+        }
     }
 
     public Map<Integer, Chromosome> getLSChromosomes() {
         return LSChromosomes;
     }
 
-    private void LocalSearch(int max, int genNum) {
-        //System.out.println("LocalSearch");
-        Random rand = new Random(System.currentTimeMillis());
+
+    private void LocalSearch() {
         Chromosome ch;
         int r;
         Set<Integer> keys = new HashSet<>();
@@ -554,12 +536,11 @@ public class GeneticAlgorithm{
             }
             keys.add(r);
             ch = newPopulation.get(r);
-//            System.out.println("Chromosome before: "+ r+" -"+ ch.getFitness());
 
             Chromosome finalCh = ch;
             int finalR = r;
             LSTasks.add(() -> {
-                new LocalSearchThreadUp(this, finalCh,rand,max, finalR, genNum, data).run();
+                new BCRC_CrossoverTaskUpR(this,finalCh,finalR,data).run();
                 return null;
             });
         }
@@ -569,7 +550,6 @@ public class GeneticAlgorithm{
             synchronized (sChromosomes){
                 for(Map.Entry<Integer, Chromosome> entry : sChromosomes.entrySet()){
                     newPopulation.set(entry.getKey(), entry.getValue());
-//                    System.out.println("Chromosome after: "+ entry.getKey()+" -"+ entry.getValue().getFitness());
                 }
             }
         }catch (InterruptedException e){
