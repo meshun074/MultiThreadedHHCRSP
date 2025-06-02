@@ -88,7 +88,7 @@ public class Mutation2 implements Runnable {
                 int otherIndex = getCaregiverIndex(r1, p,genes,allCaregivers);
                 List<CaregiverPair> allCaregiverCombinations = patient.getAllPossibleCaregiverCombinations();
                 for(CaregiverPair pair : allCaregiverCombinations){
-                    if(pair.getFirst()==r1 && pair.getSecond()==otherIndex||pair.getFirst()==otherIndex && pair.getSecond()==r1){
+                    if(pair.getFirst()==r2 && pair.getSecond()==otherIndex||pair.getFirst()==otherIndex && pair.getSecond()==r2){
                         newRoute[i]=p;
                         break;
                     }
