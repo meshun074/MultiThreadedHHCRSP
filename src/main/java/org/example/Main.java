@@ -41,16 +41,16 @@ public class Main {
                     Config1 config1 = Config1.read(configFile);
                     instanceNumber = config1.getInstanceIndex();
                     instanceName = config1.getInstanceName();
-                    int runCount = RunCounter.getAndIncrementRunCount(instanceNumber);
+                    int runCount = Integer.parseInt(args[1]);
                     randomSeed = System.currentTimeMillis() + runCount;
                     List<Parameters> parameters = getParametersList();
                     p = parameters.get(44);
-//                    //create result directory
-//                    String resultDir = "src/main/java/org/example/Config_" + instanceName + "_" + instanceNumber + "_results";
-//                    new File(resultDir).mkdirs();
-//                    // Read dataset
-//                    PrintStream fileout = new PrintStream(resultDir + "/Result_" + instanceName + "_" + instanceNumber + "_" + runCount + "_" + p.selectionTechnique() + "_" + p.crossoverType() + "_" + p.mutationType() + "_" + p.mutationRate() + "_" + randomSeed + ".txt");
-//                    System.setOut(fileout);
+                    //create result directory
+                    String resultDir = "src/main/java/org/example/Config_" + instanceName + "_" + instanceNumber + "_results";
+                    new File(resultDir).mkdirs();
+                    // Read dataset
+                    PrintStream fileout = new PrintStream(resultDir + "/Result_" + instanceName + "_" + instanceNumber + "_" + runCount + "_" + p.selectionTechnique() + "_" + p.crossoverType() + "_" + p.mutationType() + "_" + p.mutationRate() + "_" + randomSeed + ".txt");
+                    System.setOut(fileout);
                     System.out.printf("Config Parameters: parameterIndex=44, instanceNumber=%d, seed=%d\n", instanceNumber, randomSeed);
 
                     instance = ReadData.read(new File("src/main/java/org/example/Data/kummer/" + instanceName));
@@ -64,7 +64,7 @@ public class Main {
                     int problemSize = config.getProblemSize();
                     instanceNumber = config.getInstanceIndex();
 
-                    int runCount = RunCounter.getAndIncrementRunCount(instanceNumber);
+                    int runCount = Integer.parseInt(args[1]);
                     randomSeed = System.currentTimeMillis() + runCount;
 
                     List<Parameters> parameters = getParametersList();
@@ -72,13 +72,13 @@ public class Main {
                     String[] Instances = {"10", "25", "50", "75", "100", "200", "300"};
                     instanceName = Instances[problemSize];
 
-//                    //create result directory
-//                    String resultDir = "src/main/java/org/example/Config_" + paramIndex + "_" + problemSize + "_" + instanceNumber + "_results";
-//                    new File(resultDir).mkdirs();
-//
-//                    // Read dataset
-//                    PrintStream fileout = new PrintStream(resultDir + "/Result_" + instanceName + "_" + instanceNumber + "_" + runCount + "_" + p.selectionTechnique() + "_" + p.crossoverType() + "_" + p.mutationType() + "_" + p.mutationRate() + "_" + randomSeed + ".txt");
-//                    System.setOut(fileout);
+                    //create result directory
+                    String resultDir = "src/main/java/org/example/Config_" + paramIndex + "_" + problemSize + "_" + instanceNumber + "_results";
+                    new File(resultDir).mkdirs();
+
+                    // Read dataset
+                    PrintStream fileout = new PrintStream(resultDir + "/Result_" + instanceName + "_" + instanceNumber + "_" + runCount + "_" + p.selectionTechnique() + "_" + p.crossoverType() + "_" + p.mutationType() + "_" + p.mutationRate() + "_" + randomSeed + ".txt");
+                    System.setOut(fileout);
                     System.out.printf("Config Parameters: parameterIndex=%d, ProblemSize=%d, instanceNumber=%d, seed=%d\n", paramIndex, problemSize, instanceNumber, randomSeed);
 
                     instance = ReadData.read(new File("src/main/java/org/example/Data/instance/" + instanceName + "_" + instanceNumber + ".json"));
@@ -88,7 +88,7 @@ public class Main {
                 double total = 0;
                 double best = Double.MAX_VALUE;
 
-                GeneticAlgorithm ga = new GeneticAlgorithm(randomSeed, 5, 10, 4, 200, 1200, 0.1f, 1.0f, p, instance);
+                GeneticAlgorithm ga = new GeneticAlgorithm(randomSeed, 5, 10, 4, 300, 600, 0.1f, 1.0f, p, instance);
                 Chromosome bestChromosome = ga.start();
                 // Execute GA tasks
 
