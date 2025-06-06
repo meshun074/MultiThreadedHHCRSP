@@ -84,6 +84,7 @@ public class GeneticAlgorithm{
             if(!crossType.equals("MP")&&mutRate==-1f){
                 if (i % LSRate == 0)
                     LocalSearch();
+                //Relocate and swap tobe test for local search or bcrc addition.
             }
             mutationSelection();
             updatePopulation1();
@@ -182,7 +183,7 @@ public class GeneticAlgorithm{
         ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         crossoverChromosomes = Collections.synchronizedList(new ArrayList<>());
         List<Callable<Void>> crossoverTasks = new ArrayList<>();
-        if(selectTechnique=='R')
+        if(selectTechnique=='W')
             rouletteWheelSetup();
         while (index < popSize) {
             p1 = newPopulation.get(selectionTechnique(rand));
@@ -451,18 +452,21 @@ public class GeneticAlgorithm{
     }
     private void rouletteWheelSetup(){
         double total = 0.0;
+        double lambda = 1e-6;
         for (int i = 0; i < newPopulation.size(); i++){
-            popProbabilities[i] = 1 / newPopulation.get(i).getFitness();
+            popProbabilities[i] = 1 / (newPopulation.get(i).getFitness()+lambda);
             total+=popProbabilities[i];
         }
         for(int i = 0; i < popProbabilities.length; i++){
-            popProbabilities[i] = popProbabilities[i] / total;
+            popProbabilities[i] = (popProbabilities[i] / total);
         }
     }
     private int rouletteWheelSelection(){
         double rand = Math.random();
+        double cumulativeFitness = 0.0;
       for(int i = 0; i < newPopulation.size(); i++){
-          if(rand<popProbabilities[i])
+          cumulativeFitness +=popProbabilities[i];
+          if(rand<=cumulativeFitness)
               return i;
       }
       return (int)(rand*popSize);
@@ -935,7 +939,7 @@ public class GeneticAlgorithm{
         return conflictCheck(c1Route, c2Route, m, n);
     }
 
-    static boolean conflictCheck(ArrayList<String> c1Route, ArrayList<String> c2Route, int m, int n) {
+    public static boolean conflictCheck(ArrayList<String> c1Route, ArrayList<String> c2Route, int m, int n) {
         int index1;
         int index2;
         Set<String> route2 = new HashSet<>(c2Route);

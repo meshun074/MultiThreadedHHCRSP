@@ -10,6 +10,7 @@ public class Chromosome {
     private double totalTardiness;
     private double highestTardiness;
     private ArrayList[] genes;
+    private long moveID;
 
     private ShiftUp[] caregiversRouteUp;
     private final Map<String, Set<Integer>> patientToRoutesMap = new HashMap<>();
@@ -140,6 +141,13 @@ public class Chromosome {
         this.totalTardiness += totalTardiness;
     }
 
+    public long getMoveID() {
+        return moveID;
+    }
+
+    public void setMoveID(long moveID) {
+        this.moveID = moveID;
+    }
     public void showSolution(int index) {
         System.out.print("\n Best Solution : "+index+"\n");
         for (int i =0; i< genes.length; i++) {

@@ -70,7 +70,7 @@ public class EvaluationFunctionUp {
         ch.setFitness((1 / 3d * ch.getTotalTravelCost()) + (1 / 3d * ch.getTotalTardiness()) + (1 / 3d * ch.getHighestTardiness()));
     }
 
-    static boolean patientAssignment(Chromosome ch, String patient, ShiftUp caregiver1, ShiftUp[] routes, int i, Set<String> track) {
+    public static boolean patientAssignment(Chromosome ch, String patient, ShiftUp caregiver1, ShiftUp[] routes, int i, Set<String> track) {
         double maxTardiness;
         double travelCost;
         double tardiness1, tardiness2;

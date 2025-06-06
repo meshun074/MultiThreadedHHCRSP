@@ -170,7 +170,7 @@ public class EvaluationFunction {
             }}, 0.0);
     }
 
-    static int getIdOfObject(String s) {
+    public static int getIdOfObject(String s) {
         return Integer.parseInt(s.substring(1)) - 1;
     }
 

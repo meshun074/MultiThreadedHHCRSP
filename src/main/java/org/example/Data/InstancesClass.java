@@ -67,15 +67,18 @@ public class InstancesClass {
         Set<Integer>firstCaregivers = p.getPossibleFirstCaregiver();
         Set<Integer>secondCaregivers = p.getPossibleSecondCaregiver();
         Set<Integer> allCaregivers = new HashSet<>(firstCaregivers);
+        Set<String> allCaregiversSet = new HashSet<>();
         allCaregivers.addAll(secondCaregivers);
         p.setAllCaregiversForDoubleService(allCaregivers);
         List<CaregiverPair> caregiverPairs = new ArrayList<>();
         CaregiverPair caregiverPair;
         for (int i : firstCaregivers) {
             for(int j : secondCaregivers){
-                if(i!=j){
+                String com = i+"-"+j;
+                if(i!=j&&!allCaregiversSet.contains(com)){
                     caregiverPair = new CaregiverPair(i, j);
                     caregiverPairs.add(caregiverPair);
+                    allCaregiversSet.add(com);
                 }
             }
         }
